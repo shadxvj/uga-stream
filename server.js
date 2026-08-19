@@ -238,5 +238,5 @@ app.get('/stream/:videoName', (req, res) => {
     }
 });
 
-const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => console.log(`Uga Stream running live on port ${PORT}`));
