@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uga Stream — VJ Admin Panel</title>
+    <style>
+        body { background-color: #0d0d0d; color: #fff; font-family: sans-serif; padding: 50px; }
+        .form-container { max-width: 500px; margin: 0 auto; background: #1a1a1a; padding: 30px; border-radius: 8px; border: 1px solid #f39c12; }
+        h2 { color: #f39c12; text-align: center; }
+        label { display: block; margin-top: 15px; font-weight: bold; }
+        input, select { width: 100%; padding: 10px; margin-top: 5px; background: #2b2b2b; color: #fff; border: 1px solid #444; border-radius: 4px; box-sizing: border-box; }
+        button { background: #f39c12; color: #000; border: none; width: 100%; padding: 12px; margin-top: 25px; font-weight: bold; cursor: pointer; border-radius: 4px; font-size: 1rem; }
+        button:hover { background: #e08e0b; }
+       </style>
+
+           <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const isAdminLoggedIn = localStorage.getItem("adminAuthenticated");
+            
+            if (isAdminLoggedIn !== "true") {
+                const passwordAttempt = prompt("🔒 Restricted Access: Enter Admin Password to continue:");
+                
+                if (passwordAttempt === "UgaStream2026") {
+                                       localStorage.setItem("adminAuthenticated", "true");
+                    alert("✅ Access Granted. Welcome back Admin!");
+                    fetchAdminMovies(); 
+                    fetchRegisteredUsers();
+                } else {
+                    alert("❌ Incorrect password. Access Denied.");
+                    window.location.href = "index.html"; 
+                }
+            } else {
+                fetchAdminMovies(); 
+                fetchRegisteredUsers();
+            }
+
+        });
+
+        function adminLogout() {
+            localStorage.removeItem("adminAuthenticated");
+            window.location.href = "index.html";
+        }
+
+        // FETCH MOVIES AND DISPLAY THEM WITH DELETE BUTTONS
+        async function fetchAdminMovies() {
+            const listContainer = document.getElementById('adminMoviesList');
+            if (!listContainer) return;
+            
+            try {
+                const response = await fetch('/api/movies');
+                const movies = await response.json();
+                
+                if (movies.length === 0) {
+                    listContainer.innerHTML = `<p style="color: #666; font-style: italic; font-size: 0.9rem;">No video files found in database registry. Upload some media content above to begin.</p>`;
+                    return;
+                }
+                
+                listContainer.innerHTML = ''; 
+                
+                movies.forEach(movie => {
+                    const row = document.createElement('div');
+                    row.style.cssText = "display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 12px 16px; border-radius: 6px;";
+                    row.innerHTML = `
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <img src="${movie.image}" style="width: 45px; height: 60px; object-fit: cover; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1);">
+                            <div>
+                                <h4 style="margin: 0; color: #fff; font-size: 1rem; font-weight: 600;">${movie.title}</h4>
+                                <p style="margin: 4px 0 0 0; color: #888; font-size: 0.8rem;"><span style="color: #f39c12; font-weight: 600;">VJ ${movie.vj}</span> • Category: <span style="text-transform: capitalize;">${movie.category}</span></p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="deleteMovie(${movie.id}, '${movie.title.replace(/'/g, "\\'")}')" style="background: #e50914; color: #fff; border: none; padding: 8px 16px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.85rem; transition: background 0.2s;">🗑️ Delete</button>
+                    `;
+                    listContainer.appendChild(row);
+                });
+            } catch (error) {
+                console.error("Error communicating with movie inventory API:", error);
+            }
+        }
+
+        // CLIENT-SIDE DELETE REQUEST LOGIC
+        async function deleteMovie(id, title) {
+            if (confirm(`⚠️ Are you sure you want to completely erase "${title}" from the UGA STREAM streaming application?`)) {
+                try {
+                    const response = await fetch(`/api/movies/${id}`, { method: 'DELETE' });
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        alert(`✅ Success: Movie deleted successfully.`);
+                        fetchAdminMovies(); 
+                    } else {
+                        alert(`❌ Failure: ${result.message}`);
+                    }
+                } catch (error) {
+                    console.error("Network issue processing item deletion:", error);
+                    alert("❌ Connection failure: Could not delete movie.");
+                }
+            }
+        }
+                // FETCH REGISTERED MEMBERS FROM THE BACKEND SERVER
+               // FETCH REGISTERED MEMBERS FROM THE BACKEND SERVER
+        async function fetchRegisteredUsers() {
+            const tableBody = document.getElementById('usersTableBody');
+            if (!tableBody) return;
+
+            try {
+                const response = await fetch('/api/users');
+                const users = await response.json();
+
+                if (!users || users.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="4" style="padding: 12px; text-align: center; color: #666; font-style: italic;">No users registered yet.</td></tr>`;
+                    return;
+                }
+
+                tableBody.innerHTML = ''; 
+
+                users.forEach(user => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td style="padding: 10px; border: 1px solid rgba(255,255,255,0.08);">${user.username || 'Unknown'}</td>
+                        <td style="padding: 10px; border: 1px solid rgba(255,255,255,0.08);">${user.phone || 'N/A'}</td>
+                        <td style="padding: 10px; border: 1px solid rgba(255,255,255,0.08); color: #f39c12; font-weight: bold; text-transform: uppercase;">${user.plan || 'none'}</td>
+                        <td style="padding: 10px; border: 1px solid rgba(255,255,255,0.08); color: #ff4d4d; font-family: monospace;">${user.password || '••••'}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error("Error fetching database users:", error);
+                tableBody.innerHTML = `<tr><td colspan="4" style="padding: 12px; text-align: center; color: #e50914;">Error loading user metrics.</td></tr>`;
+            }
+        }
+
+    </script>
+
+</head>
+
+
+<body>
+
+    <div class="form-container">
+        <h2>Uga Stream Admin Panel</h2>
+       <button type="button" onclick="adminLogout()" style="background: #e50914; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; float: right; font-weight: bold;">🔒 Lock Panel</button>
+
+        <!-- enctype="multipart/form-data" is required for file uploads -->
+        <form action="/api/upload-movie" method="POST" enctype="multipart/form-data">
+            
+            <label>Movie Title:</label>
+            <input type="text" name="title" required placeholder="e.g., Gladiator 2">
+
+            <label>VJ Translator Name:</label>
+            <input type="text" name="vj" required placeholder="e.g., VJ Emmy">
+
+            <label>Movie Category:</label>
+            <select name="category">
+                <option value="trending">🔥 Trending</option>
+                <option value="action">🎬 Action</option>
+                <option value="comedy">😂 Comedy</option>
+                <option value="drama">🎭 Drama</option>
+                <option value="series">📺 Series</option>
+                <option value="animation">🦊 Animation</option>
+            </select>
+
+            <label>Select Movie Video (.mp4):</label>
+            <input type="file" name="video" accept="video/mp4" required>
+
+            <label>Select Poster Image (.jpg / .png):</label>
+            <input type="file" name="poster" accept="image/*" required>
+
+            <button type="submit">🚀 Upload to Platform</button>
+        </form>
+                <!-- === DYNAMIC MOVIES MANAGEMENT SECTION === -->
+        <div class="manage-catalog-container" style="margin-top: 40px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <h3 style="color: #f39c12; font-size: 1.3rem; margin-bottom: 20px; font-weight: 700;">📋 Current Catalog Management</h3>
+            <div id="adminMoviesList" style="display: flex; flex-direction: column; gap: 12px;">
+                <!-- JavaScript automatically populates interactive rows here -->
+            </div>
+        </div>
+        <!-- === REGISTERED USERS METRICS DISPLAY SECTION === -->
+        <div class="manage-users-container" style="margin-top: 40px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <h3 style="color: #f39c12; font-size: 1.3rem; margin-bottom: 20px; font-weight: 700;">👥 Registered Member Directory</h3>
+            <div style="overflow-x: auto;">
+                <table class="users-table" style="width: 100%; border-collapse: collapse; background-color: rgba(255,255,255,0.02); text-align: left; font-size: 0.9rem;">
+                   <thead>
+    <tr style="background-color: #f39c12; color: #000;">
+        <th style="padding: 10px; border: 1px solid #333;">Username</th>
+        <th style="padding: 10px; border: 1px solid #333;">Phone Number</th>
+        <th style="padding: 10px; border: 1px solid #333;">Plan</th>
+        <th style="padding: 10px; border: 1px solid #333;">Password</th> <!-- <-- ADD THIS HERE -->
+    </tr>
+</thead>
+
+                    <tbody id="usersTableBody">
+                        <tr>
+                            <td colspan="4" style="padding: 12px; text-align: center; color: #666; font-style: italic;">Loading database registration info...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

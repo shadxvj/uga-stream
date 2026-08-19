@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UGA STREAM — Premium VJ-translated Cinema</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cloudflare.com">
+</head>
+<body>
+
+    <!-- Header & Navigation Menu re-branded to UGA STREAM -->
+    <header class="navbar">
+        <div class="logo-container">
+            <span class="logo-box">US</span>
+            <span class="logo-text">UGA <span class="ug-text">STREAM</span></span>
+        </div>
+        <nav class="nav-links">
+            <a href="#" class="active">Home</a>
+            <a href="#trending">Trending</a>
+            <a href="#action">Action</a>
+            <a href="#comedy">Comedy</a>
+            <a href="#drama">Drama</a>
+            <a href="#series">Series</a>
+            <a href="#animation">Animation</a>
+        </nav>
+   <div class="nav-auth" style="background: transparent !important;">
+
+    <!-- Red Search Bar -->
+    <div class="search-container">
+        <input type="text" placeholder="Search movies, VJs..." class="search-input">
+        <button class="search-submit-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </button>
+    </div>
+
+    <!-- Login Link Restored -->
+    <a href="#" class="login-link">Login</a>
+
+
+
+    <!-- Sign Up Button -->
+    <button class="signup-btn">Sign Up</button>
+</div>
+
+
+
+    </header>
+
+                   <!-- Cinematic Sliding Hero Showcase Section Restored -->
+       <main class="content-wrapper">
+                       <section class="hero-section" style="position: relative; display: flex; align-items: center; justify-content: flex-start; min-height: 85vh; padding: 0 10%; overflow: hidden; width: 100% !important;">
+        
+        <!-- Background Slider Layer (Forced to span the entire container area behind content) -->
+        <div class="hero-showcase-box" style="position: absolute !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; z-index: 1 !important; margin: 0 !important; padding: 0 !important; overflow: hidden !important;">
+            <div class="hero-slider-track" style="display: flex !important; width: 400% !important; height: 100% !important; animation: heroSliderShift 16s infinite ease-in-out !important;">
+                <div class="slide" style="width: 25% !important; height: 100% !important; background-size: cover !important; background-position: center !important; background-repeat: no-repeat !important; background-image: linear-gradient(rgba(13,13,13,0.45), rgba(13,13,13,0.85)), url('images/hero-bg1.jpg');"></div>
+                <div class="slide" style="width: 25% !important; height: 100% !important; background-size: cover !important; background-position: center !important; background-repeat: no-repeat !important; background-image: linear-gradient(rgba(13,13,13,0.45), rgba(13,13,13,0.85)), url('images/hero-bg2.jpg');"></div>
+                <div class="slide" style="width: 25% !important; height: 100% !important; background-size: cover !important; background-position: center !important; background-repeat: no-repeat !important; background-image: linear-gradient(rgba(13,13,13,0.45), rgba(13,13,13,0.85)), url('images/hero-bg3.jpg');"></div>
+                <div class="slide" style="width: 25% !important; height: 100% !important; background-size: cover !important; background-position: center !important; background-repeat: no-repeat !important; background-image: linear-gradient(rgba(13,13,13,0.45), rgba(13,13,13,0.85)), url('images/hero-bg1.jpg');"></div>
+            </div>
+        </div>
+
+        <!-- Floating Text Content Layer on Top -->
+        <div class="hero-content" style="position: relative !important; z-index: 2 !important; max-width: 600px !important; width: 100% !important; background: rgba(13, 13, 13, 0.65) !important; padding: 40px !important; border-radius: 12px !important; backdrop-filter: blur(8px) !important; -webkit-backdrop-filter: blur(8px) !important; border: 1px solid rgba(255,255,255,0.08) !important; margin-left: 0 !important;">
+            <div class="hero-tags">
+                <span class="tag">2026</span>
+                <span class="tag">MOVIE</span>
+                <span class="tag vj-tag">ACTION</span>
+            </div>
+            <h1 class="hero-title" style="font-size: 3.5rem !important; margin-top: 15px !important; font-weight: 800 !important; line-height: 1.15 !important; color: #fff !important;">Uganda's home for VJ-translated cinema.</h1>
+            <p class="hero-description" style="color: #ccc !important; font-size: 1.2rem !important; margin: 20px 0 30px 0 !important;">Discover the latest movies in Luganda with premium streaming quality and local VJ flavor.</p>
+            <button class="download-btn" onclick="window.location.href='watch.html?video=sample.mp4'" style="width: auto !important;">
+                <i class="fa-solid fa-play"></i> Watch Now
+            </button>
+        </div>
+
+    </section>
+
+
+
+
+            
+           
+
+
+        
+        <!-- Dark ambient theater vignette filter overlay -->
+        <div class="hero-overlay-gradient"></div>
+
+       
+
+
+
+          <!-- Clean Categories Section - Matches your Admin Dashboard selections exactly -->
+        <!-- Clean Categories Section - Matches your Admin uploads flawlessly -->
+    <section class="movies-container">
+        
+                <!-- Dynamic Search Results Section -->
+        
+
+        <div class="category-row" id="trending">
+            <h2 class="category-title">🔥 Trending Right Now</h2>
+            <div class="movie-grid" id="trending-grid"></div>
+        </div>
+
+        <div class="category-row" id="action">
+            <h2 class="category-title">🎬 High Octane Action</h2>
+            <div class="movie-grid" id="action-grid"></div>
+        </div>
+
+        <!-- FIX 1: Cleaned and structured Comedy section layout row -->
+        <div class="category-row" id="comedy">
+            <h2 class="category-title">😂 Pure Comedy Zone</h2>
+            <div class="movie-grid" id="comedy-grid"></div>
+        </div>
+
+        <!-- FIX 2: Fixed id to "series" so it handles your TV Series array perfectly -->
+        <div class="category-row" id="series">
+            <h2 class="category-title">📺 TV Series Mix</h2>
+            <div class="movie-grid" id="series-grid"></div>
+        </div>
+        
+        <div class="category-row" id="drama">
+            <h2 class="category-title">🎭 Intense Drama</h2>
+            <div class="movie-grid" id="drama-grid"></div>
+        </div>
+
+        <div class="category-row" id="animation">
+            <h2 class="category-title">🦊 Animation Zone</h2>
+            <div class="movie-grid" id="animation-grid"></div>
+        </div>
+
+    </section>
+
+
+
+
+    
+
+    <!-- Script fetching movies dynamically with custom floating VJ badges -->
+    <!-- Add this exact opening tag right ABOVE the document.addEventListener line -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.querySelector('.search-input');
+
+    if (searchInput) {
+        searchInput.addEventListener('input', (event) => {
+            const searchQuery = event.target.value.toLowerCase().trim();
+            const movieCards = document.querySelectorAll('.movie-grid .movie-card');
+
+            movieCards.forEach(card => {
+                const textContent = card.textContent.toLowerCase();
+
+                if (searchQuery === '') {
+                    card.style.display = ""; 
+                } else if (textContent.includes(searchQuery)) {
+                    card.style.display = ""; 
+                } else {
+                    card.style.display = "none"; 
+                }
+            });
+        });
+    }
+});
+</script>
+
+<!-- Add this exact closing tag right BELOW the very last bracket line -->
+<section class="pricing-section">
+    <div class="pricing-header">
+        <span class="premium-badge">👑 Premium Plans</span>
+        <h2>Subscribe to unlock downloads</h2>
+        <p>Sign in to browse the full catalog — pick a plan to keep watching offline.</p>
+    </div>
+
+    <div class="pricing-grid">
+        <!-- Daily Card -->
+        <div class="pricing-card">
+            <h3>Daily</h3>
+            <div class="price">UGX 2,000</div>
+            <ul class="features-list">
+                <li>✔ 24-hour access</li>
+                <li>✔ HD streaming</li>
+            </ul>
+            <button class="plan-btn">Choose Daily</button>
+        </div>
+
+        <!-- Weekly Card -->
+        <div class="pricing-card">
+            <h3>Weekly</h3>
+            <div class="price">UGX 7,000</div>
+            <ul class="features-list">
+                <li>✔ 7-day access</li>
+                <li>✔ All premium content</li>
+            </ul>
+            <button class="plan-btn">Choose Weekly</button>
+        </div>
+
+       <!-- Monthly Card -->
+<div class="pricing-card popular">
+    <span class="popular-tag">POPULAR</span>
+    <h3>Monthly</h3>
+    <div class="price">UGX 25,000</div>
+    <ul class="features-list">
+        <li>✔ 30-day access</li>
+        <li>✔ Downloads enabled</li>
+    </ul>
+    <button class="plan-btn highlighted-btn">Choose Monthly</button>
+</div>
+
+
+        <!-- Annual Card -->
+        <div class="pricing-card">
+            <h3>Annual</h3>
+            <div class="price">UGX 200,000</div>
+            <ul class="features-list">
+                <li>✔ 365-day access</li>
+                <li>✔ Maximum savings</li>
+                <li>✔ Downloads enabled</li>
+            </ul>
+            <button class="plan-btn">Choose Annual</button>
+        </div>
+    </div>
+</section>
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UGA STREAM — Premium VJ-translated Cinema</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Paste the Font Awesome link directly below this line -->
+    <link rel="stylesheet" href="https://cloudflare.com">
+</head>
+
+                    <span class="logo-box-footer">US</span>
+                    <span class="logo-text-footer">UGA <span class="ug-text">STREAM</span></span>
+                </div>
+                <p>Premium VJ-translated movies & series streamed in HD. Made for Uganda.</p>
+                
+                <!-- Social Icons Block -->
+                <div class="footer-socials">
+                    <a href="#" class="social-icon-btn"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" class="social-icon-btn"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="#" class="social-icon-btn"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" class="social-icon-btn"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+            </div>
+
+            <!-- Column 2: Quick Links -->
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#movies">Movies</a></li>
+                    <li><a href="#series">Series</a></li>
+                    <li><a href="#categories">Categories</a></li>
+                    <li><a href="#trending">Trending</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 3: Categories -->
+            <div class="footer-column">
+                <h3>Categories</h3>
+                <ul>
+                    <li><a href="#action">Action</a></li>
+                    <li><a href="#comedy">Comedy</a></li>
+                    <li><a href="#drama">Drama</a></li>
+                    <li><a href="#animation">Animation</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 4: Support -->
+            <div class="footer-column">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">FAQs</a></li>
+                    <li><a href="#">Terms of Use</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+
+        </div>
+    </footer>
+
+                <p class="brand-tagline">Premium VJ-translated movies & series streamed in HD. Made for Uganda.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+            </div>
+
+            <!-- Column 2: Quick Links Navigation -->
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Movies</a></li>
+                    <li><a href="#">Series</a></li>
+                    <li><a href="#">Categories</a></li>
+                    <li><a href="#">Trending</a></li>
+                </ul>
+            </div>
+
+                    </div>
+    </footer>
+
+    <!-- ========================================== -->
+    <!-- MODAL OVERLAYS LAYERED STRUCTURE           -->
+    <!-- ========================================== -->
+
+    <!-- Sign Up Modal Box -->
+    <div id="signupModal" class="modal-overlay">
+        <div class="modal-card">
+            <span class="close-modal-btn">&times;</span>
+            <h2>Create an Account</h2>
+            <p>Join UGA STREAM to start streaming your favorite VJ movies.</p>
+            <form id="signupForm">
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter your username" required>
+                </div>
+                <div class="input-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" placeholder="e.g. 0771234567" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Create a password" required>
+                </div>
+                <div class="input-group">
+                    <label>Select Subscription Plan</label>
+                    <div class="modal-plan-selector-container">
+                        <label class="modal-plan-option">
+                            <input type="radio" name="plan" value="daily" checked required>
+                            <div class="plan-option-box"><span class="plan-name">Daily</span><span class="plan-cost">UGX 2,000</span></div>
+                        </label>
+                        <label class="modal-plan-option">
+                            <input type="radio" name="plan" value="weekly">
+                            <div class="plan-option-box"><span class="plan-name">Weekly</span><span class="plan-cost">UGX 7,000</span></div>
+                        </label>
+                        <label class="modal-plan-option">
+                            <input type="radio" name="plan" value="monthly">
+                            <div class="plan-option-box"><span class="plan-name">Monthly</span><span class="plan-cost">UGX 25,000</span></div>
+                        </label>
+                        <label class="modal-plan-option">
+                            <input type="radio" name="plan" value="annual">
+                            <div class="plan-option-box"><span class="plan-name">Annual</span><span class="plan-cost">UGX 200,000</span></div>
+                        </label>
+                    </div>
+                </div>
+                <button type="submit" class="modal-submit-btn">Sign Up Now</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Login Modal Box -->
+    <div id="loginModal" class="modal-overlay">
+        <div class="modal-card">
+            <span class="close-login-btn">&times;</span>
+            <h2>Welcome Back</h2>
+            <p>Sign in to your UGA STREAM account to continue watching.</p>
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="loginPhone">Phone Number</label>
+                    <input type="tel" id="loginPhone" placeholder="Enter your registered phone" required>
+                </div>
+                <div class="input-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="modal-submit-btn">Login Now</button>
+            </form>
+        </div>
+    </div>
+
+        <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const searchInput = document.querySelector('.search-input');
+        
+        // 1. FETCH UPLOADED MOVIES FROM YOUR SERVER
+               async function loadMovies() {
+            try {
+                const response = await fetch('/api/movies');
+                const movies = await response.json();
+                
+                // Clear any leftover placeholders inside the layout grids
+                document.querySelectorAll('.movie-grid').forEach(grid => grid.innerHTML = '');
+                
+                movies.forEach(movie => {
+                    const categoryId = movie.category.toLowerCase().trim();
+                    // FIX: Appended '-grid' to match your HTML id definitions perfectly
+const targetGrid = document.querySelector(`.category-row[id="${categoryId}"] .movie-grid[id="${categoryId}-grid"]`);
+
+                    
+                    if (targetGrid) {
+                        const movieCard = document.createElement('div');
+                                    movieCard.classList.add('movie-card');
+
+                        movieCard.className = 'movie-card';
+                                   movieCard.innerHTML = `
+                <div class="poster-wrapper" onclick="window.location.href='watch.html?video=${movie.videoFile}'">
+                    <img src="${movie.image}" alt="${movie.title}">
+                    <span class="vj-badge">VJ ${movie.vj}</span>
+                </div>
+                <h3 style="font-size: 0.95rem; margin-top: 10px; color: #fff;">${movie.title}</h3>
+
+
+                            </div>
+                            <h3 style="font-size: 0.95rem; margin-top: 10px; color: #fff; font-weight: 600; text-align: left;">${movie.title}</h3>
+                            <button onclick="window.location.href='watch.html?video=${movie.videoFile}'">Watch Now</button>
+                        `;
+                        targetGrid.appendChild(movieCard);
+                    }
+                });
+            } catch (error) {
+                console.error("Failed to load catalog movies from database:", error);
+            }
+        }
+
+        // Run movie loader engine immediately
+        loadMovies();
+
+        // Run movie loader engine immediately
+        loadMovies();
+
+        // 2. LIVE SEARCH SYSTEM FILTERING FOR MOVIES & VJS
+        if (searchInput) {
+            searchInput.addEventListener('input', (event) => {
+                const searchQuery = event.target.value.toLowerCase().trim();
+                const movieCards = document.querySelectorAll('.movie-card');
+                
+                movieCards.forEach(card => {
+                    const titleElement = card.querySelector('h3');
+                    const vjElement = card.querySelector('.vj-badge');
+                    
+                    const titleText = titleElement ? titleElement.textContent.toLowerCase() : '';
+                    const vjText = vjElement ? vjElement.textContent.toLowerCase() : '';
+                    
+                    if (titleText.includes(searchQuery) || vjText.includes(searchQuery)) {
+                        card.style.display = ''; 
+                    } else {
+                        card.style.display = 'none'; 
+                    }
+                });
+            });
+        }
+    });
+    </script>
+
+</body>
+</html>
+
+            <!-- Column 3: Movie Categories List -->
+            <div class="footer-column categories-list">
+                <h3>Categories</h3>
+                <div class="categories-dual-grid">
+                    <ul>
+                        <li><a href="#action">Action</a></li>
+                        <li><a href="#comedy">Comedy</a></li>
+                        <li><a href="#drama">Drama</a></li>
+                        <li><a href="#series">Series</a></li>
+                        <li><a href="#animation">Animation</a></li>
+                    </ul>
+                    <ul>
+                        <li><a href="#">Thriller</a></li>
+                        <li><a href="#">Horror</a></li>
+                        <li><a href="#">Sci-Fi</a></li>
+                        <li><a href="#">Romance</a></li>
+                        <li><a href="#">Family</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Column 4: Platform Support Links -->
+            <div class="footer-column">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">FAQs</a></li>
+                    <li><a href="#">Terms of Use</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+
+        </div>
+        
+        <!-- Bottom copyright legal layout label row -->
+        <div class="footer-bottom">
+            <p>&copy; 2026 UGA STREAM. All Rights Reserved.</p>
+        </div>
+    </footer>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Fetch your movies array dynamically from your Node.js server
+    fetch('http://localhost:5000/api/movies')
+        .then(response => response.json())
+        .then(movies => {
+            // Find your dynamic category containers on the dashboard
+            const trendingGrid = document.querySelector('#trending .movie-grid');
+            const actionGrid = document.querySelector('#action .movie-grid');
+            const comedyGrid = document.querySelector('#comedy .movie-grid');
+            const dramaGrid = document.querySelector('#drama .movie-grid');
+
+            // Clear out any old contents safely before injecting
+            if (trendingGrid) trendingGrid.innerHTML = '';
+            if (actionGrid) actionGrid.innerHTML = '';
+            if (comedyGrid) comedyGrid.innerHTML = '';
+            if (dramaGrid) dramaGrid.innerHTML = '';
+
+            // 2. Loop through your backend database movies and build the theater poster cards
+            movies.forEach(movie => {
+                const cardHTML = `
+                    <div class="movie-card" data-video="${movie.videoFile}">
+                        <img src="${movie.image}" alt="${movie.title}">
+                        <div class="movie-card-overlay">
+                            <span class="play-icon">▶</span>
+                        </div>
+                        <div style="padding: 12px; background: #121212;">
+                            <h3 style="font-size: 1rem; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${movie.title}</h3>
+                            <span style="color: #ff2a6d; font-size: 0.8rem; font-weight: bold;">VJ ${movie.vj}</span>
+                        </div>
+                    </div>
+                `;
+
+                // Append the card to its matching category row matching your backend 'category' string
+                if (movie.category === 'trending' && trendingGrid) trendingGrid.innerHTML += cardHTML;
+                if (movie.category === 'action' && actionGrid) actionGrid.innerHTML += cardHTML;
+                if (movie.category === 'comedy' && document.querySelector('#tv-series .movie-grid')) document.querySelector('#tv-series .movie-grid').innerHTML += cardHTML;
+                if (movie.category === 'drama' && dramaGrid) dramaGrid.innerHTML += cardHTML;
+                if (movie.category === 'animation' && document.querySelector('#animation .movie-grid')) document.querySelector('#animation .movie-grid').innerHTML += cardHTML;
+                if ((movie.category === 'series' || movie.category === 'tv-series') && document.querySelector('#tv-series .movie-grid')) document.querySelector('#tv-series .movie-grid').innerHTML += cardHTML;
+
+
+
+            });
+    // Redirect to your watch.html page when a movie card is clicked
+    setTimeout(() => {
+        const cards = document.querySelectorAll('.movie-card');
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                const videoFile = card.getAttribute('data-video');
+                if (videoFile) {
+                    window.location.href = `watch.html?video=${videoFile}`;
+                }
+            });
+        });
+    }, 200);
+
+        })
+        
+        .catch(err => console.error("Error loading movies from API:", err));
+
+    // 3. Real-Time Search Bar Filter Functionality
+    const searchInput = document.querySelector('.search-input');
+    if (searchInput) {
+        searchInput.addEventListener('input', (event) => {
+            const searchQuery = event.target.value.toLowerCase().trim();
+            const movieCards = document.querySelectorAll('.movie-card');
+            
+            movieCards.forEach(card => {
+                const titleElement = card.querySelector('h3');
+                const vjElement = card.querySelector('span');
+                const titleText = titleElement ? titleElement.textContent.toLowerCase() : '';
+                const vjText = vjElement ? vjElement.textContent.toLowerCase() : '';
+                
+                if (titleText.includes(searchQuery) || vjText.includes(searchQuery)) {
+                    card.style.display = ''; 
+                } else {
+                    card.style.display = 'none'; 
+                }
+            });
+        });
+    }
+});
+</script>
+
+
+
+
+
+<!-- Sign Up Modal Popup Box -->
+<div id="signupModal" class="modal-overlay">
+    <div class="modal-card">
+        <span class="close-modal-btn">&times;</span>
+        <h2>Create an Account</h2>
+        <p>Join UGA STREAM to start streaming your favorite VJ movies.</p>
+        
+ <form id="signupForm">
+    <!-- 1. Username Field -->
+    <div class="input-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="Enter your username" required>
+    </div>
+    
+    <!-- 2. Phone Number Field -->
+    <div class="input-group">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" placeholder="e.g. 0771234567" required>
+    </div>
+
+    <!-- 3. Password Field -->
+    <div class="input-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Create a password" required>
+    </div>
+
+    <!-- 4. Subscription Plan Field (Moved to the End) -->
+    <!-- Visual Interactive Subscription Selection Cards -->
+<div class="input-group">
+    <label>Select Subscription Plan</label>
+    <div class="modal-plan-selector-container">
+        
+        <label class="modal-plan-option">
+            <input type="radio" name="plan" value="daily" checked required>
+            <div class="plan-option-box">
+                <span class="plan-name">Daily</span>
+                <span class="plan-cost">UGX 2,000</span>
+            </div>
+        </label>
+
+        <label class="modal-plan-option">
+            <input type="radio" name="plan" value="weekly">
+            <div class="plan-option-box">
+                <span class="plan-name">Weekly</span>
+                <span class="plan-cost">UGX 7,000</span>
+            </div>
+        </label>
+
+        <label class="modal-plan-option">
+            <input type="radio" name="plan" value="monthly">
+            <div class="plan-option-box">
+                <span class="plan-name">Monthly</span>
+                <span class="plan-cost">UGX 25,000</span>
+            </div>
+        </label>
+
+        <label class="modal-plan-option">
+            <input type="radio" name="plan" value="annual">
+            <div class="plan-option-box">
+                <span class="plan-name">Annual</span>
+                <span class="plan-cost">UGX 200,000</span>
+            </div>
+        </label>
+
+    </div>
+</div>
+
+    
+    <!-- 5. Submit Button -->
+    <button type="submit" class="modal-submit-btn">Sign Up Now</button>
+</form>
+
+       
+</div>
+<!-- JavaScript to make the Sign Up button and modal work -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const signupModal = document.getElementById('signupModal');
+    const signupBtn = document.querySelector('.signup-btn');
+    const closeModalBtn = document.querySelector('.close-modal-btn');
+    const signupForm = document.getElementById('signupForm');
+
+    if (signupBtn && signupModal) {
+        signupBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            signupModal.style.display = 'flex';
+        });
+    }
+
+    if (closeModalBtn && signupModal) {
+        closeModalBtn.addEventListener('click', () => {
+            signupModal.style.display = 'none';
+        });
+    }
+
+    window.addEventListener('click', (e) => {
+        if (e.target === signupModal) {
+            signupModal.style.display = 'none';
+        }
+    });
+
+    if (signupForm) {
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const phone = document.getElementById('phone').value;
+            const password = document.getElementById('password').value;
+            const plan = document.querySelector('input[name="plan"]:checked').value;
+
+            try {
+                const response = await fetch('/api/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, phone, plan, password })
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    alert(`Account created successfully for ${username} with the ${plan} plan!`);
+                    signupModal.style.display = 'none';
+                    signupForm.reset();
+                } else {
+                    alert(`Signup Failed: ${result.message}`);
+                }
+            } catch (error) {
+                console.error('Error connecting to backend:', error);
+                alert('Could not connect to the registration server. Please try again.');
+            }
+        });
+    }
+}); // <-- This closing bracket pairs perfectly with line 439!
+</script>
+<!-- Login Modal Popup Box -->
+<div id="loginModal" class="modal-overlay">
+    <div class="modal-card">
+        <span class="close-login-btn" style="position: absolute; top: 15px; right: 20px; font-size: 2rem; color: #8c8c8c; cursor: pointer;">&times;</span>
+        <h2>Welcome Back</h2>
+        <p>Sign in to your UGA STREAM account to continue watching.</p>
+        
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="loginPhone">Phone Number</label>
+                <input type="tel" id="loginPhone" placeholder="Enter your registered phone" required>
+            </div>
+            <div class="input-group">
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" placeholder="Enter your password" required>
+            </div>
+            <button type="submit" class="modal-submit-btn">Login Now</button>
+        </form>
+    </div>
+</div>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Modal Selectors
+        const signupModal = document.getElementById('signupModal');
+        const loginModal = document.getElementById('loginModal');
+        const signupBtn = document.querySelector('.signup-btn');
+        const loginLink = document.querySelector('.login-link');
+        const closeModalBtn = document.querySelector('.close-modal-btn');
+        const closeLoginBtn = document.querySelector('.close-login-btn');
+        const signupForm = document.getElementById('signupForm');
+        const loginForm = document.getElementById('loginForm');
+        const searchInput = document.querySelector('.search-input');
+
+        // Fetch Movies Dynamic Grid Content from API
+               async function loadMovies() {
+            try {
+                const response = await fetch('/api/movies');
+                const movies = await response.json();
+                
+                // Clear any leftover placeholder text frames inside the layout grids
+                document.querySelectorAll('.movie-grid').forEach(grid => grid.innerHTML = '');
+                
+                movies.forEach(movie => {
+                    const categoryId = movie.category.toLowerCase().trim();
+                    // Match your exact grid container id scheme (e.g., trending-grid, action-grid)
+                    const targetGrid = document.querySelector(`.category-row[id="${categoryId}"] .movie-grid[id="${categoryId}-grid"]`);
+                    
+                    if (targetGrid) {
+                        const movieCard = document.createElement('div');
+                        movieCard.className = 'movie-card';
+                        
+                        // Clean, un-broken backtick layout template string mapping
+                        movieCard.innerHTML = `
+                            <div class="poster-wrapper" onclick="window.location.href='watch.html?video=${movie.videoFile}'" style="cursor: pointer;">
+                                <img src="${movie.image}" alt="${movie.title}">
+                                <span class="vj-badge">VJ ${movie.vj}</span>
+                            </div>
+                            <h3 style="font-size: 0.95rem; margin-top: 10px; color: #fff; font-weight: 600; text-align: left;">${movie.title}</h3>
+                            <button type="button" onclick="window.location.href='watch.html?video=${movie.videoFile}'">Watch Now</button>
+                        `;
+                        targetGrid.appendChild(movieCard);
+                    }
+                });
+            } catch (error) {
+                console.error("Failed to load catalog movies from database:", error);
+            }
+        }
+
+        // Run movie loader engine immediately
+        loadMovies();
+
+        // Client-side Live Search Implementation
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase().trim();
+                document.querySelectorAll('.movie-card').forEach(card => {
+                    const txt = card.textContent.toLowerCase();
+                    card.style.display = txt.includes(query) ? '' : 'none';
+                });
+            });
+        }
+
+        // Toggle Trigger View Logic
+        if (signupBtn) signupBtn.addEventListener('click', (e) => { e.preventDefault(); signupModal.style.display = 'flex'; });
+        if (loginLink) loginLink.addEventListener('click', (e) => { e.preventDefault(); loginModal.style.display = 'flex'; });
+        if (closeModalBtn) closeModalBtn.addEventListener('click', () => signupModal.style.display = 'none');
+        if (closeLoginBtn) closeLoginBtn.addEventListener('click', () => loginModal.style.display = 'none');
+
+        window.addEventListener('click', (e) => {
+            if (e.target === signupModal) signupModal.style.display = 'none';
+            if (e.target === loginModal) loginModal.style.display = 'none';
+        });
+
+               // HANDLE USER REGISTRATION AND POST TO SERVER
+        
+        if (signupForm) {
+            signupForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                // Extract values directly from your modal form inputs
+                const username = document.getElementById('username').value;
+                const phone = document.getElementById('phone').value;
+                const password = document.getElementById('password').value;
+                
+                // Reads whichever premium plan radio button is currently checked
+                const planChecked = document.querySelector('input[name="plan"]:checked');
+                const plan = planChecked ? planChecked.value : 'none';
+
+                try {
+                    const response = await fetch('/api/signup', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, phone, plan, password })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        alert(`🎉 Account created successfully! Welcome ${username}.`);
+                        signupForm.reset();
+                        
+                        // Automatically close your modal layout box
+                        const signupModal = document.getElementById('signupModal');
+                        if (signupModal) signupModal.style.display = 'none';
+                    } else {
+                        alert('❌ Signup failed: ' + data.message);
+                    }
+                } catch (error) {
+                    console.error('Error submitting signup data:', error);
+                    alert('❌ Connection failure: Could not reach the server.');
+                }
+            });
+        }
+
+
+        // Async API Actions Login Authentication
+        if (loginForm) {
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const phone = document.getElementById('loginPhone').value;
+                const password = document.getElementById('loginPassword').value;
+                try {
+                    const response = await fetch('/api/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ phone, password })
+                    });
+                    const resData = await response.json();
+                    if (response.ok && resData.success) {
+                        alert(`Welcome back, ${resData.user.username}! Active Tier: ${resData.user.plan.toUpperCase()}`);
+                        loginModal.style.display = 'none';
+                        loginForm.reset();
+                    } else { alert(`Access Denied: ${resData.message}`); }
+                } catch { alert('Network connection lost to auth server.'); }
+            });
+        }
+    });
+    </script>
+            <!-- Floating WhatsApp Support Button -->
+    <a href="https://wa.me." 
+       target="_blank" 
+       class="whatsapp-floating-btn" 
+       style="position: fixed !important; bottom: 30px !important; right: 30px !important; width: 60px !important; height: 60px !important; background-color: #25d366 !important; color: #fff !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important; z-index: 999999 !important; text-decoration: none !important;">
+
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.713-1.457L0 24zm6.59-4.846c1.66.986 3.288 1.479 5.342 1.48 5.389 0 9.772-4.342 9.775-9.676.002-2.585-1.002-5.016-2.828-6.843A9.544 9.544 0 0 0 12.006 1.39C6.62 1.39 2.235 5.732 2.233 11.066c-.001 2.11.561 4.16 1.63 5.973l-.975 3.562 3.659-.947zm11.067-5.414c-.299-.149-1.764-.868-2.038-.967-.273-.1-.473-.149-.672.15-.199.299-.772.968-.946 1.168-.175.199-.349.224-.648.075-1.123-.561-1.921-.979-2.686-2.287-.199-.344.199-.319.57-.107.332.19.473.224.547.373.075.149.037.274-.019.373-.056.1-.473 1.144-.648 1.562-.17.41-.358.353-.493.353h-.423c-.149 0-.398.056-.606.284-.208.229-.796.777-.796 1.896s.812 2.195.925 2.344c.113.149 1.599 2.441 3.874 3.422 1.816.782 2.44.629 2.86.587.659-.064 1.764-.72 2.013-1.417.25-.696.25-1.293.174-1.418-.075-.124-.274-.199-.573-.348z"/>
+        </svg>
+    </a>
+
+
+</body>
+</html>

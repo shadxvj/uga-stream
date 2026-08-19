@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UGA STREAM — Streaming Theater</title>
+    <link rel="stylesheet" href="https://cloudflare.com">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+        /* Top Navigation Header bar */
+        .watch-header {
+            padding: 20px 4%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+            position: absolute;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            box-sizing: border-box;
+        }
+        .back-btn {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: color 0.2s;
+        }
+        .back-btn:hover {
+            color: #f39c12;
+        }
+        /* Theater Player Box Container Layout */
+        .player-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #000;
+            width: 100%;
+            height: 100%;
+        }
+        video {
+            width: 100%;
+            height: 100%;
+            max-height: 100vh;
+            object-fit: contain; /* Keeps cinema letterboxing intact */
+        }
+    </style>
+</head>
+<body>
+
+       <!-- Back Navigation Top Bar Container -->
+    <header class="watch-header">
+        <a href="index.html" class="back-btn">
+            <i class="fa-solid fa-arrow-left"></i> Back to Home
+        </a>
+        <!-- PASTE THIS BUTTON LINE HERE -->
+        <a id="directDownloadBtn" href="#" style="background-color: #e50914; color: white; text-decoration: none; padding: 10px 20px; font-weight: bold; border-radius: 4px; float: right; margin-top: -5px;">Download Movie</a>
+    </header>
+
+
+    <!-- Main Streaming Target Canvas Content -->
+    <main class="player-container">
+        <video id="ugaStreamVideo" controls autoplay controlsList="nodownload">
+            <source id="videoSource" src="" type="video/mp4">
+            Your browser does not support HTML video playback mechanics.
+        </video>
+    </main>
+
+          <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const movieFile = urlParams.get('video');
+
+        if (movieFile) {
+            const video = document.getElementById('ugaStreamVideo');
+            const downloadBtn = document.getElementById('directDownloadBtn');
+            
+            // Connect player streaming view source canvas engine
+            video.src = `/stream/${movieFile}`;
+            video.load();
+
+            // FIX: Directs your download button action directly straight into your forced file attachment route
+            if (downloadBtn) {
+                downloadBtn.href = `/download/${movieFile}`;
+            }
+        } else {
+            window.location.href = 'index.html';
+        }
+    </script>
+
+
+    </script>
+</body>
+</html>
