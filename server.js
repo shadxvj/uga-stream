@@ -64,7 +64,7 @@ const storage = multer.diskStorage({
         if (file.fieldname === "video") {
             cb(null, path.join(__dirname, 'videos')); // Saves movies here
         } else if (file.fieldname === "poster") {
-            cb(null, path.join(__dirname, 'public', 'images')); // Saves posters here
+            cb(null, path.join(__dirname, 'images')); // Saves posters here
         }
     },
     filename: function (req, file, cb) {
