@@ -2,6 +2,36 @@ const express = require('express');
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+
+// Configure Cloudinary using your Render Environment Variables
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+// Configure storage configuration for your movie videos
+const videoStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'uga-stream-videos',
+    resource_type: 'video', 
+    allowed_formats: ['mp4', 'mkv', 'avi', 'mov']
+  },
+});
+
+// Configure storage configuration for your movie cover poster images
+const imageStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'uga-stream-posters',
+    resource_type: 'image',
+    allowed_formats: ['jpg', 'jpeg', 'png', 'webp']
+  },
+});
+
 const app = express();
 const PORT = 5000;
 
@@ -60,21 +90,19 @@ app.post('/api/signup', (req, res) => {
 
 // Configure Multer Storage for both Videos and Images
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        if (file.fieldname === "video") {
-            cb(null, path.join(__dirname, 'videos')); // Saves movies here
-        } else if (file.fieldname === "poster") {
-            cb(null, path.join(__dirname, 'images')); // Saves posters here
+   const upload = multer({
+    storage: new CloudinaryStorage({
+        cloudinary: cloudinary,
+        params: async (req, file) => {
+            const isVideo = file.fieldname === 'video';
+            return {
+                folder: isVideo ? 'uga-stream-videos' : 'uga-stream-posters',
+                resource_type: isVideo ? 'video' : 'image',
+                allowed_formats: isVideo ? ['mp4', 'mkv', 'avi', 'mov'] : ['jpg', 'jpeg', 'png', 'webp']
+            };
         }
-    },
-    filename: function (req, file, cb) {
-        // Keeps the original extension but adds a timestamp to avoid duplicates
-        const uniqueSuffix = Date.now() + path.extname(file.originalname);
-        cb(null, file.fieldname + '-' + uniqueSuffix);
-    }
+    })
 });
-
-const upload = multer({ storage: storage });
 
 // API Endpoint to process the upload form from Admin Panel
 app.post('/api/upload-movie', upload.fields([{ name: 'video', maxCount: 1 }, { name: 'poster', maxCount: 1 }]), (req, res) => {
@@ -86,8 +114,8 @@ app.post('/api/upload-movie', upload.fields([{ name: 'video', maxCount: 1 }, { n
             return res.status(400).send('Please upload both a video file and a poster image.');
         }
 
-        const videoFile = req.files['video'][0].filename;
-        const posterFile = req.files['poster'][0].filename;
+        const videoUrl = req.files['video'][0].path;
+const posterUrl = req.files['poster'][0].path;
 
         // Create a new movie entry
         const newMovie = {
@@ -95,8 +123,9 @@ app.post('/api/upload-movie', upload.fields([{ name: 'video', maxCount: 1 }, { n
             title: title,
             category: category,
             vj: vj,
-            image: `images/${posterFile}`, // Web-accessible path to image
-            videoFile: videoFile
+            image: posterUrl,
+videoFile: videoUrl
+
         };
 
         moviesDatabase.push(newMovie);
