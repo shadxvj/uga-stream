@@ -2046,3 +2046,45 @@ footer ul li a:hover {
     transform: scale(1.1);
     background-color: #128c7e !important;
 }
+/* --- Mobile Responsive Fixes --- */
+@media (max-width: 768px) {
+    /* Make the navigation bar wrap cleanly on small screens */
+    header, nav, .navber, .navbar {
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        padding: 10px !important;
+        height: auto !important;
+    }
+
+    /* Stack links vertically or make them wrap */
+    nav ul, .nav-links, .nav-container {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 10px !important;
+        margin: 10px 0 !important;
+        width: 100% !important;
+    }
+
+    /* Ensure the search bar and authentication buttons wrap instead of overflowing */
+    .search-box, .auth-buttons, .login-btn, .signup-btn {
+        width: 90% !important;
+        margin: 5px auto !important;
+        display: block !important;
+        text-align: center !important;
+    }
+
+    /* Scale down your massive hero text size so it doesn't push sections off-screen */
+    .hero-content h1, h1 {
+        font-size: 1.8rem !important;
+        line-height: 1.3 !important;
+    }
+
+    /* Stack your hero banner content layout vertically */
+    .hero, .main-container {
+        flex-direction: column-reverse !important;
+        padding: 20px 10px !important;
+        background-size: cover !important;
+    }
+}
