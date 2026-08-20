@@ -2057,46 +2057,76 @@ footer ul li a:hover {
         height: auto !important;
     }
 
-  /* Custom Mobile Responsive Patch for UGA STREAM Navbar */
-@media screen and (max-width: 900px) {
-  /* Fix the main header bar container */
-  .navbar, nav, header {
+  /* UGA STREAM Mobile Responsive Layout Adjustments */
+@media screen and (max-width: 991px) {
+  /* Prevent horizontal view scrolling across the whole site */
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  /* Stack the main navigation container items vertically */
+  header.navbar {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
-    gap: 15px !important;
     height: auto !important;
     padding: 15px 10px !important;
+    gap: 15px !important;
   }
 
-  /* Force navigation list items to center and wrap nicely */
-  .navbar ul, .nav-links, nav a {
+  /* Center the middle list of navigation links and let them wrap */
+  header.navbar .nav-links {
     display: flex !important;
     flex-wrap: wrap !important;
     justify-content: center !important;
-    gap: 10px !important;
+    gap: 12px !important;
+    width: 100% !important;
+    margin: 5px 0 !important;
+  }
+
+  /* Re-arrange the authentication block row into a centered wrapping column */
+  header.navbar .nav-auth {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 15px !important;
     width: 100% !important;
   }
 
-  /* Target the movie search box explicitly */
-  input[type="text"], [class*="search"] {
+  /* Make the search container expand cleanly on narrow screens */
+  header.navbar .search-container {
     width: 90% !important;
-    max-width: 350px !important;
-    margin: 5px auto !important;
+    max-width: 400px !important;
+    margin-bottom: 5px !important;
+    display: flex !important;
   }
 
-  /* Target your Login and Sign Up button elements */
-  .login-btn, .signup-btn, [class*="login"], [class*="btn"] {
-    display: inline-block !important;
-    width: auto !important;
-    min-width: 80px !important;
-    text-align: center !important;
+  header.navbar .search-input {
+    width: 100% !important;
   }
 
-  /* Prevent text headers from blowing past the viewport limits */
-  h1, .hero-content h1 {
-    font-size: 2rem !important;
-    line-height: 1.2 !important;
+  /* Keep the Login text link and Sign Up button inline and fully visible */
+  header.navbar .login-link {
+    margin: 0 10px !important;
+    white-space: nowrap !important;
+  }
+
+  header.navbar .signup-btn {
+    padding: 8px 20px !important;
+    white-space: nowrap !important;
+  }
+
+  /* Scale down the cinematic hero banner title so it fits phone viewports */
+  .hero-title {
+    font-size: 2.2rem !important;
     text-align: center !important;
+  }
+  
+  .hero-content {
+    padding: 20px !important;
+    margin: 10px !important;
   }
 }
