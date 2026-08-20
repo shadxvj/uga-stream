@@ -2057,34 +2057,46 @@ footer ul li a:hover {
         height: auto !important;
     }
 
-    /* Stack links vertically or make them wrap */
-    nav ul, .nav-links, .nav-container {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        gap: 10px !important;
-        margin: 10px 0 !important;
-        width: 100% !important;
-    }
+  /* Custom Mobile Responsive Patch for UGA STREAM Navbar */
+@media screen and (max-width: 900px) {
+  /* Fix the main header bar container */
+  .navbar, nav, header {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 15px !important;
+    height: auto !important;
+    padding: 15px 10px !important;
+  }
 
-    /* Ensure the search bar and authentication buttons wrap instead of overflowing */
-    .search-box, .auth-buttons, .login-btn, .signup-btn {
-        width: 90% !important;
-        margin: 5px auto !important;
-        display: block !important;
-        text-align: center !important;
-    }
+  /* Force navigation list items to center and wrap nicely */
+  .navbar ul, .nav-links, nav a {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
 
-    /* Scale down your massive hero text size so it doesn't push sections off-screen */
-    .hero-content h1, h1 {
-        font-size: 1.8rem !important;
-        line-height: 1.3 !important;
-    }
+  /* Target the movie search box explicitly */
+  input[type="text"], [class*="search"] {
+    width: 90% !important;
+    max-width: 350px !important;
+    margin: 5px auto !important;
+  }
 
-    /* Stack your hero banner content layout vertically */
-    .hero, .main-container {
-        flex-direction: column-reverse !important;
-        padding: 20px 10px !important;
-        background-size: cover !important;
-    }
+  /* Target your Login and Sign Up button elements */
+  .login-btn, .signup-btn, [class*="login"], [class*="btn"] {
+    display: inline-block !important;
+    width: auto !important;
+    min-width: 80px !important;
+    text-align: center !important;
+  }
+
+  /* Prevent text headers from blowing past the viewport limits */
+  h1, .hero-content h1 {
+    font-size: 2rem !important;
+    line-height: 1.2 !important;
+    text-align: center !important;
+  }
 }
