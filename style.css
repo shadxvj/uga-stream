@@ -271,7 +271,7 @@ body {
     width: 340px;          /* Clean fixed desktop card width block */
     height: 460px;         /* Standard streaming vertical poster size aspect ratio */
     border-radius: 12px;
-    border: 1px solid rgba(255, 42, 109, 0.25);
+    border: 1px solid transparent !important;
     overflow: hidden;
     position: relative;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
