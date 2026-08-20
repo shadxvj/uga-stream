@@ -2138,3 +2138,26 @@ footer ul li a:hover {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
 }
+/* Fix navigation bar alignment issues */
+header.navbar {
+    display: flex !important;
+    align-items: center !important; /* Vertically centers all elements inside the header */
+    justify-content: space-between !important;
+    padding: 15px 4% !important; /* Adds uniform spacing around elements */
+    height: auto !important;
+    min-height: 70px !important;
+}
+
+/* Ensure the authorization and search block elements align nicely */
+.nav-auth {
+    display: flex !important;
+    align-items: center !important; /* Centers the search bar, login, and signup vertically */
+    gap: 15px !important;
+    margin: 0 !important;
+}
+
+/* Align search input text fields and icons */
+.search-container {
+    display: flex !important;
+    align-items: center !important;
+}
