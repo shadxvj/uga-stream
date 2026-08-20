@@ -2176,7 +2176,103 @@ header.navbar .nav-auth {
     gap: 15px !important;
 }
 
-/* 2. Mobile Responsive Structure Rules */
 /* ====================================================
-   FIX ALL MOBILE OVERLAPS & VERTICAL SPACING FOR PHONE
+   CLEAN MOBILE LAYOUT — NO OVERLAPS & PROPORTIONAL SIZES
    ==================================================== */
+@media screen and (max-width: 991px) {
+    html, body {
+        overflow-x: hidden !important;
+        width: 100% !important;
+    }
+
+    /* 1. Make the header navigation bar its own separate section up top */
+    header.navbar {
+        display: flex !important;
+        flex-direction: column !important;
+        position: relative !important; /* Pushes it away from the background movie text */
+        background: #0d0d0d !important; /* Solid dark bar so everything is clear to read */
+        width: 100% !important;
+        height: auto !important;
+        padding: 15px 10px !important;
+        gap: 12px !important;
+    }
+
+    /* 2. Group and center menu link text tags nicely */
+    header.navbar .nav-links {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 12px !important;
+        width: 100% !important;
+        margin: 5px 0 !important;
+    }
+
+    header.navbar .nav-links a {
+        font-size: 0.9rem !important;
+        color: #ccc !important;
+        text-decoration: none !important;
+    }
+
+    /* 3. Handle search bar and authorization buttons */
+    header.navbar .nav-auth {
+        display: flex !important;
+        flex-direction: row !important; /* Keep search, login, signup aligned neatly */
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 15px !important;
+        width: 100% !important;
+    }
+
+    /* Minimize search input container width */
+    header.navbar .search-container {
+        width: 90% !important;
+        max-width: 280px !important;
+    }
+
+    header.navbar .search-input {
+        width: 100% !important;
+        padding: 6px 12px !important;
+        font-size: 0.85rem !important;
+    }
+
+    /* Style login text link */
+    header.navbar .login-link {
+        color: #fff !important;
+        font-size: 0.9rem !important;
+        text-decoration: none !important;
+    }
+
+    /* Minimize sign up button size */
+    header.navbar .signup-btn {
+        background: #e50914 !important;
+        color: #fff !important;
+        padding: 6px 16px !important;
+        font-size: 0.85rem !important;
+        border-radius: 4px !important;
+    }
+
+    /* 4. Minimize the massive background text sizes so it looks clean */
+    .hero-section {
+        padding: 30px 5% !important;
+        min-height: auto !important;
+    }
+
+    .hero-title {
+        font-size: 1.8rem !important; /* Drastically minimizes your text scale */
+        line-height: 1.3 !important;
+        text-align: center !important;
+        margin-top: 10px !important;
+    }
+
+    .hero-description {
+        font-size: 0.95rem !important;
+        text-align: center !important;
+        margin: 10px 0 !important;
+    }
+
+    .hero-content {
+        padding: 15px !important;
+        width: 100% !important;
+    }
+}
