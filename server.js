@@ -88,21 +88,21 @@ app.post('/api/signup', (req, res) => {
     }
 });
 
-// Configure Multer Storage for both Videos and Images
-const storage = multer.diskStorage({
-   const upload = multer({
-    storage: new CloudinaryStorage({
-        cloudinary: cloudinary,
-        params: async (req, file) => {
-            const isVideo = file.fieldname === 'video';
-            return {
-                folder: isVideo ? 'uga-stream-videos' : 'uga-stream-posters',
-                resource_type: isVideo ? 'video' : 'image',
-                allowed_formats: isVideo ? ['mp4', 'mkv', 'avi', 'mov'] : ['jpg', 'jpeg', 'png', 'webp']
-            };
-        }
-    })
+// Configure Multer Storage for Cloudinary (Both Videos and Images)
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: async (req, file) => {
+        const isVideo = file.fieldname === 'video';
+        return {
+            folder: isVideo ? 'uga-stream-videos' : 'uga-stream-posters',
+            resource_type: isVideo ? 'video' : 'image',
+            allowed_formats: isVideo ? ['mp4', 'mkv', 'avi', 'mov'] : ['jpg', 'jpeg', 'png', 'webp']
+        };
+    }
 });
+
+const upload = multer({ storage: storage });
+
 
 // API Endpoint to process the upload form from Admin Panel
 app.post('/api/upload-movie', upload.fields([{ name: 'video', maxCount: 1 }, { name: 'poster', maxCount: 1 }]), (req, res) => {
