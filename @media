@@ -2177,71 +2177,112 @@ header.navbar .nav-auth {
 }
 
 /* 2. Mobile Responsive Structure Rules */
+/* ====================================================
+   FIX ALL MOBILE OVERLAPS & VERTICAL SPACING FOR PHONE
+   ==================================================== */
 @media screen and (max-width: 991px) {
     html, body {
         overflow-x: hidden !important;
         width: 100% !important;
     }
 
-    /* Stack sections into clean vertical blocks */
+    /* 1. Fix Header Bar Container - Stop the overlaps */
     header.navbar {
+        display: flex !important;
         flex-direction: column !important;
-        align-items: center !important;
+        position: relative !important; /* Forces it to sit neatly ABOVE the hero text instead of overlapping it */
+        background: rgba(13, 13, 13, 0.95) !important; /* Dark solid backdrop so text links are easy to read */
+        width: 100% !important;
+        height: auto !important;
+        padding: 15px 10px !important;
         gap: 15px !important;
-        padding: 15px !important;
+        z-index: 999 !important;
     }
 
-    /* Wrap categoric menu lists into centermost layout blocks */
+    /* 2. Style & Center Navigation Menu Items */
     header.navbar .nav-links {
+        display: flex !important;
         flex-wrap: wrap !important;
+        flex-direction: row !important;
         justify-content: center !important;
-        gap: 10px !important;
+        align-items: center !important;
+        gap: 12px !important;
         width: 100% !important;
         margin: 5px 0 !important;
     }
 
-    /* Format search options and links into a balanced block row underneath */
+    header.navbar .nav-links a {
+        font-size: 0.95rem !important;
+        padding: 4px 8px !important;
+        color: #fff !important;
+    }
+
+    /* 3. Style & Center Search Bar / Login Buttons */
     header.navbar .nav-auth {
+        display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
         gap: 12px !important;
         width: 100% !important;
     }
 
-    /* Let the search container expand wide across mobile grids */
+    /* Fix White Search input box container spacing */
     header.navbar .search-container {
-        width: 90% !important;
-        max-width: 360px !important;
+        width: 85% !important;
+        max-width: 320px !important;
         display: flex !important;
-        justify-content: center !important;
+        position: relative !important;
     }
 
     header.navbar .search-input {
         width: 100% !important;
+        padding: 8px 35px 8px 12px !important;
+        border-radius: 20px !important;
     }
 
-    /* Group user auth tools inline side by side */
+    /* Push Login text link and Sign Up button into a separate clear row */
     header.navbar .login-link {
         display: inline-block !important;
-        margin: 5px 12px !important;
+        color: #e50914 !important; /* Bold Red accent color so it stands out */
+        font-weight: 600 !important;
+        margin: 5px 0 !important;
+        text-decoration: none !important;
     }
 
     header.navbar .signup-btn {
-        display: inline-block !important;
-        width: auto !important;
-        padding: 8px 24px !important;
+        display: block !important;
+        width: 130px !important;
+        text-align: center !important;
+        padding: 8px 0 !important;
+        border-radius: 4px !important;
     }
 
-    /* Scale hero layout headers dynamically for text spacing */
+    /* 4. Push Hero Section down so it clears the new expanded navbar area */
+    main.content-wrapper {
+        margin-top: 0 !important;
+    }
+
+    .hero-section {
+        min-height: calc(85vh - 60px) !important;
+        padding: 40px 5% !important;
+    }
+
+    /* Dynamic adjustments to shrink the large main headline */
     .hero-title {
-        font-size: 2rem !important;
-        line-height: 1.2 !important;
+        font-size: 1.8rem !important; /* Scales down the title size so it doesn't crowd out your links */
+        line-height: 1.25 !important;
         text-align: center !important;
     }
 
+    .hero-description {
+        font-size: 1rem !important;
+        text-align: center !important;
+        margin: 15px 0 !important;
+    }
+    
     .hero-content {
-        padding: 24px !important;
-        margin: 15px !important;
-        max-width: 90% !important;
+        padding: 20px !important;
+        margin: 0 auto !important;
+        width: 95% !important;
     }
 }
