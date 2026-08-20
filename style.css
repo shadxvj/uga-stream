@@ -2148,16 +2148,100 @@ header.navbar {
     min-height: 70px !important;
 }
 
-/* Ensure the authorization and search block elements align nicely */
-.nav-auth {
-    display: flex !important;
-    align-items: center !important; /* Centers the search bar, login, and signup vertically */
-    gap: 15px !important;
-    margin: 0 !important;
-}
+/* ==========================================
+   FINAL UNIFIED NAVBAR RESPONSIVE PATCH
+   ========================================== */
 
-/* Align search input text fields and icons */
-.search-container {
+/* 1. Global Desktop Alignment Rule */
+header.navbar {
     display: flex !important;
     align-items: center !important;
+    justify-content: space-between !important;
+    padding: 12px 4% !important;
+    min-height: 75px !important;
+    height: auto !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+header.navbar .nav-links {
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+}
+
+header.navbar .nav-auth {
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+}
+
+/* 2. Mobile Responsive Structure Rules */
+@media screen and (max-width: 991px) {
+    html, body {
+        overflow-x: hidden !important;
+        width: 100% !important;
+    }
+
+    /* Stack sections into clean vertical blocks */
+    header.navbar {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 15px !important;
+        padding: 15px !important;
+    }
+
+    /* Wrap categoric menu lists into centermost layout blocks */
+    header.navbar .nav-links {
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 10px !important;
+        width: 100% !important;
+        margin: 5px 0 !important;
+    }
+
+    /* Format search options and links into a balanced block row underneath */
+    header.navbar .nav-auth {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 12px !important;
+        width: 100% !important;
+    }
+
+    /* Let the search container expand wide across mobile grids */
+    header.navbar .search-container {
+        width: 90% !important;
+        max-width: 360px !important;
+        display: flex !important;
+        justify-content: center !important;
+    }
+
+    header.navbar .search-input {
+        width: 100% !important;
+    }
+
+    /* Group user auth tools inline side by side */
+    header.navbar .login-link {
+        display: inline-block !important;
+        margin: 5px 12px !important;
+    }
+
+    header.navbar .signup-btn {
+        display: inline-block !important;
+        width: auto !important;
+        padding: 8px 24px !important;
+    }
+
+    /* Scale hero layout headers dynamically for text spacing */
+    .hero-title {
+        font-size: 2rem !important;
+        line-height: 1.2 !important;
+        text-align: center !important;
+    }
+
+    .hero-content {
+        padding: 24px !important;
+        margin: 15px !important;
+        max-width: 90% !important;
+    }
 }
