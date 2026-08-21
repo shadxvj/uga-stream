@@ -15,6 +15,19 @@
             <span class="logo-box">US</span>
             <span class="logo-text">UGA <span class="ug-text">STREAM</span></span>
         </div>
+                <div class="logo-container">
+            <span class="logo-box">US</span>
+            <span class="logo-text">UGA <span class="ug-text">STREAM</span></span>
+        </div>
+
+        <button class="menu-toggle" id="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav class="nav-links" id="nav-links">
+            <a href="#" class="active">Home</a>
         <nav class="nav-links">
             <a href="#" class="active">Home</a>
             <a href="#trending">Trending</a>
@@ -884,6 +897,16 @@ document.addEventListener('DOMContentLoaded', () => {
             <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.713-1.457L0 24zm6.59-4.846c1.66.986 3.288 1.479 5.342 1.48 5.389 0 9.772-4.342 9.775-9.676.002-2.585-1.002-5.016-2.828-6.843A9.544 9.544 0 0 0 12.006 1.39C6.62 1.39 2.235 5.732 2.233 11.066c-.001 2.11.561 4.16 1.63 5.973l-.975 3.562 3.659-.947zm11.067-5.414c-.299-.149-1.764-.868-2.038-.967-.273-.1-.473-.149-.672.15-.199.299-.772.968-.946 1.168-.175.199-.349.224-.648.075-1.123-.561-1.921-.979-2.686-2.287-.199-.344.199-.319.57-.107.332.19.473.224.547.373.075.149.037.274-.019.373-.056.1-.473 1.144-.648 1.562-.17.41-.358.353-.493.353h-.423c-.149 0-.398.056-.606.284-.208.229-.796.777-.796 1.896s.812 2.195.925 2.344c.113.149 1.599 2.441 3.874 3.422 1.816.782 2.44.629 2.86.587.659-.064 1.764-.72 2.013-1.417.25-.696.25-1.293.174-1.418-.075-.124-.274-.199-.573-.348z"/>
         </svg>
     </a>
+    <script>
+        const menuToggle = document.getElementById('menu-toggle');
+        const navLinks = document.getElementById('nav-links');
+        const navAuth = document.getElementById('nav-auth');
+
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            navAuth.classList.toggle('active');
+        });
+    </script>
 
 
 </body>
