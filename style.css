@@ -2343,3 +2343,63 @@ header.navbar .nav-auth {
         height: 360px;
     }
 }
+/* ==========================================
+   MOBILE NAVBAR TOGGLE CONTROLS
+   ========================================== */
+@media (max-width: 900px) {
+    /* Forces navbar items to stay horizontal on top */
+    .navbar {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        flex-wrap: wrap;
+    }
+
+    /* Hides the vertical category text list by default */
+    .nav-links {
+        display: none !important;
+        width: 100%;
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px 0 10px 0;
+        text-align: center;
+    }
+
+    /* Hides the search container and buttons by default */
+    .nav-auth {
+        display: none !important;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        padding-bottom: 15px;
+    }
+
+    /* This reveals the hidden categories ONLY when you tap the button */
+    .nav-links.active, 
+    .nav-auth.active {
+        display: flex !important;
+    }
+
+    /* Styles the custom hamburger menu toggle icon lines */
+    .menu-toggle {
+        display: flex !important;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 26px;
+        height: 18px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+    }
+
+    .menu-toggle span {
+        width: 100%;
+        height: 3px;
+        background-color: #ffffff;
+        border-radius: 2px;
+        transition: all 0.3s ease;
+    }
+}
