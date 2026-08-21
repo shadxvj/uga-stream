@@ -2496,3 +2496,85 @@ header.navbar .nav-auth {
         border-radius: 2px !important;
     }
 }
+/* ==========================================
+   MOBILE TOP-RIGHT NAV FIXED ALIGNMENT 
+   ========================================== */
+@media (max-width: 900px) {
+    /* 1. Force the navbar to be a single, non-wrapping row banner */
+    header.navbar, .navbar {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        flex-wrap: nowrap !important;
+        padding: 10px 14px !important;
+        background-color: #050505 !important;
+        width: 100% !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        height: 60px !important;
+        z-index: 1000 !important;
+    }
+
+    /* 2. Group the Search bar tightly on the right side next to logo */
+    .nav-auth, div.nav-auth {
+        display: flex !important; 
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 10px !important;
+        width: auto !important;
+        height: auto !important;
+        background: transparent !important;
+        position: static !important; /* Removes absolute positioning */
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Shrink search input layout container to fit on tiny screens */
+    .search-container {
+        width: 150px !important;
+        height: 32px !important;
+        padding: 2px 10px !important;
+        margin: 0 !important;
+    }
+
+    .search-input {
+        font-size: 0.75rem !important;
+        width: 100% !important;
+    }
+
+    /* Hide desktop buttons so they don't block the mobile row */
+    .login-link, .signup-btn {
+        display: none !important;
+    }
+
+    /* 3. Force Hamburger menu lines to the far right edge */
+    .menu-toggle {
+        display: flex !important;
+        order: 3 !important;
+        margin-left: 8px !important;
+        background: transparent !important;
+    }
+
+    /* 4. PUSH ALL CATEGORIES SAFELY INSIDE THE DROPDOWN */
+    .nav-links, nav.nav-links {
+        display: none !important; /* Hides links completely by default */
+        position: absolute !important;
+        top: 60px !important; /* Drops right below the 60px black bar */
+        left: 0 !important;
+        width: 100% !important;
+        background-color: rgba(5, 5, 5, 0.98) !important;
+        flex-direction: column !important;
+        gap: 16px !important;
+        padding: 20px 0 !important;
+        text-align: center !important;
+        border-bottom: 1px solid rgba(243, 156, 18, 0.2);
+        z-index: 999 !important;
+    }
+
+    /* 5. Reveal the dropdown categories only when you click the menu */
+    .nav-links.active {
+        display: flex !important;
+    }
+}
