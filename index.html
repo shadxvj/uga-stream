@@ -6,7 +6,87 @@
     <title>UGA STREAM — Premium VJ-translated Cinema</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="style.css?v=3.0
+    <!-- PASTE THIS FORCE BLOCK EXACTLY HERE -->
+    <style>
+    @media (max-width: 900px) {
+        header.navbar {
+            display: flex !important;
+            flex-direction: row !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            flex-wrap: nowrap !important;
+            padding: 10px 16px !important;
+            position: fixed !important;
+            width: 100% !important;
+            height: 65px !important;
+            background: #050505 !important;
+            z-index: 9999 !important;
+            top: 0 !important;
+            left: 0 !important;
+        }
+
+        /* Group search bar and lines together on the right */
+        .nav-auth {
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            gap: 12px !important;
+            width: auto !important;
+            position: static !important;
+            background: transparent !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        /* Shrink search bar to fit the top row */
+        .search-container {
+            width: 140px !important;
+            height: 34px !important;
+            margin: 0 !important;
+        }
+
+        .search-input {
+            font-size: 0.8rem !important;
+            width: 100% !important;
+        }
+
+        /* Hide desktop login/signup buttons from top bar */
+        .login-link, .signup-btn {
+            display: none !important;
+        }
+
+        /* Move menu toggle icon to the absolute far right edge */
+        .menu-toggle {
+            display: flex !important;
+            order: 3 !important;
+            background: transparent !important;
+            margin-left: 4px !important;
+        }
+
+        /* FORCE HIDE THE CATEGORY LINKS INSIDE THE MENU */
+        .nav-links {
+            display: none !important;
+            position: absolute !important;
+            top: 65px !important;
+            left: 0 !important;
+            width: 100% !important;
+            background: rgba(5, 5, 5, 0.98) !important;
+            flex-direction: column !important;
+            gap: 15px !important;
+            padding: 20px 0 !important;
+            text-align: center !important;
+            z-index: 9998 !important;
+            border-bottom: 1px solid rgba(243, 156, 18, 0.2);
+        }
+
+        /* Show the categories only when clicked */
+        .nav-links.active {
+            display: flex !important;
+        }
+    }
+    </style>
 </head>
+
 <body>
 
     <!-- Header & Navigation Menu re-branded to UGA STREAM -->
