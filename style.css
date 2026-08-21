@@ -2407,54 +2407,69 @@ header.navbar .nav-auth {
    FINAL RESPONSIVE MOBILE FIX
    ========================================== */
 @media (max-width: 900px) {
-    /* 1. Force everything back onto a single row banner */
-    .navbar, header.navbar {
+    /* 1. Aligns the Logo on the left, and Hamburger/Search container on the right */
+    header.navbar, .navbar {
         display: flex !important;
         flex-direction: row !important;
         justify-content: space-between !important;
         align-items: center !important;
-        flex-wrap: nowrap !important;
-        padding: 12px 16px !important;
-        background-color: #050505 !important;
-        width: 100% !important;
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
+        flex-wrap: nowrap !important; /* Prevents elements from breaking into a second line */
+        padding: 10px 16px !important;
+        background: #050505 !important;
     }
 
-    /* 2. COMPLETELY HIDE THE LINK TEXT LIST BY DEFAULT */
-    .nav-links, nav.nav-links {
+    /* 2. Groups search bar and toggle icon tightly on the right side */
+    .nav-auth {
+        display: flex !important; /* Force it visible on the top row */
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 12px !important;
+        width: auto !important;
+        order: 2 !important; /* Places it next to the hamburger button */
+    }
+
+    /* Shrinks search input container slightly to fit nicely on small screens */
+    .search-container {
+        width: 140px !important;
+        height: 32px !important;
+        padding: 2px 8px !important;
+    }
+
+    .search-input {
+        font-size: 0.8rem !important;
+    }
+
+    /* Hide desktop buttons so they don't crowd the top mobile bar */
+    .login-link, .signup-btn {
+        display: none !important;
+    }
+
+    /* 3. Forces the hamburger menu button to the absolute far right */
+    .menu-toggle {
+        display: flex !important;
+        order: 3 !important; 
+        margin-left: 5px;
+    }
+
+    /* 4. Keeps the vertical categories hidden cleanly right below the header layer */
+    .nav-links {
         display: none !important;
         position: absolute !important;
         top: 60px !important;
         left: 0 !important;
         width: 100% !important;
-        background-color: rgba(5, 5, 5, 0.98) !important;
+        background: rgba(5, 5, 5, 0.98) !important;
         flex-direction: column !important;
-        gap: 15px !important;
         padding: 20px 0 !important;
-        text-align: center !important;
-        border-bottom: 1px solid rgba(255, 42, 109, 0.2);
+        z-index: 999 !important;
     }
 
-    /* 3. COMPLETELY HIDE AUTH & SEARCH BY DEFAULT */
-    .nav-auth, div.nav-auth {
-        display: none !important;
-        position: absolute !important;
-        top: 360px !important; /* Positions it nicely below the vertical link text dropdown list */
-        left: 0 !important;
-        width: 100% !important;
-        background-color: rgba(5, 5, 5, 0.98) !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        gap: 15px !important;
-        padding-bottom: 25px !important;
-    }
-
-    /* 4. SHOW THEM ONCE CLICKED (WHEN THE ACTIVE CLASS IS ON) */
+    /* Displays the dropdown categories list smoothly when toggled active */
     .nav-links.active {
         display: flex !important;
     }
+}
+
     
     .nav-auth.active {
         display: flex !important;
