@@ -2276,3 +2276,70 @@ header.navbar .nav-auth {
         width: 100% !important;
     }
 }
+/* ==========================================
+   MOBILE & TABLET RESPONSIVE MEDIA QUERY
+   ========================================== */
+@media (max-width: 900px) {
+    /* 1. Stack Navbar items vertically */
+    .navbar {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px 4%;
+        background: rgba(5, 5, 5, 0.95); /* Solid backing so movie backdrop doesn't mix with text */
+        position: relative; /* Allows content below to flow naturally without overlapping */
+    }
+
+    /* 2. Center layout links and wrap them cleanly */
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px 18px;
+    }
+
+    .nav-links a {
+        font-size: 0.85rem;
+    }
+
+    /* 3. Center and size search/auth buttons safely */
+    .nav-auth {
+        flex-direction: column;
+        width: 100%;
+        gap: 12px;
+    }
+
+    .search-container {
+        width: 90%;
+        max-width: 320px;
+        justify-content: space-between;
+    }
+
+    /* 4. Fix Hero layouts and stop side-by-side stretching */
+    .hero-section {
+        flex-direction: column !important; /* Stack text content on top of your movie carousel */
+        padding: 40px 5% !important;
+        text-align: center;
+        min-height: auto !important;
+        gap: 30px !important;
+    }
+
+    .hero-content {
+        max-width: 100%;
+    }
+
+    /* Reduce font size so headline doesn't clip on small devices */
+    .hero-content h1, 
+    .hero-section h1 {
+        font-size: 2.2rem !important;
+        line-height: 1.2;
+    }
+
+    .hero-tags {
+        justify-content: center;
+    }
+
+    /* 5. Scale down the vertical slideshow block safely */
+    .hero-showcase-box {
+        width: 260px; /* Slimmer layout to match phone screen profiles */
+        height: 360px;
+    }
+}
