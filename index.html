@@ -10,14 +10,14 @@
 </head>
 <body>
 
-    <!-- Header & Navigation Menu -->
+        <!-- Header & Navigation Menu -->
     <header class="navbar">
         <div class="logo-container">
             <span class="logo-box">US</span>
             <span class="logo-text">UGA <span class="ug-text">STREAM</span></span>
         </div>
 
-        <!-- Hidden desktop links container that folds into a clean dropdown menu on smartphones -->
+        <!-- 1. PLACEMENT CORRECTION: Ensure this block sits right here directly below your logo container -->
         <nav class="nav-links" id="nav-links">
             <a href="#" class="active">Home</a>
             <a href="#trending">Trending</a>
@@ -28,29 +28,17 @@
             <a href="#animation">Animation</a>
         </nav>
 
+        <!-- 2. Your nav-auth button container must start completely below your category links -->
         <div class="nav-auth" id="nav-auth">
-            <!-- Red / Pink Glow Cinematic Search Bar -->
             <div class="search-container">
                 <input type="text" placeholder="Search movies, VJs..." class="search-input">
                 <button class="search-submit-btn">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 </button>
             </div>
-
-            <!-- Header Action Items -->
             <a href="#login-anchor" class="login-link">Login</a>
-            <button class="signup-btn" onclick="document.getElementById('signup-anchor').scrollIntoView({behavior: 'smooth'});">Sign Up</button>
+            <button class="signup-btn">Sign Up</button>
         </div>
-
-               <nav class="nav-links" id="nav-links">
-            <a href="#" class="active">Home</a>
-            <a href="#trending">Trending</a>
-            <a href="#action">Action</a>
-            <a href="#comedy">Comedy</a>
-            <a href="#drama">Drama</a>
-            <a href="#series">Series</a>
-            <a href="#animation">Animation</a>
-        </nav>
 
         <!-- Mobile Interaction Menu Toggle Trigger -->
         <button class="menu-toggle" id="menu-toggle" aria-label="Toggle Navigation">
@@ -59,6 +47,7 @@
             <span></span>
         </button>
     </header>
+
 
     <!-- Main Content Wrapper Layout -->
     <main class="content-wrapper">
