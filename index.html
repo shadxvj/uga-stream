@@ -5,19 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UGA STREAM — Premium VJ-translated Cinema</title>
     <link rel="stylesheet" href="style.css">
-    <!-- FontAwesome Icons for the UI buttons -->
+    <!-- FontAwesome Icons for UI graphics -->
     <link rel="stylesheet" href="https://cloudflare.com">
 </head>
 <body>
 
-        <!-- Header & Navigation Menu -->
+    <!-- Top Quick Links Utility Bar -->
+    <div class="quick-links-bar">
+        <div class="quick-links-content">
+            <a href="#signup-anchor"><span class="badge-promo">PROMO</span> Join today for UGX 2,000</a>
+            <div class="quick-utility-links">
+                <a href="#faqs">How to Watch</a>
+                <a href="#support">Get Help</a>
+                <a href="#vj-join">Become a VJ</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation Header -->
     <header class="navbar">
-        <div class="logo-container">
+        <!-- Left: Logo Branding -->
+        <div class="logo-container" onclick="window.location.reload();">
             <span class="logo-box">US</span>
             <span class="logo-text">UGA <span class="ug-text">STREAM</span></span>
         </div>
 
-        <!-- 1. PLACEMENT CORRECTION: Ensure this block sits right here directly below your logo container -->
+        <!-- Center: Movie Categories Layout -->
         <nav class="nav-links" id="nav-links">
             <a href="#" class="active">Home</a>
             <a href="#trending">Trending</a>
@@ -28,37 +41,43 @@
             <a href="#animation">Animation</a>
         </nav>
 
-        <!-- 2. Your nav-auth button container must start completely below your category links -->
-        <div class="nav-auth" id="nav-auth">
+        <!-- Right: Global Actions Cluster System -->
+        <div class="nav-right-cluster">
             <div class="search-container">
                 <input type="text" placeholder="Search movies, VJs..." class="search-input">
                 <button class="search-submit-btn">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 </button>
             </div>
-            <a href="#login-anchor" class="login-link">Login</a>
-            <button class="signup-btn">Sign Up</button>
-        </div>
 
-        <!-- Mobile Interaction Menu Toggle Trigger -->
-        <button class="menu-toggle" id="menu-toggle" aria-label="Toggle Navigation">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
+            <!-- Profile Menu Interactive System -->
+            <div class="profile-menu-container">
+                <button class="profile-icon-btn" id="profileMenuBtn" aria-label="Account Menu">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                </button>
+                <div class="profile-dropdown-card" id="profileDropdown">
+                    <div class="dropdown-header">Welcome to UGA Stream</div>
+                    <a href="#login-anchor" class="dropdown-item">Login Now</a>
+                    <a href="#signup-anchor" class="dropdown-item signup-accent">Sign Up Now</a>
+                </div>
+            </div>
+
+            <!-- Mobile Interactions Menu Toggle -->
+            <button class="menu-toggle" id="menu-toggle" aria-label="Toggle Navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
     </header>
 
-
-    <!-- Main Content Wrapper Layout -->
+    <!-- Main Content Presentation Layout -->
     <main class="content-wrapper">
         
-        <!-- Premium Dual-Column Cinematic Hero Section Layout -->
+        <!-- Premium Dual-Column Cinematic Hero Presentation Layer -->
         <section class="hero-section">
-            
-            <!-- Dark ambient theater vignette filter overlay -->
             <div class="hero-overlay-gradient"></div>
 
-            <!-- Floating Text Content Layer on Top -->
             <div class="hero-content">
                 <div class="hero-tags">
                     <span class="tag">2026</span>
@@ -72,7 +91,7 @@
                 </button>
             </div>
 
-            <!-- Controlled Floating Slider Card Showcase Box wrapper -->
+            <!-- Animated Slider Card Component -->
             <div class="hero-showcase-box">
                 <div class="hero-slider-track">
                     <div class="slide" style="background-image: linear-gradient(rgba(13,13,13,0.2), rgba(13,13,13,0.6)), url('images/hero-bg1.jpg');"></div>
@@ -81,7 +100,6 @@
                     <div class="slide" style="background-image: linear-gradient(rgba(13,13,13,0.2), rgba(13,13,13,0.6)), url('images/hero-bg1.jpg');"></div>
                 </div>
             </div>
-
         </section>
 
         <!-- Premium Themed Subscription Sign-Up Area -->
@@ -159,7 +177,7 @@
 
     </main>
 
-    <!-- Global Application Footer Context -->
+    <!-- Global Application Footer -->
     <footer class="main-footer">
         <div class="footer-links">
             <a href="#">Support</a>
@@ -171,37 +189,67 @@
         <p class="footer-copyright">&copy; 2026 UGA STREAM. All Rights Reserved.</p>
     </footer>
 
-    <!-- JavaScript to control mobile interactions -->
-   <script>
+    <!-- Core Script Configurations to handle drop-down and mobile drawer operations -->
+    <script>
     document.addEventListener("DOMContentLoaded", () => {
-        const menuToggle = document.getElementById('menu-toggle');
-        const navLinks = document.getElementById('nav-links');
-        const navAuth = document.getElementById('nav-auth');
+        const profileMenuBtn = document.getElementById("profileMenuBtn");
+        const profileDropdown = document.getElementById("profileDropdown");
+        const menuToggle = document.getElementById("menu-toggle");
+        const navLinks = document.getElementById("nav-links");
 
-        if (menuToggle && navLinks) {
-            menuToggle.addEventListener('click', (e) => {
+        // Profile Menu Component Interaction Handler
+        if (profileMenuBtn && profileDropdown) {
+            profileMenuBtn.addEventListener("click", (e) => {
                 e.stopPropagation();
-                // This forces the menu items to toggle visibility on phones
-                navLinks.classList.toggle('active');
-                menuToggle.classList.toggle('open');
-                
-                // This brings the login/signup links into the mobile menu dropdown area!
-                if(navAuth) {
-                    navAuth.classList.toggle('mobile-visible');
-                }
-            });
-
-            // Close the panel instantly if clicking the empty ambient space outside
-            document.addEventListener('click', (e) => {
-                if (!navLinks.contains(e.target) && !menuToggle.contains(e.target)) {
-                    navLinks.classList.remove('active');
-                    menuToggle.classList.remove('open');
-                    if(navAuth) navAuth.classList.remove('mobile-visible');
-                }
+                profileDropdown.classList.toggle("show");
             });
         }
-    });
-</script>
 
+        // Mobile Screen Hamburger Menu Toggle Handler
+        if (menuToggle && navLinks) {
+    <!-- JavaScript to control mobile interactions -->
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const profileMenuBtn = document.getElementById("profileMenuBtn");
+        const profileDropdown = document.getElementById("profileDropdown");
+        const menuToggle = document.getElementById("menu-toggle");
+        const navLinks = document.getElementById("nav-links");
+
+        // Profile Menu Component Interaction Handler
+        if (profileMenuBtn && profileDropdown) {
+            profileMenuBtn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                profileDropdown.classList.toggle("show");
+            });
+        }
+
+        // Mobile Screen Hamburger Menu Toggle Handler
+        if (menuToggle && navLinks) {
+            menuToggle.addEventListener("click", (e) => {
+                e.stopPropagation();
+                menuToggle.classList.toggle("active");
+                navLinks.classList.toggle("active");
+            });
+        }
+
+        // Close components if a user taps an active viewport location outside menu bounds
+        document.addEventListener("click", () => {
+            if (profileDropdown) profileDropdown.classList.remove("show");
+            if (navLinks) {
+                navLinks.classList.remove("active");
+                if (menuToggle) menuToggle.classList.remove("active");
+            }
+        });
+
+        // Close mobile drawer when an anchor destination selection link is chosen
+        const dynamicNavs = document.querySelectorAll(".nav-links a, .dropdown-item");
+        dynamicNavs.forEach(link => {
+            link.addEventListener("click", () => {
+                if (navLinks) navLinks.classList.remove("active");
+                if (menuToggle) menuToggle.classList.remove("active");
+            });
+        });
+    });
+    </script>
 </body>
 </html>
