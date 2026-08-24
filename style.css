@@ -73,7 +73,7 @@ body {
 .nav-auth {
      display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 15px
 
 /* Look right here — line 64 is missing its closing curly bracket } */
 body {
