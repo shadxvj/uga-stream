@@ -74,7 +74,11 @@ body {
      display: flex;
     align-items: center;
     gap: 15px;
-  
+
+/* Look right here — line 64 is missing its closing curly bracket } */
+body {
+    background-color: #050505;
+
 
 body {
     background-color: #050505;
