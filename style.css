@@ -70,10 +70,16 @@ body {
     color: #ffffff;
 }
 
+/* CURRENT BROKEN CODE: */
 .nav-auth {
      display: flex;
     align-items: center;
-    gap: 15px
+    gap: 15px;
+  
+
+body {
+    background-color: #050505;
+
 
 /* Look right here — line 64 is missing its closing curly bracket } */
 body {
