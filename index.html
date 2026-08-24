@@ -173,27 +173,36 @@
     </footer>
 
     <!-- JavaScript to control mobile interactions -->
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const menuToggle = document.getElementById('menu-toggle');
-            const navLinks = document.getElementById('nav-links');
+   <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const menuToggle = document.getElementById('menu-toggle');
+        const navLinks = document.getElementById('nav-links');
+        const navAuth = document.getElementById('nav-auth');
 
-            if (menuToggle && navLinks) {
-                menuToggle.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    navLinks.classList.toggle('active');
-                    menuToggle.classList.toggle('open');
-                });
+        if (menuToggle && navLinks) {
+            menuToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // This forces the menu items to toggle visibility on phones
+                navLinks.classList.toggle('active');
+                menuToggle.classList.toggle('open');
+                
+                // This brings the login/signup links into the mobile menu dropdown area!
+                if(navAuth) {
+                    navAuth.classList.toggle('mobile-visible');
+                }
+            });
 
-                // Closes dropdown drawer instantly if user touches the backdrop surface area
-                document.addEventListener('click', (e) => {
-                    if (!navLinks.contains(e.target) && !menuToggle.contains(e.target)) {
-                        navLinks.classList.remove('active');
-                        menuToggle.classList.remove('open');
-                    }
-                });
-            }
-        });
-    </script>
+            // Close the panel instantly if clicking the empty ambient space outside
+            document.addEventListener('click', (e) => {
+                if (!navLinks.contains(e.target) && !menuToggle.contains(e.target)) {
+                    navLinks.classList.remove('active');
+                    menuToggle.classList.remove('open');
+                    if(navAuth) navAuth.classList.remove('mobile-visible');
+                }
+            });
+        }
+    });
+</script>
+
 </body>
 </html>
