@@ -1,4 +1,6 @@
-/* Reset defaults */
+/* ==========================================================================
+   1. CORE GLOBAL STYLING RESETS
+   ========================================================================== */
 * {
     margin: 0;
     padding: 0;
@@ -12,185 +14,136 @@ body {
     overflow-x: hidden;
 }
 
-/* Navbar Layout */
+/* ==========================================================================
+   2. DESKTOP MAIN NAVIGATION HEADER
+   ========================================================================== */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 4%;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+    padding: 15px 4%;
+    background: rgba(5, 5, 5, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     position: fixed;
     width: 100%;
     top: 0;
-    z-index: 100;
+    left: 0;
+    z-index: 2000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .logo-container {
     display: flex;
     align-items: center;
     gap: 8px;
+    cursor: pointer;
 }
 
 .logo-box {
-    background-color: #f39c12;
-    color: #000;
+    background-color: #e50914;
+    color: #ffffff;
     font-weight: 900;
-    padding: 4px 8px;
+    padding: 4px 10px;
     border-radius: 4px;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
+    letter-spacing: -0.5px;
 }
 
 .logo-text {
-    font-weight: 700;
-    font-size: 1.2rem;
+    font-weight: 800;
+    font-size: 1.3rem;
     letter-spacing: 0.5px;
+    color: #ffffff;
 }
 
 .ug-text {
-    color: #f39c12;
+    color: #e50914;
 }
 
 .nav-links {
     display: flex;
-    gap: 20px;
+    gap: 24px;
     align-items: center;
 }
 
 .nav-links a {
     color: #b3b3b3;
     text-decoration: none;
-    font-size: 0.9rem;
-    transition: color 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 5px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: color 0.2s ease;
 }
 
-.nav-links a:hover, .nav-links a.active {
+.nav-links a:hover, 
+.nav-links a.active {
     color: #ffffff;
 }
 
-/* CURRENT BROKEN CODE: */
 .nav-auth {
-     display: flex;
-    align-items: center;
-    gap: 15px;
-  
-
-body {
-    background-color: #050505;
-
-
-/* Look right here — line 64 is missing its closing curly bracket } */
-body {
-    background-color: #050505;
-
-
-body {
-    background-color: #050505;
-    color: #ffffff;
-    overflow-x: hidden;
-}
-
-/* Navbar Layout */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 4%;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
-    position: fixed;
-    width: 100%;
-    top: 0;
-    z-index: 100;
-}
-
-.logo-container {
     display: flex;
     align-items: center;
-    gap: 8px;
-}
-
-.logo-box {
-    background-color: #f39c12;
-    color: #000;
-    font-weight: 900;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 1.1rem;
-}
-
-.logo-text {
-    font-weight: 700;
-    font-size: 1.2rem;
-    letter-spacing: 0.5px;
-}
-
-.ug-text {
-    color: #f39c12;
-}
-
-.nav-links {
-    display: flex;
     gap: 20px;
-    align-items: center;
 }
 
-.nav-links a {
-    color: #b3b3b3;
-    text-decoration: none;
-    font-size: 0.9rem;
-    transition: color 0.3s;
+/* Red Glow Cinematic Input Bar */
+.search-container {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 5px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(243, 156, 18, 0.3);
+    border-radius: 20px;
+    padding: 4px 14px;
+    height: 36px;
+    transition: all 0.3s ease;
 }
 
-.nav-links a:hover, .nav-links a.active {
+.search-input {
+    background: transparent;
+    border: none;
     color: #ffffff;
+    outline: none;
+    font-size: 0.85rem;
+    width: 180px;
 }
 
-.nav-auth {
-    display: flex;
-    align-items: center; /* Forces the search container to stay perfectly centered vertically */
-    gap: 15px;
-    height: 100%; /* Keeps alignment constrained */
-}
-
-
-.search-btn {
+.search-submit-btn {
     background: none;
     border: none;
-    color: #fff;
-    font-size: 1.1rem;
+    color: #b3b3b3;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s;
 }
 
-.login-link, .login-link:link, .login-link:visited {
-    background-color: #e50914 !important;
-    color: #ffffff !important; /* Forces the text to stay white permanently */
-    text-decoration: none !important;
-    padding: 8px 18px;
-    border-radius: 4px;
-    font-weight: 700;
-    font-size: 0.9rem;
-    display: inline-block;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+.search-container:focus-within {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: #e50914;
+    box-shadow: 0 0 12px rgba(229, 9, 20, 0.3);
 }
 
+.search-submit-btn:hover {
+    color: #e50914;
+}
 
+/* Authentication Trigger Targets */
+.login-link {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
 
 .login-link:hover {
-    background-color: #b81d24 !important;
-    color: #ffffff !important;
+    color: #e50914;
 }
 
-
-
 .signup-btn {
-    background-color: #e50914 !important;
-    color: #ffffff !important;
+    background-color: #e50914;
+    color: #ffffff;
     border: none;
     padding: 8px 18px;
     border-radius: 4px;
@@ -201,74 +154,55 @@ body {
 }
 
 .signup-btn:hover {
-    background-color: #b81d24 !important;
+    background-color: #b81d24;
 }
 
-.login-link {
-    color: #e50914 !important;
-    text-decoration: none;
-    font-size: 0.95rem;
-    font-weight: 700;
-    transition: color 0.2s ease;
+/* Mobile Icon Menu Toggle Graphics */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
 }
 
-.login-link:hover {
-    color: #ffffff !important;
-}
-
-
-
-
-.search-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    background-color: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 20px;
-    padding: 4px 14px;
+.menu-toggle span {
+    width: 26px;
+    height: 3px;
+    background-color: #ffffff;
+    border-radius: 2px;
     transition: all 0.3s ease;
 }
 
-.search-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    background-color: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 42, 109, 0.4); /* Premium red/pink translucent border */
-    border-radius: 20px;
-    padding: 4px 14px;
-    height: 36px;
-    transition: all 0.3s ease;
-}
-
-.search-container:focus-within {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-color: #ff2a6d; /* Solid high-vibrancy cinematic red border on click */
-    box-shadow: 0 0 12px rgba(255, 42, 109, 0.3); /* Soft red ambient glow */
-}
-
-.search-submit-btn:hover {
-    color: #ff2a6d; /* Changes the magnifying glass search icon to red on hover */
-}
-
-
-
-/* Overwrite your existing hero section with this block */
+/* ==========================================================================
+   3. HORIZONTAL HERO AND POSTER CARDS DISPLAY LAYER
+   ========================================================================== */
 .hero-section {
-    min-height: 85vh !important;
-    width: 100% !important;
-    display: flex !important;
-    flex-direction: row !important; /* Forces side-by-side alignment */
-    justify-content: space-between !important;
-    align-items: center !important;
-    padding: 180px 6% 60px 6% !important;
-    background-color: #050505 !important; /* Removes the stretched image background */
-    gap: 40px !important;
-    overflow: hidden !important;
-    position: relative !important;
+    min-height: 85vh;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 140px 8% 60px 8%;
+    background-color: #050505;
+    gap: 60px;
+    overflow: hidden;
+    position: relative;
 }
 
+.hero-overlay-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(5, 5, 5, 0.95) 40%, rgba(5, 5, 5, 0.2) 75%, rgba(5, 5, 5, 0.9) 100%);
+    z-index: 2;
+    pointer-events: none;
+}
 
 .hero-content {
     max-width: 55%;
@@ -276,1764 +210,83 @@ body {
     z-index: 10;
 }
 
-/* Small Controlled Showcase Box container wrapper */
-.hero-showcase-box {
-    width: 340px;          /* Clean fixed desktop card width block */
-    height: 460px;         /* Standard streaming vertical poster size aspect ratio */
-    border-radius: 12px;
-    border: 1px solid transparent !important;
-    overflow: hidden;
-    position: relative;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
-}
-
-/* Track inside the box container */
-.hero-slider-track {
-    display: flex;
-    width: 400%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    animation: slideLeftToRight 20s infinite ease-in-out;
-}
-
-/* Individual posters fit perfectly inside the custom box sizes with zero zoom blur */
-.slide {
-    width: 25% !important;
-    height: 100% !important;
-    background-size: contain !important; /* Locks image aspect ratio to display completely with no zooming */
-    background-position: center center !important;
-    background-repeat: no-repeat !important;
-    background-color: #111111; /* Clean backup fill backing color */
-    flex-shrink: 0 !important;
-}
-/* Container Box setting up the layout on the right side */
-.hero-showcase-box {
-    width: 340px;          /* Clean desktop card width block */
-    height: 460px;         /* Standard vertical movie poster aspect ratio */
-    border-radius: 12px;
-    border: 1px solid rgba(255, 42, 109, 0.25);
-    overflow: hidden;
-    position: relative;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
-    flex-shrink: 0;
-}
-
-
-
-
-/* Dark Ambient Netflix Gradient Vignette Filter Overlay */
-.hero-overlay-gradient {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to right, rgba(5, 5, 5, 0.95) 35%, rgba(5, 5, 5, 0.4) 70%, rgba(5, 5, 5, 0.9) 100%),
-                linear-gradient(to top, rgba(5, 5, 5, 1) 5%, transparent 30%, rgba(5, 5, 5, 0.7) 100%);
-    z-index: 2;
-    pointer-events: none;
-}
-
-.hero-content {
-    max-width: 650px;
-    position: relative;
-    z-index: 3; /* Forces text to float safely above the backdrop elements */
-}
-
-/* Linear Infinite Motion Keyframe Definition Loop */
-@keyframes slideLeftToRight {
-    0% { transform: translateX(0); }
-    28% { transform: translateX(0); } /* Holds on image 1 */
-    33% { transform: translateX(-25%); } /* Slides to image 2 */
-    61% { transform: translateX(-25%); } /* Holds on image 2 */
-    66% { transform: translateX(-50%); } /* Slides to image 3 */
-    94% { transform: translateX(-50%); } /* Holds on image 3 */
-    100% { transform: translateX(-75%); } /* Slides to duplicate image 1 for smooth loop reset */
-}
-
 .hero-tags {
     display: flex;
-    gap: 10px;
-    margin-bottom: 25px;
-}
-
-.tag {
-    background-color: #1a1a1a;
-    color: #999;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-}
-
-.vj-tag {
-    background-color: #2c1a1a;
-    color: #ff5e7e;
-}
-
-.hero-title {
-    font-size: 4rem;
-    font-weight: 800;
-    line-height: 1.1;
-    margin-bottom: 20px;
-    letter-spacing: -1px;
-}
-
-.hero-description {
-    color: #cccccc;
-    font-size: 1.1rem;
-    line-height: 1.6;
-    margin-bottom: 30px;
-}
-
-.download-btn {
-    background: linear-gradient(90deg, #ff2a6d, #ff5e7e);
-    color: #fff;
-    border: none;
-    padding: 14px 28px;
-    border-radius: 30px;
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    box-shadow: 0 4px 15px rgba(255, 42, 109, 0.3);
-    margin-top: 25px; /* Adds fresh space to push the button down dynamically */
-    transition: transform 0.2s;
-}
-
-
-.download-btn:hover {
-    transform: scale(1.03);
-}
-
-/* ======================================================= */
-/* NEW CODES: PREMIUM MOVIE ROWS & VIDEO MODAL OVERLAY     */
-/* ======================================================= */
-
-/* Movie Rows Container Layout */
-.movies-container {
-    padding: 60px 4% 100px 4%; 
-    background-color: #050505;
-    margin-top: -50px; 
-    position: relative;
-    z-index: 10;
-}
-
-.category-row {
-    margin-bottom: 60px; /* Big layout gaps between categories */
-}
-
-.category-title {
-    font-size: 1.6rem;
-    font-weight: 700;
-    margin-bottom: 25px; /* Big layout space below titles */
-    color: #ffffff;
-    letter-spacing: 0.5px;
-}
-
-/* Horizontal Scroll Movie Rows Arrangement */
-.movie-grid {
-    display: flex;
-    gap: 25px; /* Large space between movie posters */
-    overflow-x: auto; 
-    padding: 15px 5px; 
-    scrollbar-width: none; 
-}
-
-.movie-grid::-webkit-scrollbar {
-    display: none; 
-}
-
-/* Premium Movie Poster Card Styling */
-.movie-card {
-    position: relative;
-    min-width: 220px; 
-    max-width: 220px;
-    height: 330px; /* Large theater aspect ratio poster dimensions */
-    border-radius: 8px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease;
-    background-color: #121212;
-    border: 1px solid #222;
-}
-
-.movie-card img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.movie-card:hover {
-    transform: scale(1.06); /* Pop upscale animation on hover */
-    border-color: #f39c12;
-    box-shadow: 0 12px 25px rgba(243, 156, 18, 0.25);
-}
-
-/* Hover play button overlay effect */
-.movie-card-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.3));
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.movie-card:hover .movie-card-overlay {
-    opacity: 1;
-}
-
-.play-icon {
-    color: #f39c12;
-    font-size: 3.5rem;
-    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
-}
-
-/* Video Streaming Modal Popup Design */
-.video-modal {
-    display: none; 
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.95);
-    z-index: 2000;
-    justify-content: center;
-    align-items: center;
-}
-
-.modal-content {
-    position: relative;
-    width: 85%;
-    max-width: 900px;
-    background-color: #000;
-    border: 2px solid #f39c12;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.modal-content video {
-    width: 100%;
-    display: block;
-    aspect-ratio: 16 / 9;
-}
-
-.close-btn {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    color: #fff;
-    font-size: 2.5rem;
-    font-weight: bold;
-    cursor: pointer;
-    z-index: 2100;
-    transition: color 0.2s;
-}
-
-.close-btn:hover {
-    color: #ff2a6d;
-}
-
-    background-color: #f39c12;
-    color: #000;
-    border: none;
-    padding: 8px 18px;
-    border-radius: 4px;
-    font-weight: 700;
-    cursor: pointer;
-    font-size: 0.9rem;
-}
-
-.hero-section {
-    min-height: 80vh;
-    width: 100%;
-    position: relative;
-    display: flex;
-    align-items: flex-start; /* Changed from center to flex-start to let padding work */
-    padding-top: 200px;      /* Comfortably pushes everything down below the navbar */
-    padding-left: 6%;
-    padding-bottom: 60px;    /* Expands the container height so the button isn't cut off */
-    background-color: #050505;
-}
-
-
-.hero-content .download-btn {
-    margin-top: 30px !important;
-}
-
-
-.hero-content {
-    max-width: 650px;
-    position: relative;
-    z-index: 10;
-    margin-top: 0 !important;
-    padding-top: 100px !important; /* Forces the tags and text to slide down below the navbar */
-    padding-bottom: 90px !important;
-}
-
-
-
-.hero-tags {
-    display: flex;
-    gap: 10px;
-    margin-top: 40px !important; /* Forcefully pushes the tags down below the navbar */
-    margin-bottom: 25px;
-}
-
-
-.tag {
-    background-color: #1a1a1a;
-    color: #999;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-}
-
-.vj-tag {
-    background-color: #2c1a1a;
-    color: #ff5e7e;
-}
-
-.hero-title {
-    font-size: 4rem;
-    font-weight: 800;
-    line-height: 1.1;
-    margin-bottom: 20px;
-    letter-spacing: -1px;
-}
-
-.hero-description {
-    color: #cccccc;
-    font-size: 1.1rem;
-    line-height: 1.6;
-    margin-bottom: 30px;
-}
-
-.download-btn {
-    background: linear-gradient(90deg, #ff2a6d, #ff5e7e);
-    color: #fff;
-    border: none;
-    padding: 14px 28px;
-    border-radius: 30px;
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    box-shadow: 0 4px 15px rgba(255, 42, 109, 0.3);
-    transition: transform 0.2s;
-}
-
-.download-btn:hover {
-    transform: scale(1.03);
-}
-/* Placeholder Box treatment for manual tracking */
-.movie-card.empty {
-    height: 280px;
-    background-color: #141414;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 2px dashed #333;
-}
-
-.movie-card.empty:hover {
-    border-color: #f39c12;
-    background-color: #1c1c1c;
-}
-
-.poster-placeholder {
-    color: #555;
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-/* Premium Movie Rows Section Layout */
-.movies-container {
-    padding: 40px 4% 100px 4%; 
-    background-color: #050505;
-    margin-top: -30px; 
-    position: relative;
-    z-index: 10;
-}
-
-.category-row {
-    margin-bottom: 50px;
-}
-
-.category-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 20px;
-    color: #ffffff;
-    letter-spacing: 0.5px;
-}
-
-/* Horizontal Scroll Grid Layout */
-.movie-grid {
-    display: flex;
-    gap: 16px; /* Perfect tight margin gap between cards */
-    overflow-x: auto; 
-    padding: 10px 4px; 
-    scrollbar-width: none; 
-}
-
-.movie-grid::-webkit-scrollbar {
-    display: none; 
-}
-
-/* Ugaflix-style Vertical Poster Cards */
-.movie-card {
-    position: relative;
-    min-width: 175px; 
-    max-width: 175px;
-    height: 250px; 
-    border-radius: 6px; /* Smooth rounded card corners */
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-    background-color: #111;
-    border: 1px solid #1a1a1a;
-}
-
-.movie-card img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.movie-card:hover {
-    transform: scale(1.04);
-    border-color: #f39c12;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
-}
-
-/* Floating Corner VJ Badge Element */
-.vj-floating-badge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: rgba(5, 5, 5, 0.85); /* Dark transparent background tint */
-    color: #ffffff;
-    font-size: 0.72rem;
-    font-weight: 700;
-    padding: 3px 10px;
-    border-radius: 4px; 
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    z-index: 50;
-    pointer-events: none; 
-}
-
-/* Hover play overlay filter effect */
-.movie-card-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.4);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-    z-index: 40;
-}
-
-.movie-card:hover .movie-card-overlay {
-    opacity: 1;
-}
-
-.play-icon {
-    color: #ffffff;
-    font-size: 2.5rem;
-}
-/* Premium Streaming Red Auth Buttons Styling */
-.nav-auth {
-    display: flex;
-    align-items: center;
-    gap: 12px; /* Perfect spacing separation between the buttons */
-}
-
-.login-btn-new {
-    background: transparent;
-    color: #ffffff;
-    border: 2px solid #e50914; /* Clean premium streaming red outline border */
-    padding: 8px 18px;
-    border-radius: 4px;
-    font-weight: 700;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: background 0.2s, transform 0.2s;
-}
-
-.login-btn-new:hover {
-    background-color: rgba(229, 9, 20, 0.15); /* Soft red background glow on hover */
-    transform: scale(1.02);
-}
-
-.signup-btn-new {
-    background-color: #e50914; /* Strong solid premium streaming red fill */
-    color: #ffffff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    font-weight: 700;
-    cursor: pointer;
-    font-size: 0.9rem;
-    box-shadow: 0 4px 12px rgba(229, 9, 20, 0.3); /* Subtle styling depth drop-shadow */
-    transition: background 0.2s, transform 0.2s;
-}
-
-.signup-btn-new:hover {
-    background-color: #b80710; /* Slightly darker shade on cursor hover */
-    transform: scale(1.02);
-}
-/* Premium Corporate Site Footer Design Styles */
-.site-footer {
-    background-color: #000000;
-    border-top: 1px solid #141414;
-    padding: 60px 6% 30px 6%;
-    font-family: 'Segoe UI', sans-serif;
-    position: relative;
-    z-index: 100;
-}
-
-.footer-container {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 40px;
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
-.footer-column {
-    flex: 1;
-    min-width: 180px;
-}
-
-.footer-column.brand-info {
-    flex: 1.5;
-    min-width: 250px;
-}
-
-/* Brand info item treatments */
-.logo-container-footer {
-    display: flex;
-    align-items: center;
     gap: 8px;
     margin-bottom: 20px;
 }
 
-.logo-box-footer {
-    background-color: #f39c12;
-    color: #000;
-    font-weight: 900;
-    padding: 3px 6px;
-    border-radius: 4px;
-    font-size: 1rem;
-}
-
-.logo-text-footer {
-    font-weight: 700;
-    font-size: 1.1rem;
-}
-
-.brand-tagline {
-    color: #8c8c8c;
-    font-size: 0.9rem;
-    line-height: 1.6;
-    margin-bottom: 25px;
-    max-width: 280px;
-}
-
-.social-icons {
-    display: flex;
-    gap: 15px;
-}
-
-.social-icons a {
-    color: #cccccc;
-    font-size: 1.1rem;
-    transition: color 0.2s;
-}
-
-.social-icons a:hover {
-    color: #f39c12;
-}
-
-/* Link items styling mechanics */
-.footer-column h3 {
-    color: #ffffff;
-    font-size: 1.05rem;
-    font-weight: 700;
-    margin-bottom: 25px;
-    letter-spacing: 0.5px;
-}
-
-.footer-column ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.footer-column ul li {
-    margin-bottom: 12px;
-}
-
-.footer-column ul li a {
-    color: #8c8c8c;
-    text-decoration: none;
-    font-size: 0.9rem;
-    transition: color 0.2s;
-}
-
-.footer-column ul li a:hover {
-    color: #ffffff;
-}
-
-/* Split multi-grid structure layout for the Category elements */
-.categories-dual-grid {
-    display: flex;
-    gap: 30px;
-}
-
-/* Clean line bottom strip */
-.footer-bottom {
-    margin-top: 50px;
-    padding-top: 25px;
-    border-top: 1px solid #141414;
-    text-align: center;
-}
-
-.footer-bottom p {
-    color: #555555;
-    font-size: 0.8rem;
-}
-/* Link exact file backgrounds from your local repository assets */
-.slide.slide-1 {
-    background-image: url('images/hero-bg1.jpg.jfif');
-}
-
-.slide.slide-2 {
-    background-image: url('images/hero-bg2.jpg.jfif');
-}
-
-.slide.slide-3 {
-    background-image: url('images/hero-bg3.jpg.jfif');
-}
-/* Pricing Section Container */
-.pricing-section {
-    padding: 30px 4% 60px 4%; /* Changed top padding from 120px to 30px */
-    background-color: #050505;
-    text-align: center;
-}
-
-
-.pricing-header h2 {
-    font-size: 2.5rem;
-    font-weight: 800;
-    margin: 15px 0;
-    color: #ffffff;
-    letter-spacing: -0.5px;
-}
-
-.pricing-header p {
-    color: #8c8c8c;
-    font-size: 1.05rem;
-    margin-bottom: 50px;
-}
-
-.premium-badge {
-    background-color: rgba(243, 156, 18, 0.1);
-    color: #f39c12;
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    border: 1px solid rgba(243, 156, 18, 0.2);
-}
-
-/* Flex Grid System for 4 Cards */
-.pricing-grid {
-    display: flex;
-    justify-content: center;
-    align-items: stretch;
-    gap: 25px;
-    flex-wrap: wrap;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-/* Individual Cards Layout */
-.pricing-card {
-    background-color: #0b0b0b;
-    border: 1px solid #1a1a1a;
-    border-radius: 12px;
-    padding: 35px 25px;
-    width: 260px;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    transition: transform 0.3s ease;
-}
-
-.pricing-card:hover {
-    transform: translateY(-5px);
-}
-
-/* Highlighted Popular Plan */
-.pricing-card.popular {
-    border-color: #f39c12;
-    box-shadow: 0 0 25px rgba(243, 156, 18, 0.15);
-}
-
-.popular-tag {
-    position: absolute;
-    top: -12px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #f39c12;
-    color: #000000;
-    font-size: 0.75rem;
-    font-weight: 800;
-    padding: 4px 14px;
-    border-radius: 20px;
-    letter-spacing: 0.5px;
-}
-
-/* Inside Typography Elements */
-.pricing-card h3 {
-    font-size: 1.25rem;
-    color: #ffffff;
-    margin-bottom: 15px;
-    text-align: left;
-}
-
-.pricing-card .price {
-    font-size: 1.8rem;
-    font-weight: 800;
-    color: #ffffff;
-    text-align: left;
-    margin-bottom: 25px;
-}
-
-.features-list {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 35px 0;
-    text-align: left;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.features-list li {
-    color: #b3b3b3;
-    font-size: 0.9rem;
-}
-
-/* Buttons Formatting */
-.plan-btn {
-    background: transparent;
-    border: 1px solid #2a2a2a;
-    color: #ffffff;
-    padding: 12px;
-    border-radius: 8px;
-    font-weight: 700;
-    cursor: pointer;
-    margin-top: auto;
-    width: 100%;
-    transition: all 0.2s ease;
-}
-
-.plan-btn:hover {
-    background-color: #ffffff;
-    color: #000000;
-}
-
-.highlighted-btn {
-    background-color: #f39c12;
-    border-color: #f39c12;
-    color: #000000;
-}
-
-.highlighted-btn:hover {
-    background-color: #d6850f;
-    color: #000000;
-}
-
-/* ======================================================= */
-/* NEW CODES: SIGN UP MODAL & PRICING PLAN CARDS           */
-/* ======================================================= */
-
-/* Modal Screen Blur Overlay Container */
-.modal-overlay {
-    display: none; 
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.85); 
-    backdrop-filter: blur(5px);
-    z-index: 2000; 
-    justify-content: center;
-    align-items: center;
-}
-
-/* Modal Content Card Frame */
-.modal-card {
-    background-color: #111111;
-    border: 1px solid rgba(255, 42, 109, 0.3);
-    padding: 35px;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 420px;
-    position: relative;
-    color: #ffffff;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
-}
-
-.close-modal-btn {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 2rem;
-    color: #8c8c8c;
-    cursor: pointer;
-    transition: color 0.2s;
-}
-
-.close-modal-btn:hover {
-    color: #ff2a6d;
-}
-
-.modal-card h2 {
-    margin-bottom: 8px;
-    font-size: 1.8rem;
-    font-weight: 800;
-}
-
-.modal-card p {
-    color: #8c8c8c;
-    font-size: 0.9rem;
-    margin-bottom: 25px;
-}
-
-.input-group {
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.input-group label {
-    font-size: 0.85rem;
-    color: #cccccc;
-    font-weight: 600;
-}
-
-.input-group input {
-    background: #1a1a1a;
-    border: 1px solid #333333;
-    padding: 12px;
-    border-radius: 6px;
-    color: #ffffff;
-    font-size: 1rem;
-    transition: border 0.2s;
-}
-
-.input-group input:focus {
-    outline: none;
-    border-color: #ff2a6d;
-}
-
-.modal-submit-btn {
-    background: linear-gradient(90deg, #ff2a6d, #ff5e7e);
-    color: white;
-    border: none;
-    padding: 14px;
-    width: 100%;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-    font-size: 1rem;
-    margin-top: 10px;
-    box-shadow: 0 4px 12px rgba(255, 42, 109, 0.2);
-}
-
-/* Subscription Pricing Section Design */
-.pricing-section {
-    padding: 80px 4%;
-    background-color: #0b0b0b;
-    text-align: center;
-}
-
-.pricing-header h2 {
-    font-size: 2.5rem;
-    font-weight: 800;
-    margin: 10px 0;
-}
-
-.premium-badge {
-    color: #f39c12;
-    text-transform: uppercase;
-    font-weight: 700;
-    font-size: 0.85rem;
-    letter-spacing: 2px;
-}
-
-.pricing-header p {
-    color: #8c8c8c;
-    margin-bottom: 40px;
-}
-
-.pricing-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 25px;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.pricing-card {
-    background-color: #141414;
-    border: 1px solid #222222;
-    border-radius: 12px;
-    padding: 30px 20px;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    transition: transform 0.3s ease;
-}
-
-.pricing-card:hover {
-    transform: translateY(-5px);
-}
-
-.pricing-card.popular {
-    border-color: #ff2a6d;
-    box-shadow: 0 0 20px rgba(255, 42, 109, 0.15);
-}
-
-.popular-tag {
-    position: absolute;
-    top: -12px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: linear-gradient(90deg, #ff2a6d, #ff5e7e);
-    color: white;
+.tag {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #eee;
     padding: 4px 12px;
-    border-radius: 20px;
+    border-radius: 4px;
     font-size: 0.75rem;
-    font-weight: 800;
-    letter-spacing: 1px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
 }
 
-.pricing-card h3 {
-    font-size: 1.4rem;
+.vj-tag {
+    background-color: rgba(229, 9, 20, 0.2);
+    color: #ff5e7e;
+    border: 1px solid rgba(229, 9, 20, 0.4);
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1.15;
+    color: #ffffff;
     margin-bottom: 15px;
 }
 
-.price {
-    font-size: 1.8rem;
-    font-weight: 800;
-    color: #ff2a6d;
-    margin-bottom: 20px;
-}
-
-.features-list {
-    list-style: none;
-    text-align: left;
+.hero-description {
+    color: #cccccc;
+    font-size: 1.15rem;
+    line-height: 1.5;
     margin-bottom: 30px;
-    flex-grow: 1;
 }
 
-.features-list li {
-    margin-bottom: 12px;
-    color: #cccccc;
-    font-size: 0.9rem;
-}
-
-.plan-btn {
-    background-color: #222222;
-    color: white;
-    border: 1px solid #333333;
-    padding: 12px;
-    border-radius: 6px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.plan-btn:hover {
-    background-color: #333333;
-}
-
-.highlighted-btn {
-    background: linear-gradient(90deg, #ff2a6d, #ff5e7e);
+.download-btn {
+    background-color: #e50914;
+    color: #ffffff;
     border: none;
-}
-
-.highlighted-btn:hover {
-    opacity: 0.9;
-}
-/* Interactive Sign-Up Form Option Cards */
-.modal-plan-selector-container {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    width: 100%;
-    margin-top: 5px;
-}
-
-.modal-plan-option {
-    cursor: pointer;
-}
-
-/* Hide the default ugly radio button circle */
-.modal-plan-option input[type="radio"] {
-    display: none;
-}
-
-/* Custom Styled Content Box */
-.plan-option-box {
-    background-color: #1a1a1a;
-    border: 1px solid #333333;
-    padding: 12px 6px;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    transition: all 0.2s ease;
-}
-
-.plan-name {
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: #cccccc;
-    margin-bottom: 4px;
-}
-
-.plan-cost {
-    font-size: 0.75rem;
-    font-weight: 800;
-    color: #ff2a6d;
-}
-
-/* Visual change when an option card gets clicked/selected */
-.modal-plan-option input[type="radio"]:checked + .plan-option-box {
-    border-color: #ff2a6d;
-    background-color: rgba(255, 42, 109, 0.1);
-    box-shadow: 0 0 10px rgba(255, 42, 109, 0.2);
-}
-
-.plan-option-box:hover {
-    border-color: #ff5e7e;
-}
-/* Ensure slider images take up full canvas dimensions */
-.slide {
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center top;
-    background-repeat: no-repeat;
-    flex-shrink: 0; /* Prevents individual panels from flattening down */
-}
-
-/* Forces the slider content context frame to stack correctly behind text cards */
-.hero-slider-track {
-    display: flex;
-    width: 400%; /* Spans 4 full widths matching the count of our image array elements */
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
-    animation: slideLeftToRight 24s infinite ease-in-out;
-}
-/* ======================================================= */
-/* FORCED RESET: SPLIT CINEMATIC HERO LAYOUT               */
-/* ======================================================= */
-
-/* 1. Forces the main container to sit side-by-side */
-/* Update this block at the bottom of your style.css file */
-/* Update this block at the very bottom of your style.css file */
-.hero-section {
-    min-height: 75vh !important; /* Slightly reduced height to keep things compact */
-    width: 100% !important;
-    display: flex !important;
-    flex-direction: row !important; 
-    justify-content: space-between !important;
-    align-items: center !important;
-    padding: 10px 6% 30px 6% !important; /* Pushes everything tightly up near the header */
-    background: #050505 !important; 
-    gap: 40px !important;
-    overflow: hidden !important;
-    position: relative !important;
-}
-
-
-
-/* 2. Constrains your typography content block */
-.hero-content {
-    max-width: 55% !important;
-    position: relative !important;
-    z-index: 10 !important;
-}
-
-/* 3. Creates the neat right-hand side poster box layout */
-.hero-showcase-box {
-    width: 340px !important;          
-    height: 460px !important;         
-    border-radius: 12px !important;
-    border: 1px solid rgba(255, 42, 109, 0.3) !important;
-    overflow: hidden !important;
-    position: relative !important;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8) !important;
-    flex-shrink: 0 !important;
-    z-index: 10 !important;
-}
-
-/* 4. Traps the slider movement inside the tiny right box only */
-.hero-showcase-box .hero-slider-track {
-    display: flex !important;
-    width: 400% !important;
-    height: 100% !important;
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    z-index: 1 !important;
-    animation: slideLeftToRight 20s infinite ease-in-out !important;
-}
-
-/* 5. Keeps each slider poster perfectly crisp and small inside the box */
-.hero-showcase-box .slide {
-    width: 25% !important;
-    height: 100% !important;
-    background-size: contain !important; /* Locks normal size, stops zoom distortion */
-    background-position: center center !important;
-    background-repeat: no-repeat !important;
-    background-color: #111111 !important;
-    flex-shrink: 0 !important;
-}
-
-/* 6. Removes the huge full-screen overlay filter that blurs everything */
-.hero-section > .hero-overlay-gradient {
-    display: none !important;
-}
-/* ======================================================= */
-/* PREMIUM MOVIE GRID CARDS HOVER EFFECT EFFECT            */
-/* ======================================================= */
-
-/* 1. Target the grid layout containers */
-.movie-grid {
-    display: grid !important;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)) !important;
-    gap: 25px !important;
-    padding: 20px 0 !important;
-}
-
-/* 2. Configure default structural card values */
-.movie-card {
-    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease !important;
-    cursor: pointer !important;
-}
-
-/* 3. The smooth float up and zoom transformation trigger */
-.movie-card:hover {
-    transform: scale(1.06) translateY(-5px) !important;
-    box-shadow: 0 10px 20px rgba(255, 42, 109, 0.25) !important; /* Soft ambient glowing shadows */
-}
-
-/* 4. Ensure individual images handle transitions cleanly */
-.movie-card img {
-    transition: opacity 0.2s ease !important;
-}
-
-.movie-card:hover img {
-    opacity: 0.9 !important; /* Subtle cinematic brightness dip */
-}
-/* ======================================================= */
-/* MOBILE RESPONSIVE FOOTER ALIGNMENT                      */
-/* ======================================================= */
-
-/* 1. Sets up the main grid columns for desktop layout view */
-.site-footer .footer-container {
-    display: grid !important;
-    grid-template-columns: 2fr repeat(3, 1fr) !important;
-    gap: 40px !important;
-    padding: 60px 5% 40px 5% !important;
-    width: 100% !important;
-    align-items: flex-start !important;
-}
-
-/* 2. Styles individual column blocks cleanly */
-.footer-column {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 15px !important;
-}
-
-.footer-column h3 {
-    font-size: 1.1rem !important;
-    font-weight: 700 !important;
-    color: #ffffff !important;
-    letter-spacing: 0.5px !important;
-    margin-bottom: 5px !important;
-}
-
-.footer-column ul {
-    list-style: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 10px !important;
-}
-
-.footer-column ul li a {
-    color: #8c8c8c !important;
-    text-decoration: none !important;
-    font-size: 0.9rem !important;
-    transition: color 0.2s ease !important;
-}
-
-.footer-column ul li a:hover {
-    color: #ff2a6d !important; /* Highlights links with cinematic red on hover */
-}
-
-/* 3. MOBILE MEDIA QUERY: Automatically formats columns when monitoring on your phone screen! */
-@media (max-width: 768px) {
-    .site-footer .footer-container {
-        grid-template-columns: 1fr !important; /* Collapses into a single row column list */
-        gap: 30px !important;
-        padding: 40px 6% !important;
-    }
-    
-    .footer-column {
-        text-align: left !important;
-    }
-}
-/* ======================================================= */
-/* FOOTER GRID FORCE ALIGNMENT                              */
-/* ======================================================= */
-
-/* Forces the footer container into a flat, clean row layout */
-.site-footer .footer-container {
-    display: grid !important;
-    grid-template-columns: repeat(4, 1fr) !important; /* Forces 4 neat columns across the screen */
-    gap: 30px !important;
-    padding: 40px 5% !important;
-    width: 100% !important;
-    max-width: 1200px !important;
-    margin: 0 auto !important;
-    align-items: flex-start !important;
-}
-
-/* Forces columns to keep their links neat and straight */
-.footer-column {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 12px !important;
-    text-align: left !important;
-}
-
-.footer-column ul {
-    list-style: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 8px !important;
-}
-
-/* Clean spacing for your mobile phone view state */
-@media (max-width: 768px) {
-    .site-footer .footer-container {
-        grid-template-columns: 1fr !important; /* Stack vertically beautifully on your phone */
-        gap: 25px !important;
-    }
-}
-/* ======================================================= */
-/* GLOBAL RAW FOOTER RESETS FOR MOBILE MONITORING           */
-/* ======================================================= */
-
-/* Target the raw footer tag and its main wrapping child element */
-footer, .site-footer, footer > div, .footer-container {
-    display: flex !important;
-    flex-direction: row !important; /* Force side-by-side on desktop */
-    justify-content: space-between !important;
-    flex-wrap: wrap !important; /* Let elements wrap safely if needed */
-    gap: 40px !important;
-    padding: 60px 5% 40px 5% !important;
-    background-color: #0b0b0b !important;
-    width: 100% !important;
-    align-items: flex-start !important;
-}
-
-/* Force each separate link container block to be its own straight column */
-footer div, .footer-column {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 12px !important;
-    flex: 1 1 200px !important; /* Distribute column space evenly */
-}
-
-footer h3 {
-    font-size: 1.1rem !important;
-    color: #ffffff !important;
-    margin-bottom: 5px !important;
-}
-
-footer ul {
-    list-style: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 10px !important;
-    line-height: 1.5 !important;
-}
-
-footer ul li a, footer a {
-    color: #8c8c8c !important;
-    text-decoration: none !important;
-    font-size: 0.9rem !important;
-    display: inline-block !important;
-}
-
-footer ul li a:hover {
-    color: #ff2a6d !important;
-}
-
-/* SMARTPHONE OPTIMIZATION: Snaps columns into a clean single vertical stack on your phone */
-@media (max-width: 768px) {
-    footer, .site-footer, footer > div, .footer-container {
-        flex-direction: column !important; /* Stack vertically for tiny screens */
-        gap: 30px !important;
-        padding: 40px 6% !important;
-    }
-}
-/* ==========================================================================
-   FOOTER GRID LAYOUT ALIGNMENT
-   ========================================================================== */
-
-/* Main layout row container holding columns */
-.footer-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 30px;
-}
-
-/* Base style settings for individual lists columns */
-.footer-column {
-    flex: 1;
-    min-width: 200px; /* Snaps gracefully on smaller viewports */
-}
-
-/* Adjust layout spacing on titles */
-.footer-column h3 {
-    font-size: 1rem;
-    font-weight: 700;
-    color: #ffffff;
-    margin-bottom: 18px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-/* Structural cleanup on links */
-.footer-column ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.footer-column ul li {
-    margin-bottom: 10px;
-}
-
-.footer-column ul li a {
-    color: #999999;
-    text-decoration: none;
-    font-size: 0.9rem;
-    transition: color 0.2s ease-in-out;
-}
-
-.footer-column ul li a:hover {
-    color: #ff2a6d; /* Changes color to cinema accent red on hover */
-}
-
-/* Specific text wrapping for the brand info block description */
-.brand-info p {
-    color: #888888;
-    font-size: 0.88rem;
-    line-height: 1.5;
-    margin-top: 12px;
-    max-width: 280px;
-}
-
-/* ==========================================================================
-   BRAND LOGO STYLING INSIDE THE FOOTER
-   ========================================================================== */
-.logo-container-footer {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.logo-box-footer {
-    background-color: #f39c12;
-    color: #000000;
-    font-weight: 900;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 1rem;
-}
-
-.logo-text-footer {
-    font-weight: 700;
-    font-size: 1.1rem;
-    color: #ffffff;
-}
-/* ==========================================================================
-   PRODUCTION GOLD FOOTER LAYOUT (MATCHES THE SCREENSHOT)
-   ========================================================================== */
-
-/* Main dark footer tray spanning the base background */
-.site-footer {
-    background-color: #000000; /* Rich pure pitch black theater backing */
-    border-top: 1px solid #111111;
-    padding: 60px 6% 40px 6%;
-    font-family: 'Segoe UI', Arial, sans-serif;
-    margin-top: auto;
-    width: 100%;
-}
-
-/* Flex distribution container holding columns across screen width */
-.footer-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 40px;
-}
-
-/* Individual list column structural blocks */
-.footer-column {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; /* Hard-aligns all elements left */
-    min-width: 160px;
-}
-
-/* Brand column wrapper with descriptions and icons tracking */
-.brand-info {
-    max-width: 320px;
-}
-
-.brand-info p {
-    color: #888888;
-    font-size: 0.88rem;
-    line-height: 1.5;
-    margin-top: 15px;
-    margin-bottom: 20px;
-    text-align: left;
-}
-
-/* Category header titles */
-.footer-column h3 {
+    padding: 12px 28px;
     font-size: 1.05rem;
-    font-weight: 700;
-    color: #ffffff;
-    margin-bottom: 18px;
-    letter-spacing: 0.3px;
-}
-
-/* Link index stacks with absolute item normalization overrides */
-.footer-column ul {
-    list-style: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; /* Removes any old list centering artifacts */
-}
-
-.footer-column ul li {
-    margin-bottom: 12px;
-}
-
-/* Link transitions matching the reference build */
-.footer-column ul li a {
-    color: #aaaaaa;
-    text-decoration: none;
-    font-size: 0.92rem;
-    transition: color 0.2s ease-in-out;
-}
-
-.footer-column ul li a:hover {
-    color: #f39c12; /* Snaps to gold accent color on mouse hover */
-}
-
-/* ==========================================================================
-   BRAND LOGO & SOCIAL MEDIA BUTTON BLOCKS
-   ========================================================================== */
-.logo-container-footer {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.logo-box-footer {
-    background-color: #f39c12;
-    color: #000000;
-    font-weight: 900;
-    padding: 4px 8px;
+    font-weight: bold;
     border-radius: 4px;
-    font-size: 1.1rem;
-}
-
-.logo-text-footer {
-    font-weight: 700;
-    font-size: 1.2rem;
-    color: #ffffff;
-    letter-spacing: 0.5px;
-}
-
-/* Horizontal social media vector buttons layout */
-.footer-socials {
-    display: flex;
-    gap: 12px;
-    margin-top: 5px;
-}
-
-.social-icon-btn {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 36px;
-    height: 36px;
-    background-color: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    color: #ffffff;
-    text-decoration: none;
-    font-size: 0.95rem;
-    transition: all 0.2s ease-in-out;
-}
-
-.social-icon-btn:hover {
-    background-color: #f39c12;
-    border-color: #f39c12;
-    color: #000000; /* Inverts color cleanly on active hover */
-    transform: translateY(-2px);
-}
-/* ==========================================================================
-   DYNAMIC MOVIE GRID & POSTER LAYOUTS
-   ========================================================================== */
-
-/* Main layout row holding your category headers */
-.movies-container {
-    padding: 60px 6%;
-    background-color: #050505;
-}
-
-.category-row {
-    margin-bottom: 45px;
-}
-
-.category-title {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #ffffff;
-    margin-bottom: 20px;
-    display: flex;
+    cursor: pointer;
+    display: inline-flex;
     align-items: center;
     gap: 10px;
+    transition: background-color 0.2s;
 }
 
-/* Flex row wrapper container to hold movie posters horizontally */
-.movie-grid {
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-    overflow-x: auto; /* Allows smooth horizontal scrolling if many movies exist */
-    padding-bottom: 15px;
+.download-btn:hover {
+    background-color: #b81d24;
 }
 
-/* Track scrollbar style overrides for cinematic neatness */
-.movie-grid::-webkit-scrollbar {
-    height: 6px;
-}
-.movie-grid::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
-}
-
-/* Individual Movie Card Block Structural Rules */
-.movie-card {
-    width: 190px; /* Uniform width scaling block */
-    flex-shrink: 0;
-    background-color: #0c0c0c;
-    border: 1px solid #141414;
-    border-radius: 8px;
-    padding: 10px;
-    transition: transform 0.2s ease-in-out, border-color 0.2s;
-}
-
-.movie-card:hover {
-    transform: translateY(-5px);
-    border-color: #f39c12; /* Gold border trace highlights on active focus */
-}
-
-/* Force image scaling to stay constrained inside vertical cards layout */
-.poster-wrapper {
-    position: relative;
-    width: 100%;
-    height: 250px;
+/* Slider Track Block Config */
+.hero-showcase-box {
+    width: 320px;
+    height: 450px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     overflow: hidden;
-    border-radius: 6px;
-}
-
-.poster-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-/* Floating custom premium VJ designation badge overlays */
-.vj-badge {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    background-color: #f39c12; /* Golden signature accent block */
-    color: #000000;
-    font-weight: 800;
-    font-size: 0.72rem;
-    padding: 3px 8px;
-    border-radius: 4px;
-    text-transform: uppercase;
+    position: relative;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+    flex-shrink: 0;
     z-index: 5;
-    letter-spacing: 0.5px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
 }
 
-/* Styled streaming link execution buttons */
-.movie-card button {
-    display: block !important;
-    background-color: #e50914 !important; /* Netflix Cinematic Red standard */
-    color: #ffffff !important;
-    border: none !important;
-    width: 100% !important;
-    padding: 8px 0 !important;
-    border-radius: 4px !important;
-    margin-top: 10px !important;
-    cursor: pointer !important;
-    font-weight: 700 !important;
-    font-size: 0.85rem !important;
-    text-transform: uppercase;
-    transition: background-color 0.2s ease;
-}
-
-.movie-card button:hover {
-    background-color: #b81d24 !important;
-}
-.movie-grid {
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-}
-
-.movie-card {
-    width: 190px;
-    background-color: #0c0c0c;
-    border: 1px solid #141414;
-    border-radius: 8px;
-    padding: 10px;
-}
-
-.movie-card button {
-    display: block !important;
-    position: relative !important; /* FIX: Locks the button container floor depth down inside the card grid wrapper */
-    width: 100% !important;        /* FIX: Forces it to fill its card row boundaries perfectly */
-    background-color: #e50914 !important;
-    color: #ffffff !important;
-    border: none !important;
-    padding: 8px 0 !important;
-    margin-top: 10px !important;
-    border-radius: 4px !important;
-    cursor: pointer !important;
-    font-weight: 700 !important;
-    font-size: 0.85rem !important;
-    text-transform: uppercase;
-    transition: background-color 0.2s ease;
-}
-/* ==========================================================================
-   CATEGORY GRID ANCHOR FIX
-   ========================================================================== */
-
-/* This forces every category row container to securely lock its inner content down */
-.category-row {
-    position: relative !important;
-    display: block !important;
-    width: 100% !important;
-    clear: both !important;
-    margin-bottom: 50px !important; /* Creates clean breathing room between lists */
-}
-
-/* This anchors your movie grids inside their parent categories, forcing them down */
-.category-row .movie-grid {
-    position: relative !important;
-    display: flex !important;
-    flex-direction: row !important;
-    gap: 20px !important;
-    overflow-x: auto !important;
-    padding: 10px 0 !important;
-    margin-top: 15px !important;
-    width: 100% !important;
-    top: 0 !important;
-    left: 0 !important;
-}
-
-/* This forces the card elements to stay inside the grids below your titles */
-.movie-card {
-    position: relative !important;
-    top: 0 !important;
-    left: 0 !important;
-    margin: 0 !important;
-}
-/* Animation settings for the full-width background slider track */
 .hero-slider-track {
     display: flex;
     width: 400%;
     height: 100%;
-    animation: heroSliderShift 16s infinite ease-in-out;
+    position: absolute;
+    top: 0;
+    left: 0;
+    animation: slideLeftToRight 16s infinite ease-in-out;
 }
 
 .slide {
@@ -2042,549 +295,296 @@ footer ul li a:hover {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    background-color: #111111;
 }
 
-/* Keyframe movement engine to shift between the 4 slides automatically */
-@keyframes heroSliderShift {
+@keyframes slideLeftToRight {
     0%, 20% { transform: translateX(0); }
     25%, 45% { transform: translateX(-25%); }
     50%, 70% { transform: translateX(-50%); }
     75%, 95% { transform: translateX(-75%); }
     100% { transform: translateX(0); }
 }
-.whatsapp-floating-btn:hover {
-    transform: scale(1.1);
-    background-color: #128c7e !important;
-}
-/* --- Mobile Responsive Fixes --- */
-@media (max-width: 768px) {
-    /* Make the navigation bar wrap cleanly on small screens */
-    header, nav, .navber, .navbar {
-        flex-direction: column !important;
-        align-items: center !important;
-        text-align: center !important;
-        padding: 10px !important;
-        height: auto !important;
-    }
 
-  /* UGA STREAM Mobile Responsive Layout Adjustments */
-@media screen and (max-width: 991px) {
-  /* Prevent horizontal view scrolling across the whole site */
-  html, body {
-    overflow-x: hidden;
+/* ==========================================================================
+   4. FORM LAYOUT WRAPPERS & UTILITIES
+   ========================================================================== */
+.auth-section-wrapper {
+    padding: 60px 4%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-card-container {
+    background-color: #111111;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 40px;
+    border-radius: 8px;
     width: 100%;
-  }
-
-  /* Stack the main navigation container items vertically */
-  header.navbar {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    height: auto !important;
-    padding: 15px 10px !important;
-    gap: 15px !important;
-  }
-
-  /* Center the middle list of navigation links and let them wrap */
-  header.navbar .nav-links {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    justify-content: center !important;
-    gap: 12px !important;
-    width: 100% !important;
-    margin: 5px 0 !important;
-  }
-
-  /* Re-arrange the authentication block row into a centered wrapping column */
-  header.navbar .nav-auth {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    flex-direction: row !important;
-    justify-content: center !important;
-    align-items: center !important;
-    gap: 15px !important;
-    width: 100% !important;
-  }
-
-  /* Make the search container expand cleanly on narrow screens */
-  header.navbar .search-container {
-    width: 90% !important;
-    max-width: 400px !important;
-    margin-bottom: 5px !important;
-    display: flex !important;
-  }
-
-  header.navbar .search-input {
-    width: 100% !important;
-  }
-
-  /* Keep the Login text link and Sign Up button inline and fully visible */
-  header.navbar .login-link {
-    margin: 0 10px !important;
-    white-space: nowrap !important;
-  }
-
-  header.navbar .signup-btn {
-    padding: 8px 20px !important;
-    white-space: nowrap !important;
-  }
-
-  /* Scale down the cinematic hero banner title so it fits phone viewports */
-  .hero-title {
-    font-size: 2.2rem !important;
-    text-align: center !important;
-  }
-  
-  .hero-content {
-    padding: 20px !important;
-    margin: 10px !important;
-  }
-}
-/* Remove dark background card from hero text section */
-.hero-content {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-}
-/* Fix navigation bar alignment issues */
-header.navbar {
-    display: flex !important;
-    align-items: center !important; /* Vertically centers all elements inside the header */
-    justify-content: space-between !important;
-    padding: 15px 4% !important; /* Adds uniform spacing around elements */
-    height: auto !important;
-    min-height: 70px !important;
+    max-width: 480px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.6);
 }
 
-/* ==========================================
-   FINAL UNIFIED NAVBAR RESPONSIVE PATCH
-   ========================================== */
-
-/* 1. Global Desktop Alignment Rule */
-header.navbar {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    padding: 12px 4% !important;
-    min-height: 75px !important;
-    height: auto !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
+.auth-card-container h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #ffffff;
 }
 
-header.navbar .nav-links {
-    display: flex !important;
-    align-items: center !important;
-    gap: 15px !important;
+.auth-subtitle {
+    color: #999999;
+    font-size: 0.95rem;
+    margin-bottom: 25px;
 }
 
-header.navbar .nav-auth {
-    display: flex !important;
-    align-items: center !important;
-    gap: 15px !important;
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
-/* ====================================================
-   CLEAN MOBILE LAYOUT — NO OVERLAPS & PROPORTIONAL SIZES
-   ==================================================== */
-@media screen and (max-width: 991px) {
-    html, body {
-        overflow-x: hidden !important;
-        width: 100% !important;
-    }
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
 
-    /* 1. Make the header navigation bar its own separate section up top */
-    header.navbar {
-        display: flex !important;
-        flex-direction: column !important;
-        position: relative !important; /* Pushes it away from the background movie text */
-        background: #0d0d0d !important; /* Solid dark bar so everything is clear to read */
-        width: 100% !important;
-        height: auto !important;
-        padding: 15px 10px !important;
-        gap: 12px !important;
-    }
+.input-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #cccccc;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
 
-    /* 2. Group and center menu link text tags nicely */
-    header.navbar .nav-links {
-        display: flex !important;
-        flex-wrap: wrap !important;
-        justify-content: center !important;
-        gap: 12px !important;
-        width: 100% !important;
-        margin: 5px 0 !important;
-    }
+.form-input {
+    background-color: #1a1a1a;
+    border: 1px solid #333333;
+    color: #ffffff;
+    padding: 12px 14px;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    outline: none;
+    width: 100%;
+    transition: all 0.2s;
+}
 
-    header.navbar .nav-links a {
-        font-size: 0.9rem !important;
-        color: #ccc !important;
-        text-decoration: none !important;
-    }
+.form-input:focus {
+    border-color: #e50914;
+    background-color: #222222;
+}
 
-    /* 3. Handle search bar and authorization buttons */
-    header.navbar .nav-auth {
-        display: flex !important;
-        flex-direction: row !important; /* Keep search, login, signup aligned neatly */
-        flex-wrap: wrap !important;
-        justify-content: center !important;
-        align-items: center !important;
-        gap: 15px !important;
-        width: 100% !important;
-    }
+/* Plan Selectors Customization */
+.subscription-plan-selector h3 {
+    font-size: 0.95rem;
+    margin: 10px 0 12px 0;
+    color: #cccccc;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
 
-    /* Minimize search input container width */
-    header.navbar .search-container {
-        width: 90% !important;
-        max-width: 280px !important;
-    }
+.plan-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #1a1a1a;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+}
 
-    header.navbar .search-input {
-        width: 100% !important;
-        padding: 6px 12px !important;
-        font-size: 0.85rem !important;
-    }
+.plan-option:hover {
+    background: #222222;
+    border-color: #444444;
+}
 
-    /* Style login text link */
-    header.navbar .login-link {
-        color: #fff !important;
-        font-size: 0.9rem !important;
-        text-decoration: none !important;
-    }
+.plan-option input[type="radio"] {
+    accent-color: #e50914;
+    transform: scale(1.15);
+}
 
-    /* Minimize sign up button size */
-    header.navbar .signup-btn {
-        background: #e50914 !important;
-        color: #fff !important;
-        padding: 6px 16px !important;
-        font-size: 0.85rem !important;
-        border-radius: 4px !important;
-    }
+.plan-text {
+    font-size: 0.95rem;
+    color: #ffffff;
+    font-weight: 600;
+}
 
-    /* 4. Minimize the massive background text sizes so it looks clean */
+.plan-text small {
+    color: #888888;
+    font-weight: 400;
+    margin-left: 5px;
+}
+
+.submit-auth-btn {
+    background-color: #e50914;
+    color: #ffffff;
+    border: none;
+    padding: 14px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.2s;
+}
+
+.submit-auth-btn:hover {
+    background-color: #b81d24;
+}
+
+.login-accent {
+    background-color: #333333;
+}
+
+.login-accent:hover {
+    background-color: #444444;
+}
+
+/* ==========================================================================
+   5. INTERFACE GLOBAL FOOTER STRUCTURE
+   ========================================================================== */
+.main-footer {
+    background-color: #0c0c0c;
+    padding: 40px 4%;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 25px;
+    margin-bottom: 20px;
+}
+
+.footer-links a {
+    color: #666666;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+.footer-links a:hover {
+    color: #b3b3b3;
+}
+
+.footer-copyright {
+    color: #444444;
+    font-size: 0.8rem;
+}
+
+/* ==========================================================================
+   6. RESPONSIVE MEDIA QUERIES (ADAPTIVE ENGINE)
+   ========================================================================== */
+@media (max-width: 991px) {
     .hero-section {
-        padding: 30px 5% !important;
-        min-height: auto !important;
+        gap: 40px;
+        padding: 120px 5% 60px 5%;
     }
-
+    
     .hero-title {
-        font-size: 1.8rem !important; /* Drastically minimizes your text scale */
-        line-height: 1.3 !important;
-        text-align: center !important;
-        margin-top: 10px !important;
-    }
-
-    .hero-description {
-        font-size: 0.95rem !important;
-        text-align: center !important;
-        margin: 10px 0 !important;
-    }
-
-    .hero-content {
-        padding: 15px !important;
-        width: 100% !important;
+        font-size: 2.8rem;
     }
 }
-/* ==========================================
-   MOBILE & TABLET RESPONSIVE MEDIA QUERY
-   ========================================== */
+
 @media (max-width: 900px) {
-    /* 1. Stack Navbar items vertically */
-    .navbar {
-        flex-direction: column;
-        gap: 15px;
-        padding: 15px 4%;
-        background: rgba(5, 5, 5, 0.95); /* Solid backing so movie backdrop doesn't mix with text */
-        position: relative; /* Allows content below to flow naturally without overlapping */
-    }
-
-    /* 2. Center layout links and wrap them cleanly */
-    .nav-links {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 12px 18px;
-    }
-
-    .nav-links a {
-        font-size: 0.85rem;
-    }
-
-    /* 3. Center and size search/auth buttons safely */
+    /* Navbar transforms into a mobile header line */
+    /* ==========================================================================
+       CONTINUATION OF @MEDIA (MAX-WIDTH: 900PX) MOBILE STYLES
+       ========================================================================== */
     .nav-auth {
-        flex-direction: column;
-        width: 100%;
-        gap: 12px;
+        order: 2;
+        gap: 15px;
     }
 
+    /* Compress components to fit header limitations */
     .search-container {
-        width: 90%;
-        max-width: 320px;
-        justify-content: space-between;
+        width: 140px;
+    }
+    
+    .search-input {
+        width: 100%;
     }
 
-    /* 4. Fix Hero layouts and stop side-by-side stretching */
+    .login-link, .signup-btn {
+        display: none !important; /* Safely hidden on mobile navigation row bar lines */
+    }
+
+    /* Hamburger Animation Transitions */
+    .menu-toggle.open span:nth-child(1) {
+        transform: translateY(9px) rotate(45deg);
+    }
+    .menu-toggle.open span:nth-child(2) {
+        opacity: 0;
+    }
+    .menu-toggle.open span:nth-child(3) {
+        transform: translateY(-9px) rotate(-45deg);
+    }
+
+    /* Stack Hero section items vertically */
     .hero-section {
-        flex-direction: column !important; /* Stack text content on top of your movie carousel */
-        padding: 40px 5% !important;
+        flex-direction: column-reverse !important;
+        padding: 100px 6% 40px 6% !important;
         text-align: center;
-        min-height: auto !important;
-        gap: 30px !important;
+        gap: 35px;
+        min-height: auto;
+    }
+
+    .hero-overlay-gradient {
+        background: linear-gradient(to top, rgba(5, 5, 5, 0.95) 60%, rgba(5, 5, 5, 0.4) 100%) !important;
     }
 
     .hero-content {
-        max-width: 100%;
-    }
-
-    /* Reduce font size so headline doesn't clip on small devices */
-    .hero-content h1, 
-    .hero-section h1 {
-        font-size: 2.2rem !important;
-        line-height: 1.2;
+        max-width: 100% !important;
     }
 
     .hero-tags {
         justify-content: center;
     }
 
-    /* 5. Scale down the vertical slideshow block safely */
+    .hero-title {
+        font-size: 2.2rem !important;
+    }
+
+    .hero-description {
+        font-size: 1rem;
+        margin-bottom: 24px;
+    }
+
     .hero-showcase-box {
-        width: 260px; /* Slimmer layout to match phone screen profiles */
-        height: 360px;
+        width: 240px !important;
+        height: 335px !important;
+        margin: 0 auto; /* Centers the sliding poster box on mobile */
     }
 }
-/* ==========================================
-   MOBILE NAVBAR TOGGLE CONTROLS
-   ========================================== */
-@media (max-width: 900px) {
-    /* Forces navbar items to stay horizontal on top */
+
+/* ==========================================================================
+   7. SMALL SMARTPHONE BREAKPOINT (MAX-WIDTH: 480PX)
+   ========================================================================== */
+@media (max-width: 480px) {
     .navbar {
-        display: flex !important;
-        flex-direction: row !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        flex-wrap: wrap;
+        padding: 12px 15px;
     }
-
-    /* Hides the vertical category text list by default */
-    .nav-links {
-        display: none !important;
-        width: 100%;
-        flex-direction: column;
-        gap: 15px;
-        padding: 20px 0 10px 0;
-        text-align: center;
-    }
-
-    /* Hides the search container and buttons by default */
-    .nav-auth {
-        display: none !important;
-        width: 100%;
-        flex-direction: column;
-        align-items: center;
-        gap: 15px;
-        padding-bottom: 15px;
-    }
-
-    /* This reveals the hidden categories ONLY when you tap the button */
-    .nav-links.active, 
-    .nav-auth.active {
-        display: flex !important;
-    }
-
-    /* Styles the custom hamburger menu toggle icon lines */
-    .menu-toggle {
-        display: flex !important;
-        flex-direction: column;
-        justify-content: space-between;
-        width: 26px;
-        height: 18px;
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        padding: 0;
-    }
-
-    .menu-toggle span {
-        width: 100%;
-        height: 3px;
-        background-color: #ffffff;
-        border-radius: 2px;
-        transition: all 0.3s ease;
-    }
-}
-/* ==========================================
-   FINAL RESPONSIVE MOBILE FIX
-   ========================================== */
-@media (max-width: 900px) {
-    /* 1. Aligns the Logo on the left, and Hamburger/Search container on the right */
-    header.navbar, .navbar {
-        display: flex !important;
-        flex-direction: row !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        flex-wrap: nowrap !important; /* Prevents elements from breaking into a second line */
-        padding: 10px 16px !important;
-        background: #050505 !important;
-    }
-
-    /* 2. Groups search bar and toggle icon tightly on the right side */
-    .nav-auth {
-        display: flex !important; /* Force it visible on the top row */
-        flex-direction: row !important;
-        align-items: center !important;
-        gap: 12px !important;
-        width: auto !important;
-        order: 2 !important; /* Places it next to the hamburger button */
-    }
-
-    /* Shrinks search input container slightly to fit nicely on small screens */
-    .search-container {
-        width: 140px !important;
-        height: 32px !important;
-        padding: 2px 8px !important;
-    }
-
-    .search-input {
-        font-size: 0.8rem !important;
-    }
-
-    /* Hide desktop buttons so they don't crowd the top mobile bar */
-    .login-link, .signup-btn {
-        display: none !important;
-    }
-
-    /* 3. Forces the hamburger menu button to the absolute far right */
-    .menu-toggle {
-        display: flex !important;
-        order: 3 !important; 
-        margin-left: 5px;
-    }
-
-    /* 4. Keeps the vertical categories hidden cleanly right below the header layer */
-    .nav-links {
-        display: none !important;
-        position: absolute !important;
-        top: 60px !important;
-        left: 0 !important;
-        width: 100% !important;
-        background: rgba(5, 5, 5, 0.98) !important;
-        flex-direction: column !important;
-        padding: 20px 0 !important;
-        z-index: 999 !important;
-    }
-
-    /* Displays the dropdown categories list smoothly when toggled active */
-    .nav-links.active {
-        display: flex !important;
-    }
-}
-
     
-    .nav-auth.active {
-        display: flex !important;
-    }
-
-    /* 5. Clean up the hamburger icon layout size */
-    .menu-toggle {
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: space-between !important;
-        width: 24px !important;
-        height: 18px !important;
-        background: transparent !important;
-        border: none !important;
-        cursor: pointer !important;
-        padding: 0 !important;
-        order: 3 !important; /* Forces it to the far right side of the screen */
-    }
-
-    .menu-toggle span {
-        width: 100% !important;
-        height: 3px !important;
-        background-color: #ffffff !important;
-        border-radius: 2px !important;
-    }
-}
-/* ==========================================
-   MOBILE TOP-RIGHT NAV FIXED ALIGNMENT 
-   ========================================== */
-@media (max-width: 900px) {
-    /* 1. Force the navbar to be a single, non-wrapping row banner */
-    header.navbar, .navbar {
-        display: flex !important;
-        flex-direction: row !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        flex-wrap: nowrap !important;
-        padding: 10px 14px !important;
-        background-color: #050505 !important;
-        width: 100% !important;
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        height: 60px !important;
-        z-index: 1000 !important;
-    }
-
-    /* 2. Group the Search bar tightly on the right side next to logo */
-    .nav-auth, div.nav-auth {
-        display: flex !important; 
-        flex-direction: row !important;
-        align-items: center !important;
-        gap: 10px !important;
-        width: auto !important;
-        height: auto !important;
-        background: transparent !important;
-        position: static !important; /* Removes absolute positioning */
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-
-    /* Shrink search input layout container to fit on tiny screens */
     .search-container {
-        width: 150px !important;
-        height: 32px !important;
-        padding: 2px 10px !important;
-        margin: 0 !important;
+        width: 110px;
     }
-
-    .search-input {
-        font-size: 0.75rem !important;
-        width: 100% !important;
+    
+    .logo-text {
+        font-size: 1.1rem;
     }
-
-    /* Hide desktop buttons so they don't block the mobile row */
-    .login-link, .signup-btn {
-        display: none !important;
+    
+    .auth-card-container {
+        padding: 25px 20px;
     }
-
-    /* 3. Force Hamburger menu lines to the far right edge */
-    .menu-toggle {
-        display: flex !important;
-        order: 3 !important;
-        margin-left: 8px !important;
-        background: transparent !important;
-    }
-
-    /* 4. PUSH ALL CATEGORIES SAFELY INSIDE THE DROPDOWN */
-    .nav-links, nav.nav-links {
-        display: none !important; /* Hides links completely by default */
-        position: absolute !important;
-        top: 60px !important; /* Drops right below the 60px black bar */
-        left: 0 !important;
-        width: 100% !important;
-        background-color: rgba(5, 5, 5, 0.98) !important;
-        flex-direction: column !important;
-        gap: 16px !important;
-        padding: 20px 0 !important;
-        text-align: center !important;
-        border-bottom: 1px solid rgba(243, 156, 18, 0.2);
-        z-index: 999 !important;
-    }
-
-    /* 5. Reveal the dropdown categories only when you click the menu */
-    .nav-links.active {
-        display: flex !important;
+    
+    .auth-card-container h2 {
+        font-size: 1.5rem;
     }
 }
