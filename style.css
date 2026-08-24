@@ -564,6 +564,35 @@ body {
     }
 }
 
+    .nav-links {
+        display: none; /* Stays hidden until clicked */
+        flex-direction: column !important;
+        position: absolute !important;
+        top: 65px !important;
+        left: 0 !important;
+        width: 100% !important;
+        background-color: rgba(10, 10, 10, 0.98) !important;
+        padding: 25px 0 !important;
+        gap: 20px !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.8) !important;
+        z-index: 9999 !important;
+    }
+
+    .nav-links.active {
+        display: flex !important;
+    }
+
+    .nav-links a {
+        font-size: 1.1rem !important;
+        color: #ffffff !important; 
+        width: 100% !important;
+        text-align: center !important;
+        padding: 8px 0 !important;
+        display: block !important;
+    }
+
+
 /* ==========================================================================
    7. SMALL SMARTPHONE BREAKPOINT (MAX-WIDTH: 480PX)
    ========================================================================== */
