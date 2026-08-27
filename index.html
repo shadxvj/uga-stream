@@ -157,13 +157,39 @@
     </main>
 
     <!-- JavaScript to control user interactions -->
+        <!-- JavaScript to control user interactions -->
     <script>
     document.addEventListener("DOMContentLoaded", () => {
         const profileMenuBtn = document.getElementById("profileMenuBtn");
         const profileDropdown = document.getElementById("profileDropdown");
         const menuToggle = document.getElementById("menu-toggle");
         const navLinks = document.getElementById("nav-links");
+        const signupModal = document.getElementById("signup-anchor");
 
+        // EMERGENCY OVERRIDE: If the user just loaded the site fresh, hide the signup form completely
+        if (!window.location.hash || window.location.hash !== "#signup-anchor") {
+            if (signupModal) signupModal.style.setProperty('display', 'none', 'important');
+        }
+
+        // Listen for anchor changes so the signup button actually opens it smoothly
+        window.addEventListener("hashchange", () => {
+            if (window.location.hash === "#signup-anchor") {
+                if (signupModal) signupModal.style.setProperty('display', 'flex', 'important');
+            } else {
+                if (signupModal) signupModal.style.setProperty('display', 'none', 'important');
+            }
+        });
+
+        // Close form instantly if they click the background overlay outside the card
+        if (signupModal) {
+            signupModal.addEventListener("click", (e) => {
+                if (e.target === signupModal) {
+                    window.location.hash = "";
+                }
+            });
+        }
+
+        // Profile Menu Interactive System
         if (profileMenuBtn && profileDropdown) {
             profileMenuBtn.addEventListener("click", (e) => {
                 e.stopPropagation();
@@ -188,5 +214,6 @@
         });
     });
     </script>
+
 </body>
 </html>
