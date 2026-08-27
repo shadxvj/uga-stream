@@ -618,7 +618,7 @@ body {
     }
 }
 /* ==========================================================================
-   5. COMPLETE DIALOG OVERLAY RESET
+   5. COMPLETE DIALOG OVERLAY RESET (UNIVERSAL FIXED PATCH)
    ========================================================================== */
 #signup-anchor {
     position: fixed !important;
@@ -626,31 +626,32 @@ body {
     left: 0 !important;
     width: 100vw !important;
     height: 100vh !important;
-    background-color: rgba(5, 5, 5, 0.85) !important;
+    background-color: rgba(5, 5, 5, 0.85) !important; /* Semi-transparent dark background */
     backdrop-filter: blur(8px) !important;
     -webkit-backdrop-filter: blur(8px) !important;
-    z-index: 99999 !important;
-    display: none !important; /* Forces the box to hide completely by default */
+    vertical-align: middle;
+    z-index: 99999 !important; /* Keeps it on top of the navbar and everything else */
+    display: none !important; /* Hides it completely by default */
     justify-content: center !important;
     align-items: center !important;
-    overflow: hidden !important; /* Destroys the outer window layout scrollbar */
+    overflow: hidden !important; /* Strips out the nasty double outer scrollbar */
 }
 
-/* Make it pop up only when requested by clicking the navbar button */
+/* This activates the form ONLY when someone clicks your Sign Up links */
 #signup-anchor:target {
     display: flex !important;
 }
 
-/* Perfect alignment card styling adjustments inside the view overlay */
+/* Style formatting for the actual card container inside the modal */
 #signup-anchor .auth-card-container {
     background-color: #111111 !important;
     width: 90% !important;
     max-width: 440px !important;
-    max-height: 85vh !important; /* Limits box height to prevent window leakage */
-    overflow-y: auto !important; /* Creates exactly ONE clean vertical scrollbar */
+    max-height: 82vh !important; /* Constrains height to perfectly fit inside mobile and desktop frames */
+    overflow-y: auto !important; /* Creates exactly ONE clean internal scrollbar for form fields */
     padding: 30px !important;
     border-radius: 12px !important;
-    border: 1px solid rgba(229, 9, 20, 0.3) !important;
+    border: 1px solid rgba(229, 9, 20, 0.3) !important; /* Cool subtle red movie theme outline */
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9) !important;
     margin: auto !important;
 }
