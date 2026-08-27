@@ -618,46 +618,39 @@ body {
     }
 }
 /* ==========================================================================
-   5. EMERGENCY MODAL OVERLAY OVERRIDE FOR SIGNUP CONTAINER
+   5. COMPLETE DIALOG OVERLAY RESET
    ========================================================================== */
-
-/* Target the specific ID shown in your browser address bar */
 #signup-anchor {
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
     width: 100vw !important;
     height: 100vh !important;
-    z-index: 9999 !important; /* Forces it over the header and hero content */
-    background: rgba(5, 5, 5, 0.85) !important; /* Dims the layout background */
+    background-color: rgba(5, 5, 5, 0.85) !important;
     backdrop-filter: blur(8px) !important;
     -webkit-backdrop-filter: blur(8px) !important;
-    display: none !important; /* Keeps it hidden by default */
+    z-index: 99999 !important;
+    display: none !important; /* Forces the box to hide completely by default */
     justify-content: center !important;
     align-items: center !important;
-    padding: 20px !important;
+    overflow: hidden !important; /* Destroys the outer window layout scrollbar */
 }
 
-/* This rule only activates when the user clicks 'Sign Up Now' */
+/* Make it pop up only when requested by clicking the navbar button */
 #signup-anchor:target {
     display: flex !important;
 }
 
-/* Fixes the login form box layout container inside it */
-#signup-anchor .auth-card-container,
-#signup-anchor form,
-#signup-anchor > div {
-    margin: auto !important;
-    max-height: 90vh !important;
-    overflow-y: auto !important; /* Allows scrolling inside the form if screen is small */
-    border: 1px solid rgba(229, 9, 20, 0.3) !important;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9) !important;
-}
-/* Update your existing #signup-anchor code to remove excess inner scrollbars */
+/* Perfect alignment card styling adjustments inside the view overlay */
 #signup-anchor .auth-card-container {
-    margin: auto !important;
-    max-height: 85vh !important; /* Slightly smaller to prevent outer scrolling triggers */
-    overflow-y: auto !important;
+    background-color: #111111 !important;
+    width: 90% !important;
+    max-width: 440px !important;
+    max-height: 85vh !important; /* Limits box height to prevent window leakage */
+    overflow-y: auto !important; /* Creates exactly ONE clean vertical scrollbar */
+    padding: 30px !important;
+    border-radius: 12px !important;
     border: 1px solid rgba(229, 9, 20, 0.3) !important;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9) !important;
+    margin: auto !important;
 }
