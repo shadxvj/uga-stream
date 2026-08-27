@@ -96,7 +96,7 @@ const storage = new CloudinaryStorage({
         return {
             folder: isVideo ? 'uga-stream-videos' : 'uga-stream-posters',
             resource_type: isVideo ? 'video' : 'image',
-            allowed_formats: isVideo ? ['mp4', 'mkv', 'avi', 'mov'] : ['jpg', 'jpeg', 'png', 'webp']
+                    allowed_formats: isVideo ? ['mp4', 'mkv', 'avi', 'mov'] : ['jpg', 'jpeg', 'png', 'webp', 'jfif']
         };
     }
 });
