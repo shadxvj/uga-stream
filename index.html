@@ -101,16 +101,68 @@
                 </div>
             </div>
         </section>
-102          </div>
-103      </section>
-104
-105      <!-- PASTE THE SHOWCASE CATEGORIES CODE BLOCK HERE -->
-106      <div class="movie-showcase-container" style="padding: 40px 8%; ...">
-             ...
-         </div>
-107
-108      <!-- Premium Themed Subscription Sign-Up Area (Modal Pop-up Container) -->
-109      <section class="auth-section-wrapper" id="signup-anchor">
+        <!-- Dynamic Cinema Content Showcase Layers -->
+        <div class="movie-showcase-container" style="padding: 40px 8%; display: flex; flex-direction: column; gap: 50px; background-color: #050505;">
+            
+            <!-- 1. TRENDING CATEGORY GRID -->
+            <section class="category-row-block" id="trending">
+                <h2 style="font-size: 1.6rem; font-weight: 700; color: #ffffff; margin-bottom: 20px; letter-spacing: 0.5px;">Trending Movies <span style="color: #e50914;">★</span></h2>
+                <div class="movie-grid-track" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px;">
+                    <div class="movie-card" style="background-color: #111; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); cursor: pointer;"><div style="width: 100%; height: 260px; background-color: #222; display: flex; align-items: center; justify-content: center; color: #555;"><i class="fa-solid fa-film fa-2xl"></i></div><div style="padding: 12px;"><h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 4px;">John Wick: Chapter 4</h4><p style="font-size: 0.8rem; color: #e50914; font-weight: bold;">VJ Jingo</p></div></div>
+                    <div class="movie-card" style="background-color: #111; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); cursor: pointer;"><div style="width: 100%; height: 260px; background-color: #222; display: flex; align-items: center; justify-content: center; color: #555;"><i class="fa-solid fa-film fa-2xl"></i></div><div style="padding: 12px;"><h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 4px;">Avatar: Way of Water</h4><p style="font-size: 0.8rem; color: #e50914; font-weight: bold;">VJ Mark</p></div></div>
+                </div>
+            </section>
+
+            <!-- 2. ACTION CATEGORY GRID -->
+            <section class="category-row-block" id="action">
+                <h2 style="font-size: 1.6rem; font-weight: 700; color: #ffffff; margin-bottom: 20px; letter-spacing: 0.5px;">Action Blockbusters</h2>
+                <div class="movie-grid-track" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px;">
+                    <div class="movie-card" style="background-color: #111; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); cursor: pointer;"><div style="width: 100%; height: 260px; background-color: #222; display: flex; align-items: center; justify-content: center; color: #555;"><i class="fa-solid fa-film fa-2xl"></i></div><div style="padding: 12px;"><h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 4px;">The Batman</h4><p style="font-size: 0.8rem; color: #e50914; font-weight: bold;">VJ Emmy</p></div></div>
+                </div>
+            </section>
+
+            <!-- 3. COMEDY CATEGORY GRID -->
+            <section class="category-row-block" id="comedy">
+                <h2 style="font-size: 1.6rem; font-weight: 700; color: #ffffff; margin-bottom: 20px; letter-spacing: 0.5px;">Comedy Hits</h2>
+                <div class="movie-grid-track" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px;">
+                    <div class="movie-card" style="background-color: #111; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); cursor: pointer;"><div style="width: 100%; height: 260px; background-color: #222; display: flex; align-items: center; justify-content: center; color: #555;"><i class="fa-solid fa-film fa-2xl"></i></div><div style="padding: 12px;"><h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 4px;">Free Guy</h4><p style="font-size: 0.8rem; color: #e50914; font-weight: bold;">VJ Mark</p></div></div>
+                </div>
+            </section>
+
+            <!-- 4. DRAMA CATEGORY GRID -->
+            <section class="category-row-block" id="drama">
+                <h2 style="font-size: 1.6rem; font-weight: 700; color: #ffffff; margin-bottom: 20px; letter-spacing: 0.5px;">Intense Drama</h2>
+                <div class="movie-grid-track" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px;">
+                    <div class="movie-card" style="background-color: #111; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); cursor: pointer;"><div style="width: 100%; height: 260px; background-color: #222; display: flex; align-items: center; justify-content: center; color: #555;"><i class="fa-solid fa-film fa-2xl"></i></div><div style="padding: 12px;"><h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 4px;">Oppenheimer</h4><p style="font-size: 0.8rem; color: #e50914; font-weight: bold;">VJ Jingo</p></div></div>
+                </div>
+            </section>
+
+            <!-- 5. SERIES CATEGORY GRID -->
+            <section class="category-row-block" id="series">
+                <h2 style="font-size: 1.6rem; font-weight: 700; color: #ffffff; margin-bottom: 20px; letter-spacing: 0.5px;">Trending Series</h2>
+                <div class="movie-grid-track" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px;">
+                    <div class="movie-card" style="background-color: #111; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); cursor: pointer;"><div style="width: 100%; height: 260px; background-color: #222; display: flex; align-items: center; justify-content: center; color: #555;"><i class="fa-solid fa-film fa-2xl"></i></div><div style="padding: 12px;"><h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 4px;">House of the Dragon</h4><p style="font-size: 0.8rem; color: #e50914; font-weight: bold;">VJ Junior</p></div></div>
+                </div>
+            </section>
+
+            <!-- 6. HORROR CATEGORY GRID -->
+            <section class="category-row-block" id="horror">
+                <h2 style="font-size: 1.6rem; font-weight: 700; color: #ffffff; margin-bottom: 20px; letter-spacing: 0.5px;">Thriller & Horrors</h2>
+                <div class="movie-grid-track" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px;">
+                    <div class="movie-card" style="background-color: #111; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); cursor: pointer;"><div style="width: 100%; height: 260px; background-color: #222; display: flex; align-items: center; justify-content: center; color: #555;"><i class="fa-solid fa-film fa-2xl"></i></div><div style="padding: 12px;"><h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 4px;">Evil Dead Rise</h4><p style="font-size: 0.8rem; color: #e50914; font-weight: bold;">VJ Emmy</p></div></div>
+                </div>
+            </section>
+
+            <!-- 7. ANIMATION CATEGORY GRID -->
+            <section class="category-row-block" id="animation">
+                <h2 style="font-size: 1.6rem; font-weight: 700; color: #ffffff; margin-bottom: 20px; letter-spacing: 0.5px;">Animation & Kids</h2>
+                <div class="movie-grid-track" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px;">
+                    <div class="movie-card" style="background-color: #111; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); cursor: pointer;"><div style="width: 100%; height: 260px; background-color: #222; display: flex; align-items: center; justify-content: center; color: #555;"><i class="fa-solid fa-film fa-2xl"></i></div><div style="padding: 12px;"><h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 4px;">Spider-Man: Spider-Verse</h4><p style="font-size: 0.8rem; color: #e50914; font-weight: bold;">VJ Mark</p></div></div>
+                </div>
+            </section>
+
+        </div>
+
 
         <!-- Premium Themed Subscription Sign-Up Area (Modal Pop-up Container) -->
         <section class="auth-section-wrapper" id="signup-anchor">
