@@ -7,18 +7,51 @@
     <link rel="stylesheet" href="style.css">
     <!-- FontAwesome Icons for UI graphics -->
     <link rel="stylesheet" href="https://cloudflare.com">
+    <style>
+        /* Specific layouts to move sliding poster behind hero headlines dynamically */
+        .hero-section {
+            position: relative;
+            min-height: 80vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 8%;
+            overflow: hidden;
+            background: #050505;
+        }
+        .hero-background-carousel {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            max-width: 650px;
+            pointer-events: auto;
+        }
+        .hero-overlay-gradient {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(5,5,5,0.95) 35%, rgba(5,5,5,0.6) 70%, rgba(5,5,5,0.95) 100%),
+                        linear-gradient(to bottom, rgba(5,5,5,0.5) 0%, rgba(5,5,5,0.95) 100%);
+            z-index: 2;
+            pointer-events: none;
+        }
+    </style>
 </head>
 <body>
 
-    <!-- Top Quick Links Utility Bar -->
+    <!-- Top Quick Links Promo Banner -->
     <div class="quick-links-bar">
-        <div class="quick-links-content">
-            <a href="#signup-anchor"><span class="badge-promo">PROMO</span> Join today for UGX 2,000</a>
-            <div class="quick-utility-links">
-                <a href="#faqs">How to Watch</a>
-                <a href="#support">Get Help</a>
-                <a href="#vj-join">Become a VJ</a>
-            </div>
+        <div class="quick-links-content" style="display: flex; justify-content: center; align-items: center;">
+            <a href="#signup-anchor" style="text-decoration: none; color: #b3b3b3; font-size: 0.85rem;"><span class="badge-promo">PROMO</span> Join today for UGX 2,000</a>
         </div>
     </div>
 
@@ -30,7 +63,7 @@
             <span class="logo-text">UGA <span class="ug-text">STREAM</span></span>
         </div>
 
-        <!-- Center: Movie Categories Layout -->
+        <!-- Center: Movie Categories Layout Links -->
         <nav class="nav-links" id="nav-links">
             <a href="#" class="active">Home</a>
             <a href="#trending">Trending</a>
@@ -74,15 +107,25 @@
     <!-- Main Content Presentation Layout -->
     <main class="content-wrapper">
         
-        <!-- Premium Dual-Column Cinematic Hero Presentation Layer -->
+        <!-- Premium Dual-Column Cinematic Hero Presentation Layer (Background Carousel Slide Mode) -->
         <section class="hero-section">
+            <!-- Fullscreen Moving Image Array Background Frame -->
+            <div class="hero-background-carousel">
+                <div class="hero-slider-track">
+                    <div class="slide" style="background-image: url('images/hero-bg1.jpg');"></div>
+                    <div class="slide" style="background-image: url('images/hero-bg2.jpg');"></div>
+                    <div class="slide" style="background-image: url('images/hero-bg3.jpg');"></div>
+                    <div class="slide" style="background-image: url('images/hero-bg1.jpg');"></div>
+                </div>
+            </div>
+            
             <div class="hero-overlay-gradient"></div>
 
             <div class="hero-content">
                 <div class="hero-tags">
                     <span class="tag">2026</span>
                     <span class="tag">MOVIE</span>
-                    <span class="tag vj-tag">ACTION</span>
+                    <span class="tag vj-tag">LUGANDA VJ</span>
                 </div>
                 <h1 class="hero-title">Uganda's home for VJ-translated cinema.</h1>
                 <p class="hero-description">Discover the latest movies in Luganda with premium streaming quality and local VJ flavor.</p>
@@ -90,19 +133,10 @@
                     <i class="fa-solid fa-play"></i> Watch Now
                 </button>
             </div>
-
-            <!-- Animated Slider Card Component -->
-            <div class="hero-showcase-box">
-                <div class="hero-slider-track">
-                    <div class="slide" style="background-image: linear-gradient(rgba(13,13,13,0.2), rgba(13,13,13,0.6)), url('images/hero-bg1.jpg');"></div>
-                    <div class="slide" style="background-image: linear-gradient(rgba(13,13,13,0.2), rgba(13,13,13,0.6)), url('images/hero-bg2.jpg');"></div>
-                    <div class="slide" style="background-image: linear-gradient(rgba(13,13,13,0.2), rgba(13,13,13,0.6)), url('images/hero-bg3.jpg');"></div>
-                    <div class="slide" style="background-image: linear-gradient(rgba(13,13,13,0.2), rgba(13,13,13,0.6)), url('images/hero-bg1.jpg');"></div>
-                </div>
-            </div>
         </section>
+
         <!-- Dynamic Cinema Content Showcase Layers -->
-        <div class="movie-showcase-container" style="padding: 40px 8%; display: flex; flex-direction: column; gap: 50px; background-color: #050505;">
+        <div class="movie-showcase-container" style="padding: 60px 8%; display: flex; flex-direction: column; gap: 60px; background-color: #050505;">
             
             <!-- 1. TRENDING CATEGORY GRID -->
             <section class="category-row-block" id="trending">
@@ -110,6 +144,7 @@
                 <div class="movie-grid-track" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px;">
                     <div class="movie-card" style="background-color: #111; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); cursor: pointer;"><div style="width: 100%; height: 260px; background-color: #222; display: flex; align-items: center; justify-content: center; color: #555;"><i class="fa-solid fa-film fa-2xl"></i></div><div style="padding: 12px;"><h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 4px;">John Wick: Chapter 4</h4><p style="font-size: 0.8rem; color: #e50914; font-weight: bold;">VJ Jingo</p></div></div>
                     <div class="movie-card" style="background-color: #111; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); cursor: pointer;"><div style="width: 100%; height: 260px; background-color: #222; display: flex; align-items: center; justify-content: center; color: #555;"><i class="fa-solid fa-film fa-2xl"></i></div><div style="padding: 12px;"><h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 4px;">Avatar: Way of Water</h4><p style="font-size: 0.8rem; color: #e50914; font-weight: bold;">VJ Mark</p></div></div>
+                    <div class="movie-card" style="background-color: #111; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); cursor: pointer;"><div style="width: 100%; height: 260px; background-color: #222; display: flex; align-items: center; justify-content: center; color: #555;"><i class="fa-solid fa-film fa-2xl"></i></div><div style="padding: 12px;"><h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 4px;">Spider-Man: No Way Home</h4><p style="font-size: 0.8rem; color: #e50914; font-weight: bold;">VJ Junior</p></div></div>
                 </div>
             </section>
 
@@ -160,16 +195,12 @@
                     <div class="movie-card" style="background-color: #111; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); cursor: pointer;"><div style="width: 100%; height: 260px; background-color: #222; display: flex; align-items: center; justify-content: center; color: #555;"><i class="fa-solid fa-film fa-2xl"></i></div><div style="padding: 12px;"><h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 4px;">Spider-Man: Spider-Verse</h4><p style="font-size: 0.8rem; color: #e50914; font-weight: bold;">VJ Mark</p></div></div>
                 </div>
             </section>
-
         </div>
 
-
-        <!-- Premium Themed Subscription Sign-Up Area (Modal Pop-up Container) -->
+        <!-- Premium Themed Subscription Sign-Up Area (Modal Popup Overlay) -->
         <section class="auth-section-wrapper" id="signup-anchor">
             <div class="auth-card-container">
-                <!-- Clean Dismiss Cross Toggle Button Link -->
                 <a href="#" class="close-modal-btn">&times;</a>
-                
                 <h2>Create an Account</h2>
                 <p class="auth-subtitle">Join UGA STREAM to start streaming your favorite VJ movies.</p>
                 
@@ -191,22 +222,18 @@
 
                     <div class="subscription-plan-selector">
                         <h3>Select Subscription Plan</h3>
-                        
                         <label class="plan-option">
                             <input type="radio" name="plan" value="daily" checked>
                             <span class="plan-text">Daily UGX 2,000 <small>(24-hour access)</small></span>
                         </label>
-                        
                         <label class="plan-option">
                             <input type="radio" name="plan" value="weekly">
                             <span class="plan-text">Weekly UGX 7,000</span>
                         </label>
-                        
                         <label class="plan-option">
                             <input type="radio" name="plan" value="monthly">
                             <span class="plan-text">Monthly UGX 25,000</span>
                         </label>
-                        
                         <label class="plan-option">
                             <input type="radio" name="plan" value="annual">
                             <span class="plan-text">Annual UGX 200,000</span>
@@ -217,6 +244,17 @@
             </div>
         </section>
     </main>
+
+    <!-- Bottom Quick Links Footer Bar -->
+    <footer style="background-color: #111111; padding: 40px 8%; border-top: 1px solid rgba(255,255,255,0.05); text-align: center; margin-top: 50px;">
+        <div style="display: flex; justify-content: center; gap: 30px; margin-bottom: 20px;">
+            <a href="#faqs" style="color: #b3b3b3; text-decoration: none; font-size: 0.9rem;">How to Watch</a>
+            <a href="#support" style="color: #b3b3b3; text-decoration: none; font-size: 0.9rem;">Get Help</a>
+            <a href="#privacy" style="color: #b3b3b3; text-decoration: none; font-size: 0.9rem;">Privacy Policy</a>
+            <a href="#terms" style="color: #b3b3b3; text-decoration: none; font-size: 0.9rem;">Terms of Use</a>
+        </div>
+        <p style="color: #555555; font-size: 0.8rem;">&copy; 2026 UGA STREAM. All rights reserved. Cinematic translations by native Ugandan VJs.</p>
+    </footer>
 
     <!-- JavaScript to control user interactions -->
     <script>
