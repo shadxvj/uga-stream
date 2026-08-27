@@ -102,11 +102,11 @@
             </div>
         </section>
 
-        <!-- Premium Themed Subscription Sign-Up Area -->
+        <!-- Premium Themed Subscription Sign-Up Area (Modal Pop-up Container) -->
         <section class="auth-section-wrapper" id="signup-anchor">
-            <div class="auth-card-container" style="position: relative;">
+            <div class="auth-card-container">
                 <!-- Clean Dismiss Cross Toggle Button Link -->
-                <a href="#" style="position: absolute; top: 15px; right: 20px; color: #b3b3b3; text-decoration: none; font-size: 1.6rem; font-weight: bold; line-height: 1;">&times;</a>
+                <a href="#" class="close-modal-btn">&times;</a>
                 
                 <h2>Create an Account</h2>
                 <p class="auth-subtitle">Join UGA STREAM to start streaming your favorite VJ movies.</p>
@@ -157,39 +157,13 @@
     </main>
 
     <!-- JavaScript to control user interactions -->
-        <!-- JavaScript to control user interactions -->
     <script>
     document.addEventListener("DOMContentLoaded", () => {
         const profileMenuBtn = document.getElementById("profileMenuBtn");
         const profileDropdown = document.getElementById("profileDropdown");
         const menuToggle = document.getElementById("menu-toggle");
         const navLinks = document.getElementById("nav-links");
-        const signupModal = document.getElementById("signup-anchor");
 
-        // EMERGENCY OVERRIDE: If the user just loaded the site fresh, hide the signup form completely
-        if (!window.location.hash || window.location.hash !== "#signup-anchor") {
-            if (signupModal) signupModal.style.setProperty('display', 'none', 'important');
-        }
-
-        // Listen for anchor changes so the signup button actually opens it smoothly
-        window.addEventListener("hashchange", () => {
-            if (window.location.hash === "#signup-anchor") {
-                if (signupModal) signupModal.style.setProperty('display', 'flex', 'important');
-            } else {
-                if (signupModal) signupModal.style.setProperty('display', 'none', 'important');
-            }
-        });
-
-        // Close form instantly if they click the background overlay outside the card
-        if (signupModal) {
-            signupModal.addEventListener("click", (e) => {
-                if (e.target === signupModal) {
-                    window.location.hash = "";
-                }
-            });
-        }
-
-        // Profile Menu Interactive System
         if (profileMenuBtn && profileDropdown) {
             profileMenuBtn.addEventListener("click", (e) => {
                 e.stopPropagation();
@@ -214,6 +188,5 @@
         });
     });
     </script>
-
 </body>
 </html>
