@@ -516,3 +516,53 @@ body {
 .close-modal-btn:hover {
     color: white;
 }
+/* ==========================================================================
+   6. MOBILE RESPONSIVE NAVBAR OVERRIDES
+   ========================================================================== */
+@media (max-width: 768px) {
+    /* 1. Fix the top utility and navigation bars positioning */
+    .quick-links-bar {
+        position: relative;
+        z-index: 2500;
+    }
+    
+    .navbar {
+        top: 0 !important; /* Locks header to the absolute top edge on mobile */
+        padding: 10px 4% !important;
+        flex-wrap: wrap !important; /* Allows items to shift comfortably if tight */
+        gap: 10px;
+    }
+
+    /* 2. Hide desktop text categories to save critical mobile header space */
+    nav.nav-links {
+        display: none !important; 
+    }
+
+    /* 3. Keep your branding clean on small viewports */
+    .logo-text {
+        font-size: 1.1rem !important;
+    }
+
+    /* 4. Force search box and login systems to stay fully visible */
+    .nav-right-cluster {
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+        margin-left: auto;
+    }
+
+    .search-container {
+        display: flex !important;
+        width: 140px !important; /* Constrains input width to fit side-by-side with buttons */
+        padding: 4px 10px !important;
+    }
+
+    .search-input {
+        width: 100% !important;
+        font-size: 0.8rem !important;
+    }
+
+    .profile-menu-container {
+        display: block !important; /* Guarantees your account dropdown system remains accessible */
+    }
+}
