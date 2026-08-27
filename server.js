@@ -28,7 +28,7 @@ const imageStorage = new CloudinaryStorage({
   params: {
     folder: 'uga-stream-posters',
     resource_type: 'image',
-    allowed_formats: ['jpg', 'jpeg', 'png', 'webp']
+        allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'jfif']
   },
 });
 
