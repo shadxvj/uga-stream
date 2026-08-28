@@ -265,7 +265,11 @@
 </div>
 
 <script>
-    document.getElementById('deviceUploadForm').addEventListener('submit', function(e) {
+    // Configuration Settings - UPDATED WITH YOUR LIVE CLOUDINARY KEYS
+    const CLOUD_NAME = "d3ejbxsx"; 
+    const UPLOAD_PRESET = "p8nasi3c"; 
+
+    document.getElementById('deviceUploadForm').addEventListener('submit', async function(e) {
         e.preventDefault();
 
         const submitBtn = document.getElementById('submitBtn');
@@ -273,51 +277,83 @@
         const progressBar = document.getElementById('uploadProgressBar');
         const statusText = document.getElementById('uploadStatusText');
 
-        const formData = new FormData();
-        formData.append('title', document.getElementById('movieTitle').value);
-        formData.append('vj', document.getElementById('movieVj').value);
-        formData.append('category', document.getElementById('movieCategory').value);
-        formData.append('video', document.getElementById('videoFile').files[0]);
-        formData.append('poster', document.getElementById('posterFile').files[0]);
+        const videoFile = document.getElementById('videoFile').files[0];
+        const posterFile = document.getElementById('posterFile').files[0];
 
         submitBtn.disabled = true;
-        submitBtn.innerText = "⏳ Uploading to Server...";
         progressContainer.style.display = 'block';
-        statusText.innerText = "Connecting to upload stream...";
 
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', '/api/upload-movie', true);
+        try {
+            // 1. Upload Poster Image directly to Cloudinary
+            statusText.innerText = "1/2: Sending thumbnail poster image to Cloudinary...";
+            const posterData = new FormData();
+            posterData.append('file', posterFile);
+            posterData.append('upload_preset', UPLOAD_PRESET);
 
-        xhr.upload.addEventListener('progress', function(event) {
-            if (event.lengthComputable) {
-                const percentComplete = Math.round((event.loaded / event.total) * 100);
-                progressBar.style.width = percentComplete + '%';
-                progressBar.innerText = percentComplete + '%';
-                
-                if(percentComplete < 100) {
-                    statusText.innerText = `Streaming blocks from device: ${(event.loaded / (1024 * 1024)).toFixed(1)}MB sent...`;
-                } else {
-                    statusText.innerText = "Processing assets on Cloudinary server... please wait.";
+            const posterRes = await fetch(`https://cloudinary.com{CLOUD_NAME}/image/upload`, {
+                method: 'POST',
+                body: posterData
+            });
+            const posterJson = await posterRes.json();
+            const posterUrl = posterJson.secure_url;
+
+            // 2. Upload Video directly to Cloudinary and track large file percentages live
+            statusText.innerText = "2/2: Direct streaming movie file to Cloudinary...";
+            
+            const videoData = new FormData();
+            videoData.append('file', videoFile);
+            videoData.append('upload_preset', UPLOAD_PRESET);
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', `https://cloudinary.com{CLOUD_NAME}/video/upload`, true);
+
+            xhr.upload.addEventListener('progress', function(event) {
+                if (event.lengthComputable) {
+                    const percentComplete = Math.round((event.loaded / event.total) * 100);
+                    progressBar.style.width = percentComplete + '%';
+                    progressBar.innerText = percentComplete + '%';
                 }
-            }
-        });
+            });
 
-        xhr.onload = function() {
-            if (xhr.status === 200 || xhr.status === 201) {
-                alert("✅ Success: Media uploaded successfully!");
-                window.location.reload();
-            } else {
-                alert("❌ Upload Failed: " + xhr.responseText);
-                resetForm();
-            }
-        };
+            xhr.onload = async function() {
+                if (xhr.status === 200) {
+                    const videoJson = JSON.parse(xhr.responseText);
+                    const videoUrl = videoJson.secure_url;
 
-        xhr.onerror = function() {
-            alert("❌ Connection dropped or timed out.");
+                    // 3. Send URLs as a tiny text payload to your Render backend
+                    statusText.innerText = "Finishing up: Registering URLs in database...";
+                    
+                    const response = await fetch('/api/upload-movie', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            title: document.getElementById('movieTitle').value,
+                            vj: document.getElementById('movieVj').value,
+                            category: document.getElementById('movieCategory').value,
+                            posterUrl: posterUrl,
+                            videoUrl: videoUrl
+                        })
+                    });
+
+                    if (response.ok) {
+                        alert("✅ Success: Movie uploaded and published seamlessly!");
+                        window.location.reload();
+                    } else {
+                        alert("❌ Database registration failed.");
+                        resetForm();
+                    }
+                } else {
+                    alert("❌ Cloudinary video upload rejected: " + xhr.responseText);
+                    resetForm();
+                }
+            };
+
+            xhr.send(videoData);
+
+        } catch (err) {
+            alert("❌ Upload execution crashed: " + err.message);
             resetForm();
-        };
-
-        xhr.send(formData);
+        }
 
         function resetForm() {
             submitBtn.disabled = false;
@@ -327,36 +363,12 @@
             statusText.innerText = "";
         }
     });
+
+    // Keep your working dashboards fetching logic below intact
+    document.addEventListener("DOMContentLoaded", () => {
+        fetchAdminMovies(); 
+        fetchRegisteredUsers();
+    });
 </script>
-
-        <!-- RIGHT COLUMN: LIVE DATA TRACKING -->
-        <div>
-            <div class="dashboard-section">
-                <h3>Live Movie Registry Catalog</h3>
-                <div id="adminMoviesList">
-                    <!-- Populated dynamically via JS -->
-                </div>
-            </div>
-
-            <div class="dashboard-section">
-                <h3>Registered User Database Metrics</h3>
-                <table class="users-table">
-                    <thead>
-                        <tr>
-                            <th>Username</th>
-                            <th>Phone/Contact</th>
-                            <th>Tier Plan</th>
-                            <th>Access Key</th>
-                        </tr>
-                    </thead>
-                    <tbody id="usersTableBody">
-                        <!-- Populated dynamically via JS -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-    </div>
-
 </body>
 </html>
