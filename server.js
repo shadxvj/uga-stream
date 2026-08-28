@@ -136,9 +136,12 @@ videoFile: videoUrl
         console.log("⚡ New Movie Added Successfully:", newMovie);
         
         // Redirect back to admin panel after success
+               // Redirect back to admin panel after success
         res.send('<h1>Upload Successful!</h1><a href="/admin.html">Go Back to Admin Panel</a>');
     } catch (error) {
-        res.status(500).send('Server Error during upload.');
+        // TRAP THE REAL ERROR: Print the exact Cloudinary message to the screen
+        console.error("Upload process crashed:", error);
+        res.status(500).send('<h1>Upload Failed!</h1><p>Error Details: ' + error.message + '</p><a href="/admin.html">Go Back</a>');
     }
 });
 // API Endpoint to process User Login verification
