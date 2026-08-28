@@ -318,7 +318,7 @@
                 posterData.append('file', posterFile);
                 posterData.append('upload_preset', UPLOAD_PRESET);
 
-                const posterRes = await fetch(`https://cloudinary.com{CLOUD_NAME}/image/upload`, {
+                const posterRes = await fetch("https://" + "://cloudinary.com" + "v1_1/" + CLOUD_NAME + "/image/upload", {
                     method: 'POST',
                     body: posterData
                 });
@@ -333,7 +333,7 @@
                 videoData.append('upload_preset', UPLOAD_PRESET);
 
                 const xhr = new XMLHttpRequest();
-                xhr.open('POST', `https://cloudinary.com{CLOUD_NAME}/video/upload`, true);
+                xhr.open('POST', "https://" + "://cloudinary.com" + "v1_1/" + CLOUD_NAME + "/video/upload", true);
 
                 xhr.upload.addEventListener('progress', function(event) {
                     if (event.lengthComputable) {
