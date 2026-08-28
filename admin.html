@@ -83,7 +83,6 @@
         }
         .logout-btn:hover { background: #b81d24; }
         
-        /* Table Layout Metrics styling */
         .users-table {
             width: 100%;
             border-collapse: collapse;
@@ -225,43 +224,42 @@
 
     <div class="admin-layout-grid">
         
-      <!-- LEFT COLUMN: CONTENT MANAGEMENT UPLOAD FORM -->
-<div class="form-container">
-    <h3>Upload New Content from Device</h3>
-    <form action="/api/upload-movie" method="POST" enctype="multipart/form-data">
-        
-        <label>Movie Title:</label>
-        <input type="text" name="title" required placeholder="e.g., Gladiator 2">
+        <!-- LEFT COLUMN: CONTENT MANAGEMENT UPLOAD FORM -->
+        <div class="form-container">
+            <h3>Upload New Content from Device</h3>
+            <form action="/api/upload-movie" method="POST" enctype="multipart/form-data">
+                
+                <label>Movie Title:</label>
+                <input type="text" name="title" required placeholder="e.g., Gladiator 2">
 
-        <label>VJ Translator Name:</label>
-        <input type="text" name="vj" required placeholder="e.g., VJ Jingo">
+                <label>VJ Translator Name:</label>
+                <input type="text" name="vj" required placeholder="e.g., VJ Jingo">
 
-        <label>Movie Category:</label>
-        <select name="category">
-            <option value="trending">🔥 Trending</option>
-            <option value="action">💥 Action</option>
-            <option value="comedy">😂 Comedy</option>
-            <option value="drama">🎭 Drama</option>
-            <option value="series">📺 Series</option>
-            <option value="animation">🦊 Animation</option>
-        </select>
+                <label>Movie Category:</label>
+                <select name="category">
+                    <option value="trending">🔥 Trending</option>
+                    <option value="action">💥 Action</option>
+                    <option value="comedy">😂 Comedy</option>
+                    <option value="comedy">😂 Comedy</option>
+                    <option value="drama">🎭 Drama</option>
+                    <option value="series">📺 Series</option>
+                    <option value="animation">🦊 Animation</option>
+                </select>
 
-        <!-- 1. VIDEO FILE PICKER (Matches name: 'video' on your server) -->
-        <label>Select Movie Video (.mp4 / .mkv from device):</label>
-        <input type="file" name="video" accept="video/*" required>
+                <!-- 1. VIDEO FILE PICKER (From Device) -->
+                <label>Select Movie Video (.mp4 / .mkv from device):</label>
+                <input type="file" name="video" accept="video/*" required>
 
-        <!-- 2. POSTER IMAGE FILE PICKER (Matches name: 'poster' on your server) -->
-        <label>Select Thumbnail Poster Image (.jpg / .png / .jfif):</label>
-        <input type="file" name="poster" accept="image/*" required>
+                <!-- 2. POSTER IMAGE FILE PICKER (From Device) -->
+                <label>Select Thumbnail Poster Image (.jpg / .png / .jfif):</label>
+                <input type="file" name="poster" accept="image/*" required>
 
-        <button type="submit">🚀 Upload Device Files to Platform</button>
-    </form>
-</div>
+                <button type="submit">🚀 Upload Device Files to Platform</button>
+            </form>
+        </div>
 
-
-        <!-- RIGHT COLUMN: LIVE SYSTEM MANAGEMENT DASHBOARD -->
+        <!-- RIGHT COLUMN: LIVE DATA TRACKING -->
         <div>
-            <!-- Section 1: Active Film Catalog Inventory Management -->
             <div class="dashboard-section">
                 <h3>Live Movie Registry Catalog</h3>
                 <div id="adminMoviesList">
@@ -269,7 +267,6 @@
                 </div>
             </div>
 
-            <!-- Section 2: Registered Application Accounts Track -->
             <div class="dashboard-section">
                 <h3>Registered User Database Metrics</h3>
                 <table class="users-table">
@@ -287,6 +284,8 @@
                 </table>
             </div>
         </div>
+
     </div>
+
 </body>
 </html>
