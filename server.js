@@ -5,143 +5,114 @@ const path = require('path');
 const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
-// Configure Cloudinary using your Render Environment Variables
+// 1. Configure Cloudinary using your Render Environment Variables
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-// Unified storage configuration that handles both video formats and poster image extensions safely
-const storage = new CloudinaryStorage({
+// 2. Configure Multer to ONLY handle the image poster upload stream securely
+const imageStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
-  params: async (req, file) => {
-    const isVideo = file.fieldname === 'video';
-    return {
-      folder: isVideo ? 'uga-stream-videos' : 'uga-stream-posters',
-            resource_type: isVideo ? 'video' : 'image',
-      // Explicitly supports your missing .jfif format along with standard video container files
-      allowed_formats: isVideo ? ['mp4', 'mkv', 'avi', 'mov'] : ['jpg', 'jpeg', 'png', 'webp', 'jfif']
-    };
+  params: {
+    folder: 'uga-stream-posters',
+    resource_type: 'image',
+    allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'jfif']
   }
 });
-
-// Update the upload middleware to use this new unified storage reference variable name
-const upload = multer({ storage: storage });
-
+const uploadPoster = multer({ storage: imageStorage });
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000; // Dynamic port tracking for Render configurations
 
 app.use(express.static(path.join(__dirname)));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Local database array to hold uploaded movie objects
+// Local temporary database arrays to preserve system state metrics
 let moviesDatabase = [];
-// Local database array to hold registered users
 let usersDatabase = [
     { id: 1, username: "Ivan_K", phone: "0772123456", plan: "monthly", password: "Password123", registeredAt: new Date() },
     { id: 2, username: "Mary_Namubiru", phone: "0701987654", plan: "weekly", password: "LugandaFan99", registeredAt: new Date() },
     { id: 3, username: "VJ_Meddy_Fan", phone: "0750434712", plan: "daily", password: "UgaStreamPass", registeredAt: new Date() }
 ];
 
+/* ==========================================================================
+   API ENDPOINTS
+   ========================================================================== */
+
+// API Endpoint to process the upload form from Admin Panel
+app.post('/api/upload-movie', uploadPoster.single('poster'), (req, res) => {
+    try {
+        const { title, category, vj, videoUrl } = req.body;
+
+        // Defensive boundary guards: Stops crashes by sending clear warnings instead of breaking the engine
+        if (!req.file) {
+            return res.status(400).send('<h1>Upload Failed!</h1><p>Missing thumbnail poster image file. Please go back and pick an image.</p><a href="/admin.html">Go Back</a>');
+        }
+        if (!title || !vj || !videoUrl) {
+            return res.status(400).send('<h1>Upload Failed!</h1><p>Missing required text fields (Title, VJ, or Video Link Url).</p><a href="/admin.html">Go Back</a>');
+        }
+
+        const posterCloudUrl = req.file.path; // Secured Cloudinary image reference URL path string
+
+        // Structure a clean movie asset entry mapping directly to front-end keys
+        const newMovie = {
+            id: moviesDatabase.length + 1,
+            title: title,
+            category: category,
+            vj: vj,
+            image: posterCloudUrl,
+            source: videoUrl // Points directly to your watch.html parameter hooks
+        };
+
+        moviesDatabase.push(newMovie);
+        console.log("⚡ New Movie Published Successfully:", newMovie);
+        
+        // Redirect back to admin panel after success
+        res.send('<h1>Upload Successful!</h1><p>Your movie was published to the platform catalog.</p><a href="/admin.html">Go Back to Admin Panel</a>');
+    } catch (error) {
+        console.error("Management console upload error:", error);
+        res.status(500).send('<h1>Internal Server Error!</h1><p>Details: ' + error.message + '</p><a href="/admin.html">Go Back</a>');
+    }
+});
+
 // API Endpoint to process User Registration
 app.post('/api/signup', (req, res) => {
     try {
         const { username, phone, plan, password } = req.body;
 
-        // Basic validation
         if (!username || !phone || !plan || !password) {
             return res.status(400).json({ success: false, message: 'All fields are required.' });
         }
 
-        // Check if the phone number is already registered
         const userExists = usersDatabase.find(user => user.phone === phone);
         if (userExists) {
             return res.status(400).json({ success: false, message: 'This phone number is already registered.' });
         }
 
-        // Save new user object to our local array
         const newUser = {
             id: usersDatabase.length + 1,
             username,
             phone,
             plan,
-            password, // In a real production app, hash this password using bcrypt!
+            password,
             registeredAt: new Date()
         };
 
         usersDatabase.push(newUser);
-        console.log("👤 New user registered successfully:", { id: newUser.id, username: newUser.username, plan: newUser.plan });
-
         return res.status(201).json({ success: true, message: `Welcome ${username}! Account created.` });
-
     } catch (error) {
         console.error("Signup error:", error);
         res.status(500).json({ success: false, message: 'Server error processing registration.' });
     }
 });
 
-// Configure Multer Storage for Cloudinary (Both Videos and Images)
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: async (req, file) => {
-    const isVideo = file.fieldname === 'video';
-    return {
-      folder: isVideo ? 'uga-stream-videos' : 'uga-stream-posters',
-      resource_type: isVideo ? 'video' : 'image',
-      // Added 'jfif' to allowed image formats
-      allowed_formats: isVideo ? ['mp4', 'mkv', 'avi', 'mov'] : ['jpg', 'jpeg', 'png', 'webp', 'jfif'],
-      // Helps process larger video streams stably
-      chunk_size: isVideo ? 6000000 : undefined 
-    };
-  }
-});
-
-const upload = multer({ storage: storage });
-
-
-
-// API Endpoint to process the upload form from Admin Panel
-app.post('/api/upload-movie', upload.fields([{ name: 'video', maxCount: 1 }, { name: 'poster', maxCount: 1 }]), (req, res) => {
-    try {
-        const { title, category, vj } = req.body;
-
-        // Corrected validation check to prevent server crashes
-        if (!req.files || !req.files['video'] || !req.files['poster']) {
-            return res.status(400).send('Please upload both a video file and a poster image.');
-        }
-
-        const videoUrl = req.files['video'][0].path;
-        const posterUrl = req.files['poster'][0].path;
-
-        // Create a new movie entry
-        const newMovie = {
-            id: moviesDatabase.length + 1,
-            title: title,
-            category: category,
-            vj: vj,
-            image: posterUrl,
-videoFile: videoUrl
-
-        };
-
-        moviesDatabase.push(newMovie);
-        console.log("⚡ New Movie Added Successfully:", newMovie);
-        
-        // Redirect back to admin panel after success
-               // Redirect back to admin panel after success
-        res.send('<h1>Upload Successful!</h1><a href="/admin.html">Go Back to Admin Panel</a>');
-    } catch (error) {
-        // TRAP THE REAL ERROR: Print the exact Cloudinary message to the screen
-        console.error("Upload process crashed:", error);
-        res.status(500).send('<h1>Upload Failed!</h1><p>Error Details: ' + error.message + '</p><a href="/admin.html">Go Back</a>');
-    }
-});
 // API Endpoint to process User Login verification
 app.post('/api/login', (req, res) => {
     try {
@@ -151,31 +122,17 @@ app.post('/api/login', (req, res) => {
             return res.status(400).json({ success: false, message: 'Phone number and password are required.' });
         }
 
-        // Search local memory database for matching credentials
         const matchedUser = usersDatabase.find(user => user.phone === phone);
 
-        if (!matchedUser) {
-            return res.status(401).json({ success: false, message: 'Account not found with this phone number.' });
+        if (!matchedUser || matchedUser.password !== password) {
+            return res.status(401).json({ success: false, message: 'Incorrect credentials or account not found.' });
         }
 
-        // Validate password string matches directly
-        if (matchedUser.password !== password) {
-            return res.status(401).json({ success: false, message: 'Incorrect password details.' });
-        }
-
-        console.log(`🔑 User authenticated successfully: ${matchedUser.username}`);
-
-        // Return user data back to client window safely
         return res.json({
             success: true,
             message: 'Authentication successful.',
-            user: {
-                username: matchedUser.username,
-                phone: matchedUser.phone,
-                plan: matchedUser.plan
-            }
+            user: { username: matchedUser.username, phone: matchedUser.phone, plan: matchedUser.plan }
         });
-
     } catch (error) {
         console.error("Login verification endpoint error:", error);
         res.status(500).json({ success: false, message: 'Server auth process failure.' });
@@ -190,13 +147,12 @@ app.get('/api/movies', (req, res) => {
 // API Endpoint to fetch all registered users for the admin panel directory
 app.get('/api/users', (req, res) => {
     try {
-                const safeUserData = usersDatabase.map(user => ({
+        const safeUserData = usersDatabase.map(user => ({
             username: user.username,
             phone: user.phone,
             plan: user.plan,
             password: user.password
         }));
-
         res.json(safeUserData);
     } catch (error) {
         console.error("Error reading users list:", error);
@@ -204,8 +160,8 @@ app.get('/api/users', (req, res) => {
     }
 });
 
+// Film Entry Removal Pipeline Route
 app.delete('/api/movies/:id', (req, res) => {
-
     try {
         const movieId = parseInt(req.params.id, 10);
         const movieIndex = moviesDatabase.findIndex(movie => movie.id === movieId);
@@ -214,66 +170,16 @@ app.delete('/api/movies/:id', (req, res) => {
             return res.status(404).json({ success: false, message: 'Movie item not found in server cache.' });
         }
         
-        // FIX: Extract the first object element out of the spliced array array structure
         const [deletedMovie] = moviesDatabase.splice(movieIndex, 1);
-        console.log(`🗑️ Movie removed from catalog storage registry: ${deletedMovie.title}`);
+        console.log(`🗑️ Movie Erased: ${deletedMovie.title}`);
         
-        return res.json({ success: true, message: `Successfully deleted "${deletedMovie.title}"` });
+        return res.json({ success: true, message: 'Movie deleted successfully.' });
     } catch (error) {
-        console.error("Movie deletion endpoint execution error:", error);
-        res.status(500).json({ success: false, message: 'Server database failure.' });
+        console.error("Error processing item removal endpoint:", error);
+        return res.status(500).json({ success: false, message: 'Server failed to remove object asset entries.' });
     }
 });
 
-
-// API Endpoint to force direct attachment file downloads to the device hard drive
-app.get('/download/:videoName', (req, res) => {
-    try {
-        const videoPath = path.join(__dirname, 'videos', req.params.videoName);
-        
-        // Safety check if the requested file exists
-        if (!fs.existsSync(videoPath)) {
-            return res.status(404).send('Requested movie file is missing from our server storage.');
-        }
-
-        // Force browser to download the file instead of playing it inside a tab
-        res.download(videoPath, req.params.videoName, (err) => {
-            if (err) {
-                console.error("Error transmission during binary stream download:", err);
-            }
-        });
-    } catch (error) {
-        console.error("Download route execution crash:", error);
-        res.status(500).send('Server Error processing your download file request.');
-    }
+app.listen(PORT, () => {
+    console.log(`🚀 UGA STREAM Engine running online at port ${PORT}`);
 });
-
-// Streaming Engine Endpoint
-app.get('/stream/:videoName', (req, res) => {
-    const videoPath = path.join(__dirname, 'videos', req.params.videoName);
-    if (!fs.existsSync(videoPath)) return res.status(404).send('Movie file missing');
-
-    const stat = fs.statSync(videoPath);
-    const range = req.headers.range;
-    const fileSize = stat.size;
-
-    if (range) {
-        const parts = range.replace(/bytes=/, "").split("-");
-        const start = parseInt(parts, 10);
-        const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
-        const chunk = fs.createReadStream(videoPath, { start, end });
-        res.writeHead(206, {
-            'Content-Range': `bytes ${start}-${end}/${fileSize}`,
-            'Accept-Ranges': 'bytes',
-            'Content-Length': (end - start) + 1,
-            'Content-Type': 'video/mp4'
-        });
-        chunk.pipe(res);
-    } else {
-        res.writeHead(200, { 'Content-Length': fileSize, 'Content-Type': 'video/mp4' });
-        fs.createReadStream(videoPath).pipe(res);
-    }
-});
-
-
-app.listen(PORT, () => console.log(`Uga Stream running live on port ${PORT}`));
