@@ -5,24 +5,118 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Uga Stream — VJ Admin Panel</title>
     <style>
-        body { background-color: #0d0d0d; color: #fff; font-family: sans-serif; padding: 50px; }
-        .form-container { max-width: 500px; margin: 0 auto; background: #1a1a1a; padding: 30px; border-radius: 8px; border: 1px solid #f39c12; }
-        h2 { color: #f39c12; text-align: center; }
-        label { display: block; margin-top: 15px; font-weight: bold; }
-        input, select { width: 100%; padding: 10px; margin-top: 5px; background: #2b2b2b; color: #fff; border: 1px solid #444; border-radius: 4px; box-sizing: border-box; }
-        button { background: #f39c12; color: #000; border: none; width: 100%; padding: 12px; margin-top: 25px; font-weight: bold; cursor: pointer; border-radius: 4px; font-size: 1rem; }
+        body { 
+            background-color: #0d0d0d; 
+            color: #fff; 
+            font-family: sans-serif; 
+            padding: 30px; 
+            margin: 0;
+        }
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto 30px auto;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 15px;
+        }
+        .admin-layout-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.3fr;
+            gap: 35px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .form-container { 
+            background: #1a1a1a; 
+            padding: 30px; 
+            border-radius: 8px; 
+            border: 1px solid #f39c12; 
+            height: fit-content;
+        }
+        .dashboard-section {
+            background: #111;
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        h2, h3 { color: #f39c12; margin-top: 0; }
+        label { display: block; margin-top: 15px; font-weight: bold; font-size: 0.9rem; }
+        input, select { 
+            width: 100%; 
+            padding: 12px; 
+            margin-top: 5px; 
+            background: #2b2b2b; 
+            color: #fff; 
+            border: 1px solid #444; 
+            border-radius: 4px; 
+            box-sizing: border-box; 
+            outline: none;
+            font-size: 0.95rem;
+        }
+        input:focus, select:focus { border-color: #f39c12; }
+        button { 
+            background: #f39c12; 
+            color: #000; 
+            border: none; 
+            width: 100%; 
+            padding: 14px; 
+            margin-top: 25px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            border-radius: 4px; 
+            font-size: 1rem; 
+        }
         button:hover { background: #e08e0b; }
-       </style>
+        .logout-btn {
+            background: #e50914; 
+            color: white; 
+            border: none; 
+            padding: 8px 16px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-weight: bold;
+            width: auto;
+            margin: 0;
+        }
+        .logout-btn:hover { background: #b81d24; }
+        
+        /* Table Layout Metrics styling */
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+        .users-table th {
+            background-color: #1a1a1a;
+            color: #f39c12;
+            text-align: left;
+            padding: 12px 10px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        
+        #adminMoviesList {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        @media (max-width: 992px) {
+            .admin-layout-grid { grid-template-columns: 1fr; }
+        }
+    </style>
 
-           <script>
+    <script>
         document.addEventListener("DOMContentLoaded", () => {
             const isAdminLoggedIn = localStorage.getItem("adminAuthenticated");
             
             if (isAdminLoggedIn !== "true") {
                 const passwordAttempt = prompt("🔒 Restricted Access: Enter Admin Password to continue:");
-                
                 if (passwordAttempt === "UgaStream2026") {
-                                       localStorage.setItem("adminAuthenticated", "true");
+                    localStorage.setItem("adminAuthenticated", "true");
                     alert("✅ Access Granted. Welcome back Admin!");
                     fetchAdminMovies(); 
                     fetchRegisteredUsers();
@@ -34,7 +128,6 @@
                 fetchAdminMovies(); 
                 fetchRegisteredUsers();
             }
-
         });
 
         function adminLogout() {
@@ -42,7 +135,6 @@
             window.location.href = "index.html";
         }
 
-        // FETCH MOVIES AND DISPLAY THEM WITH DELETE BUTTONS
         async function fetchAdminMovies() {
             const listContainer = document.getElementById('adminMoviesList');
             if (!listContainer) return;
@@ -51,13 +143,12 @@
                 const response = await fetch('/api/movies');
                 const movies = await response.json();
                 
-                if (movies.length === 0) {
-                    listContainer.innerHTML = `<p style="color: #666; font-style: italic; font-size: 0.9rem;">No video files found in database registry. Upload some media content above to begin.</p>`;
+                if (!movies || movies.length === 0) {
+                    listContainer.innerHTML = `<p style="color: #666; font-style: italic; font-size: 0.9rem;">No videos registered yet. Fill out the form on the left to add content.</p>`;
                     return;
                 }
                 
                 listContainer.innerHTML = ''; 
-                
                 movies.forEach(movie => {
                     const row = document.createElement('div');
                     row.style.cssText = "display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 12px 16px; border-radius: 6px;";
@@ -69,36 +160,32 @@
                                 <p style="margin: 4px 0 0 0; color: #888; font-size: 0.8rem;"><span style="color: #f39c12; font-weight: 600;">VJ ${movie.vj}</span> • Category: <span style="text-transform: capitalize;">${movie.category}</span></p>
                             </div>
                         </div>
-                        <button type="button" onclick="deleteMovie(${movie.id}, '${movie.title.replace(/'/g, "\\'")}')" style="background: #e50914; color: #fff; border: none; padding: 8px 16px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.85rem; transition: background 0.2s;">🗑️ Delete</button>
+                        <button type="button" onclick="deleteMovie(${movie.id}, '${movie.title.replace(/'/g, "\\'")}')" style="background: #e50914; color: #fff; border: none; padding: 8px 16px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.85rem; width: auto; margin: 0;">🗑️ Delete</button>
                     `;
                     listContainer.appendChild(row);
                 });
             } catch (error) {
-                console.error("Error communicating with movie inventory API:", error);
+                console.error("Error communicating with inventory API:", error);
             }
         }
 
-        // CLIENT-SIDE DELETE REQUEST LOGIC
         async function deleteMovie(id, title) {
-            if (confirm(`⚠️ Are you sure you want to completely erase "${title}" from the UGA STREAM streaming application?`)) {
+            if (confirm(`⚠️ Are you sure you want to delete "${title}" from UGA STREAM?`)) {
                 try {
                     const response = await fetch(`/api/movies/${id}`, { method: 'DELETE' });
                     const result = await response.json();
-                    
                     if (result.success) {
-                        alert(`✅ Success: Movie deleted successfully.`);
+                        alert(`✅ Movie deleted successfully.`);
                         fetchAdminMovies(); 
                     } else {
                         alert(`❌ Failure: ${result.message}`);
                     }
                 } catch (error) {
                     console.error("Network issue processing item deletion:", error);
-                    alert("❌ Connection failure: Could not delete movie.");
                 }
             }
         }
-                // FETCH REGISTERED MEMBERS FROM THE BACKEND SERVER
-               // FETCH REGISTERED MEMBERS FROM THE BACKEND SERVER
+
         async function fetchRegisteredUsers() {
             const tableBody = document.getElementById('usersTableBody');
             if (!tableBody) return;
@@ -113,7 +200,6 @@
                 }
 
                 tableBody.innerHTML = ''; 
-
                 users.forEach(user => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
@@ -126,79 +212,78 @@
                 });
             } catch (error) {
                 console.error("Error fetching database users:", error);
-                tableBody.innerHTML = `<tr><td colspan="4" style="padding: 12px; text-align: center; color: #e50914;">Error loading user metrics.</td></tr>`;
             }
         }
-
     </script>
-
 </head>
-
-
 <body>
 
-    <div class="form-container">
-        <h2>Uga Stream Admin Panel</h2>
-       <button type="button" onclick="adminLogout()" style="background: #e50914; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; float: right; font-weight: bold;">🔒 Lock Panel</button>
+    <div class="admin-header">
+        <h2>Uga Stream Management Center</h2>
+        <button type="button" onclick="adminLogout()" class="logout-btn">🔒 Lock Panel</button>
+    </div>
 
-        <!-- enctype="multipart/form-data" is required for file uploads -->
-        <form action="/api/upload-movie" method="POST" enctype="multipart/form-data">
-            
-            <label>Movie Title:</label>
-            <input type="text" name="title" required placeholder="e.g., Gladiator 2">
+    <div class="admin-layout-grid">
+        
+        <!-- FORM CONTAINER: CLEAN TEXT INPUT PROCESSING -->
+        <div class="form-container">
+            <h3>Upload New Content</h3>
+            <form action="/api/upload-movie" method="POST" enctype="multipart/form-data">
+                
+                <label>Movie Title:</label>
+                <input type="text" name="title" required placeholder="e.g., Gladiator 2">
 
-            <label>VJ Translator Name:</label>
-            <input type="text" name="vj" required placeholder="e.g., VJ Emmy">
+                <label>VJ Translator Name:</label>
+                <input type="text" name="vj" required placeholder="e.g., VJ Jingo">
 
-            <label>Movie Category:</label>
-            <select name="category">
-                <option value="trending">🔥 Trending</option>
-                <option value="action">🎬 Action</option>
-                <option value="comedy">😂 Comedy</option>
-                <option value="drama">🎭 Drama</option>
-                <option value="series">📺 Series</option>
-                <option value="animation">🦊 Animation</option>
-            </select>
+                <label>Movie Category:</label>
+                <select name="category">
+                    <option value="trending">🔥 Trending</option>
+                    <option value="action">💥 Action</option>
+                    <option value="comedy">😂 Comedy</option>
+                    <option value="drama">🎭 Drama</option>
+                    <option value="series">📺 Series</option>
+                    <option value="animation">🦊 Animation</option>
+                </select>
 
-            <label>Select Movie Video (.mp4):</label>
-            <input type="text" name="videoUrl" required placeholder="Paste Cloudinary .mp4 video link here">
+                <label>Thumbnail Poster Image (.jpg / .png / .jfif):</label>
+                <input type="file" name="poster" accept="image/*" required>
 
-            <label>Select Poster Image (.jpg / .png):</label>
-            <input type="file" name="poster" accept="image/jpeg, image/png, image/jfif, .jfif" required>
+                <label>Video Stream Link URL (.mp4 Cloud Link):</label>
+                <input type="text" name="videoUrl" required placeholder="Paste Cloudinary or external .mp4 video link here">
 
-            <button type="submit">🚀 Upload to Platform</button>
-        </form>
-                <!-- === DYNAMIC MOVIES MANAGEMENT SECTION === -->
-        <div class="manage-catalog-container" style="margin-top: 40px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1);">
-            <h3 style="color: #f39c12; font-size: 1.3rem; margin-bottom: 20px; font-weight: 700;">📋 Current Catalog Management</h3>
-            <div id="adminMoviesList" style="display: flex; flex-direction: column; gap: 12px;">
-                <!-- JavaScript automatically populates interactive rows here -->
-            </div>
+                <button type="submit">🚀 Publish Movie to Platform</button>
+            </form>
         </div>
-        <!-- === REGISTERED USERS METRICS DISPLAY SECTION === -->
-        <div class="manage-users-container" style="margin-top: 40px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1);">
-            <h3 style="color: #f39c12; font-size: 1.3rem; margin-bottom: 20px; font-weight: 700;">👥 Registered Member Directory</h3>
-            <div style="overflow-x: auto;">
-                <table class="users-table" style="width: 100%; border-collapse: collapse; background-color: rgba(255,255,255,0.02); text-align: left; font-size: 0.9rem;">
-                   <thead>
-    <tr style="background-color: #f39c12; color: #000;">
-        <th style="padding: 10px; border: 1px solid #333;">Username</th>
-        <th style="padding: 10px; border: 1px solid #333;">Phone Number</th>
-        <th style="padding: 10px; border: 1px solid #333;">Plan</th>
-        <th style="padding: 10px; border: 1px solid #333;">Password</th> <!-- <-- ADD THIS HERE -->
-    </tr>
-</thead>
 
-                    <tbody id="usersTableBody">
+        <!-- RIGHT COLUMN: LIVE SYSTEM MANAGEMENT DASHBOARD -->
+        <div>
+            <!-- Section 1: Active Film Catalog Inventory Management -->
+            <div class="dashboard-section">
+                <h3>Live Movie Registry Catalog</h3>
+                <div id="adminMoviesList">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+
+            <!-- Section 2: Registered Application Accounts Track -->
+            <div class="dashboard-section">
+                <h3>Registered User Database Metrics</h3>
+                <table class="users-table">
+                    <thead>
                         <tr>
-                            <td colspan="4" style="padding: 12px; text-align: center; color: #666; font-style: italic;">Loading database registration info...</td>
+                            <th>Username</th>
+                            <th>Phone/Contact</th>
+                            <th>Tier Plan</th>
+                            <th>Access Key</th>
                         </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <!-- Populated dynamically via JS -->
                     </tbody>
                 </table>
             </div>
         </div>
-
     </div>
-
 </body>
 </html>
