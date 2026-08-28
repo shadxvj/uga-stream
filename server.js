@@ -19,7 +19,7 @@ const storage = new CloudinaryStorage({
     const isVideo = file.fieldname === 'video';
     return {
       folder: isVideo ? 'uga-stream-videos' : 'uga-stream-posters',
-      resource_type: isVideo ? 'video' : 'image',
+            resource_type: isVideo ? 'video' : 'image',
       // Explicitly supports your missing .jfif format along with standard video container files
       allowed_formats: isVideo ? ['mp4', 'mkv', 'avi', 'mov'] : ['jpg', 'jpeg', 'png', 'webp', 'jfif']
     };
