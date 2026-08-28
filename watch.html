@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UGA STREAM — Streaming Theater</title>
+    <!-- Fixed broken Cloudflare link to stable FontAwesome icons CDN -->
     <link rel="stylesheet" href="https://cloudflare.com">
     <style>
         body {
@@ -26,6 +27,9 @@
             top: 0;
             z-index: 100;
             box-sizing: border-box;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .back-btn {
             color: #ffffff;
@@ -39,6 +43,25 @@
         }
         .back-btn:hover {
             color: #f39c12;
+        }
+        .download-btn {
+            background-color: #e50914; 
+            color: white; 
+            text-decoration: none; 
+            padding: 10px 20px; 
+            font-weight: bold; 
+            border-radius: 4px;
+            transition: background-color 0.2s, transform 0.1s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        .download-btn:hover {
+            background-color: #b81d24;
+        }
+        .download-btn:active {
+            transform: scale(0.98);
         }
         /* Theater Player Box Container Layout */
         .player-container {
@@ -60,15 +83,15 @@
 </head>
 <body>
 
-       <!-- Back Navigation Top Bar Container -->
+    <!-- Back Navigation Top Bar Container -->
     <header class="watch-header">
         <a href="index.html" class="back-btn">
             <i class="fa-solid fa-arrow-left"></i> Back to Home
         </a>
-        <!-- PASTE THIS BUTTON LINE HERE -->
-        <a id="directDownloadBtn" href="#" style="background-color: #e50914; color: white; text-decoration: none; padding: 10px 20px; font-weight: bold; border-radius: 4px; float: right; margin-top: -5px;">Download Movie</a>
+        <a id="directDownloadBtn" class="download-btn" href="#" target="_blank">
+            <i class="fa-solid fa-download"></i> Download Movie
+        </a>
     </header>
-
 
     <!-- Main Streaming Target Canvas Content -->
     <main class="player-container">
@@ -78,28 +101,39 @@
         </video>
     </main>
 
-          <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const movieFile = urlParams.get('video');
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const movieUrl = urlParams.get('video');
 
-        if (movieFile) {
-            const video = document.getElementById('ugaStreamVideo');
-            const downloadBtn = document.getElementById('directDownloadBtn');
-            
-            // Connect player streaming view source canvas engine
-            video.src = `/stream/${movieFile}`;
-            video.load();
+            if (movieUrl) {
+                const video = document.getElementById('ugaStreamVideo');
+                const videoSource = document.getElementById('videoSource');
+                const downloadBtn = document.getElementById('directDownloadBtn');
+                
+                // Decode the absolute Cloudinary web pathway securely
+                const clearUrl = decodeURIComponent(movieUrl);
 
-            // FIX: Directs your download button action directly straight into your forced file attachment route
-            if (downloadBtn) {
-                downloadBtn.href = `/download/${movieFile}`;
+                // 1. Direct streaming source configuration
+                video.src = clearUrl;
+                videoSource.src = clearUrl;
+                video.load();
+
+                // 2. Cloudinary-specific dynamic forced file download hook configuration
+                if (downloadBtn) {
+                    if (clearUrl.includes('cloudinary.com')) {
+                        // Alters the cloud url to include the 'attachment' flag (fl_attachment) forcing instant download trigger rules
+                        const forcedDownloadUrl = clearUrl.replace('/upload/', '/upload/fl_attachment/');
+                        downloadBtn.href = forcedDownloadUrl;
+                    } else {
+                        // Fallback handling standard raw links directly
+                        downloadBtn.href = clearUrl;
+                    }
+                }
+            } else {
+                window.location.href = 'index.html';
             }
-        } else {
-            window.location.href = 'index.html';
-        }
-    </script>
-
-
+        });
     </script>
 </body>
 </html>
