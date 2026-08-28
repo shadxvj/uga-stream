@@ -12,25 +12,23 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-// Configure storage configuration for your movie videos
-const videoStorage = new CloudinaryStorage({
+// Unified storage configuration that handles both video formats and poster image extensions safely
+const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
-  params: {
-    folder: 'uga-stream-videos',
-    resource_type: 'video', 
-    allowed_formats: ['mp4', 'mkv', 'avi', 'mov']
-  },
+  params: async (req, file) => {
+    const isVideo = file.fieldname === 'video';
+    return {
+      folder: isVideo ? 'uga-stream-videos' : 'uga-stream-posters',
+      resource_type: isVideo ? 'video' : 'image',
+      // Explicitly supports your missing .jfif format along with standard video container files
+      allowed_formats: isVideo ? ['mp4', 'mkv', 'avi', 'mov'] : ['jpg', 'jpeg', 'png', 'webp', 'jfif']
+    };
+  }
 });
 
-// Configure storage configuration for your movie cover poster images
-const imageStorage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: 'uga-stream-posters',
-    resource_type: 'image',
-        allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'jfif']
-  },
-});
+// Update the upload middleware to use this new unified storage reference variable name
+const upload = multer({ storage: storage });
+
 
 const app = express();
 const PORT = 5000;
