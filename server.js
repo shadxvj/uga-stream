@@ -112,14 +112,14 @@ const upload = multer({ storage: storage });
 app.post('/api/upload-movie', upload.fields([{ name: 'video', maxCount: 1 }, { name: 'poster', maxCount: 1 }]), (req, res) => {
     try {
         const { title, category, vj } = req.body;
-        
-        // Ensure both files were sent
-        if (!req.files['video'] || !req.files['poster']) {
+
+        // Corrected validation check to prevent server crashes
+        if (!req.files || !req.files['video'] || !req.files['poster']) {
             return res.status(400).send('Please upload both a video file and a poster image.');
         }
 
         const videoUrl = req.files['video'][0].path;
-const posterUrl = req.files['poster'][0].path;
+        const posterUrl = req.files['poster'][0].path;
 
         // Create a new movie entry
         const newMovie = {
