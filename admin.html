@@ -225,38 +225,109 @@
     <div class="admin-layout-grid">
         
         <!-- LEFT COLUMN: CONTENT MANAGEMENT UPLOAD FORM -->
-        <div class="form-container">
-            <h3>Upload New Content from Device</h3>
-            <form action="/api/upload-movie" method="POST" enctype="multipart/form-data">
-                
-                <label>Movie Title:</label>
-                <input type="text" name="title" required placeholder="e.g., Gladiator 2">
+       <!-- LEFT COLUMN: CONTENT MANAGEMENT STREAMING UPLOAD FORM -->
+<div class="form-container">
+    <h3>Upload New Content from Device</h3>
+    <form id="deviceUploadForm" enctype="multipart/form-data">
+        
+        <label>Movie Title:</label>
+        <input type="text" id="movieTitle" required placeholder="e.g., Gladiator 2">
 
-                <label>VJ Translator Name:</label>
-                <input type="text" name="vj" required placeholder="e.g., VJ Jingo">
+        <label>VJ Translator Name:</label>
+        <input type="text" id="movieVj" required placeholder="e.g., VJ Jingo">
 
-                <label>Movie Category:</label>
-                <select name="category">
-                    <option value="trending">🔥 Trending</option>
-                    <option value="action">💥 Action</option>
-                    <option value="comedy">😂 Comedy</option>
-                    <option value="comedy">😂 Comedy</option>
-                    <option value="drama">🎭 Drama</option>
-                    <option value="series">📺 Series</option>
-                    <option value="animation">🦊 Animation</option>
-                </select>
+        <label>Movie Category:</label>
+        <select id="movieCategory">
+            <option value="trending">🔥 Trending</option>
+            <option value="action">💥 Action</option>
+            <option value="comedy">😂 Comedy</option>
+            <option value="drama">🎭 Drama</option>
+            <option value="series">📺 Series</option>
+            <option value="animation">🦊 Animation</option>
+        </select>
 
-                              <!-- 1. VIDEO FILE PICKER (From Device) -->
-                <label>Select Movie Video (.mp4 / .mkv from device):</label>
-                <input type="file" name="video" accept="video/*" required>
+        <!-- 1. VIDEO FILE PICKER (From Mobile/PC Device) -->
+        <label>Select Movie Video (.mp4 / .mkv from device):</label>
+        <input type="file" id="videoFile" accept="video/*" required>
 
-                <!-- 2. POSTER IMAGE FILE PICKER (From Device) -->
-                <label>Select Thumbnail Poster Image (.jpg / .png / .jfif):</label>
-                <input type="file" name="poster" accept="image/*" required>
+        <!-- 2. POSTER IMAGE FILE PICKER (From Mobile/PC Device) -->
+        <label>Select Thumbnail Poster Image (.jpg / .png / .jfif):</label>
+        <input type="file" id="posterFile" accept="image/*" required>
 
-                <button type="submit">🚀 Upload Device Files to Platform</button>
-            </form>
+        <!-- LIVE PROGRESS TRACKING VISUAL SYSTEM -->
+        <div id="uploadProgressContainer" style="display: none; margin-top: 20px; background: #222; border-radius: 4px; border: 1px solid #333; overflow: hidden; position: relative; height: 24px;">
+            <div id="uploadProgressBar" style="width: 0%; height: 100%; background: #f39c12; transition: width 0.1s ease; display: flex; align-items: center; justify-content: center; color: #000; font-weight: bold; font-size: 0.85rem;">0%</div>
         </div>
+        <p id="uploadStatusText" style="margin-top: 8px; font-size: 0.85rem; color: #aaa; text-align: center; font-style: italic;"></p>
+
+        <button type="submit" id="submitBtn">🚀 Upload Device Files to Platform</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('deviceUploadForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const submitBtn = document.getElementById('submitBtn');
+        const progressContainer = document.getElementById('uploadProgressContainer');
+        const progressBar = document.getElementById('uploadProgressBar');
+        const statusText = document.getElementById('uploadStatusText');
+
+        const formData = new FormData();
+        formData.append('title', document.getElementById('movieTitle').value);
+        formData.append('vj', document.getElementById('movieVj').value);
+        formData.append('category', document.getElementById('movieCategory').value);
+        formData.append('video', document.getElementById('videoFile').files[0]);
+        formData.append('poster', document.getElementById('posterFile').files[0]);
+
+        submitBtn.disabled = true;
+        submitBtn.innerText = "⏳ Uploading to Server...";
+        progressContainer.style.display = 'block';
+        statusText.innerText = "Connecting to upload stream...";
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/api/upload-movie', true);
+
+        xhr.upload.addEventListener('progress', function(event) {
+            if (event.lengthComputable) {
+                const percentComplete = Math.round((event.loaded / event.total) * 100);
+                progressBar.style.width = percentComplete + '%';
+                progressBar.innerText = percentComplete + '%';
+                
+                if(percentComplete < 100) {
+                    statusText.innerText = `Streaming blocks from device: ${(event.loaded / (1024 * 1024)).toFixed(1)}MB sent...`;
+                } else {
+                    statusText.innerText = "Processing assets on Cloudinary server... please wait.";
+                }
+            }
+        });
+
+        xhr.onload = function() {
+            if (xhr.status === 200 || xhr.status === 201) {
+                alert("✅ Success: Media uploaded successfully!");
+                window.location.reload();
+            } else {
+                alert("❌ Upload Failed: " + xhr.responseText);
+                resetForm();
+            }
+        };
+
+        xhr.onerror = function() {
+            alert("❌ Connection dropped or timed out.");
+            resetForm();
+        };
+
+        xhr.send(formData);
+
+        function resetForm() {
+            submitBtn.disabled = false;
+            submitBtn.innerText = "🚀 Upload Device Files to Platform";
+            progressContainer.style.display = 'none';
+            progressBar.style.width = '0%';
+            statusText.innerText = "";
+        }
+    });
+</script>
 
         <!-- RIGHT COLUMN: LIVE DATA TRACKING -->
         <div>
