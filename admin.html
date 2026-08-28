@@ -224,151 +224,178 @@
 
     <div class="admin-layout-grid">
         
-        <!-- LEFT COLUMN: CONTENT MANAGEMENT UPLOAD FORM -->
-       <!-- LEFT COLUMN: CONTENT MANAGEMENT STREAMING UPLOAD FORM -->
-<div class="form-container">
-    <h3>Upload New Content from Device</h3>
-    <form id="deviceUploadForm" enctype="multipart/form-data">
-        
-        <label>Movie Title:</label>
-        <input type="text" id="movieTitle" required placeholder="e.g., Gladiator 2">
+        <!-- LEFT COLUMN: CONTENT MANAGEMENT STREAMING UPLOAD FORM -->
+        <div class="form-container">
+            <h3>Upload New Content from Device</h3>
+            <form id="deviceUploadForm" enctype="multipart/form-data">
+                
+                <label>Movie Title:</label>
+                <input type="text" id="movieTitle" required placeholder="e.g., Gladiator 2">
 
-        <label>VJ Translator Name:</label>
-        <input type="text" id="movieVj" required placeholder="e.g., VJ Jingo">
+                <label>VJ Translator Name:</label>
+                <input type="text" id="movieVj" required placeholder="e.g., VJ Jingo">
 
-        <label>Movie Category:</label>
-        <select id="movieCategory">
-            <option value="trending">🔥 Trending</option>
-            <option value="action">💥 Action</option>
-            <option value="comedy">😂 Comedy</option>
-            <option value="drama">🎭 Drama</option>
-            <option value="series">📺 Series</option>
-            <option value="animation">🦊 Animation</option>
-        </select>
+                <label>Movie Category:</label>
+                <select id="movieCategory">
+                    <option value="trending">🔥 Trending</option>
+                    <option value="action">💥 Action</option>
+                    <option value="comedy">😂 Comedy</option>
+                    <option value="drama">🎭 Drama</option>
+                    <option value="series">📺 Series</option>
+                    <option value="animation">🦊 Animation</option>
+                </select>
 
-        <!-- 1. VIDEO FILE PICKER (From Mobile/PC Device) -->
-        <label>Select Movie Video (.mp4 / .mkv from device):</label>
-        <input type="file" id="videoFile" accept="video/*" required>
+                <!-- 1. VIDEO FILE PICKER (From Device) -->
+                <label>Select Movie Video (.mp4 / .mkv from device):</label>
+                <input type="file" id="videoFile" accept="video/*" required>
 
-        <!-- 2. POSTER IMAGE FILE PICKER (From Mobile/PC Device) -->
-        <label>Select Thumbnail Poster Image (.jpg / .png / .jfif):</label>
-        <input type="file" id="posterFile" accept="image/*" required>
+                <!-- 2. POSTER IMAGE FILE PICKER (From Device) -->
+                <label>Select Thumbnail Poster Image (.jpg / .png / .jfif):</label>
+                <input type="file" id="posterFile" accept="image/*" required>
 
-        <!-- LIVE PROGRESS TRACKING VISUAL SYSTEM -->
-        <div id="uploadProgressContainer" style="display: none; margin-top: 20px; background: #222; border-radius: 4px; border: 1px solid #333; overflow: hidden; position: relative; height: 24px;">
-            <div id="uploadProgressBar" style="width: 0%; height: 100%; background: #f39c12; transition: width 0.1s ease; display: flex; align-items: center; justify-content: center; color: #000; font-weight: bold; font-size: 0.85rem;">0%</div>
+                <!-- PROGRESS BAR VIEW LAYER -->
+                <div id="uploadProgressContainer" style="display: none; margin-top: 20px; background: #222; border-radius: 4px; border: 1px solid #333; overflow: hidden; height: 24px;">
+                    <div id="uploadProgressBar" style="width: 0%; height: 100%; background: #f39c12; display: flex; align-items: center; justify-content: center; color: #000; font-weight: bold; font-size: 0.85rem;">0%</div>
+                </div>
+                <p id="uploadStatusText" style="margin-top: 8px; font-size: 0.85rem; color: #aaa; text-align: center; font-style: italic;"></p>
+
+                <button type="submit" id="submitBtn">🚀 Upload Device Files to Platform</button>
+            </form>
         </div>
-        <p id="uploadStatusText" style="margin-top: 8px; font-size: 0.85rem; color: #aaa; text-align: center; font-style: italic;"></p>
 
-        <button type="submit" id="submitBtn">🚀 Upload Device Files to Platform</button>
-    </form>
-</div>
+        <!-- RIGHT DASHBOARD COLUMN: MONITORING METRICS -->
+        <div>
+            <div class="dashboard-section">
+                <h3>Live Movie Registry Catalog</h3>
+                <div id="adminMoviesList">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
 
-<script>
-    // Configuration Settings - UPDATED WITH YOUR LIVE CLOUDINARY KEYS
-    const CLOUD_NAME = "d3ejbxsx"; 
-    const UPLOAD_PRESET = "p8nasi3c"; 
+            <div class="dashboard-section">
+                <h3>Registered User Database Metrics</h3>
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Phone/Contact</th>
+                            <th>Tier Plan</th>
+                            <th>Access Key</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <!-- Populated dynamically via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
-    document.getElementById('deviceUploadForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
+    <!-- DIRECT TO CLOUDINARY UPLOAD LOGIC SCRIPT SYSTEM -->
+    <script>
+        // Configuration Settings - POPULATED SECURELY WITH YOUR ACCOUNT LIVE CONSOLE ENDPOINTS
+        const CLOUD_NAME = "d3ejbxsx"; 
+        const UPLOAD_PRESET = "p8nasi3c"; 
 
-        const submitBtn = document.getElementById('submitBtn');
-        const progressContainer = document.getElementById('uploadProgressContainer');
-        const progressBar = document.getElementById('uploadProgressBar');
-        const statusText = document.getElementById('uploadStatusText');
+        document.getElementById('deviceUploadForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
 
-        const videoFile = document.getElementById('videoFile').files[0];
-        const posterFile = document.getElementById('posterFile').files[0];
+            const submitBtn = document.getElementById('submitBtn');
+            const progressContainer = document.getElementById('uploadProgressContainer');
+            const progressBar = document.getElementById('uploadProgressBar');
+            const statusText = document.getElementById('uploadStatusText');
 
-        submitBtn.disabled = true;
-        progressContainer.style.display = 'block';
+            const videoFile = document.getElementById('videoFile').files[0];
+            const posterFile = document.getElementById('posterFile').files[0];
 
-        try {
-            // 1. Upload Poster Image directly to Cloudinary
-            statusText.innerText = "1/2: Sending thumbnail poster image to Cloudinary...";
-            const posterData = new FormData();
-            posterData.append('file', posterFile);
-            posterData.append('upload_preset', UPLOAD_PRESET);
+            submitBtn.disabled = true;
+            progressContainer.style.display = 'block';
 
-            const posterRes = await fetch(`https://cloudinary.com{CLOUD_NAME}/image/upload`, {
-                method: 'POST',
-                body: posterData
-            });
-            const posterJson = await posterRes.json();
-            const posterUrl = posterJson.secure_url;
+            try {
+                // 1. Upload Poster Image directly to Cloudinary
+                statusText.innerText = "1/2: Sending thumbnail poster image to Cloudinary...";
+                const posterData = new FormData();
+                posterData.append('file', posterFile);
+                posterData.append('upload_preset', UPLOAD_PRESET);
 
-            // 2. Upload Video directly to Cloudinary and track large file percentages live
-            statusText.innerText = "2/2: Direct streaming movie file to Cloudinary...";
-            
-            const videoData = new FormData();
-            videoData.append('file', videoFile);
-            videoData.append('upload_preset', UPLOAD_PRESET);
+                const posterRes = await fetch(`https://cloudinary.com{CLOUD_NAME}/image/upload`, {
+                    method: 'POST',
+                    body: posterData
+                });
+                const posterJson = await posterRes.json();
+                const posterUrl = posterJson.secure_url;
 
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', `https://cloudinary.com{CLOUD_NAME}/video/upload`, true);
+                // 2. Upload Video using XHR streaming packets directly to Cloudinary
+                statusText.innerText = "2/2: Direct streaming movie file to Cloudinary...";
+                
+                const videoData = new FormData();
+                videoData.append('file', videoFile);
+                videoData.append('upload_preset', UPLOAD_PRESET);
 
-            xhr.upload.addEventListener('progress', function(event) {
-                if (event.lengthComputable) {
-                    const percentComplete = Math.round((event.loaded / event.total) * 100);
-                    progressBar.style.width = percentComplete + '%';
-                    progressBar.innerText = percentComplete + '%';
-                }
-            });
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', `https://cloudinary.com{CLOUD_NAME}/video/upload`, true);
 
-            xhr.onload = async function() {
-                if (xhr.status === 200) {
-                    const videoJson = JSON.parse(xhr.responseText);
-                    const videoUrl = videoJson.secure_url;
+                xhr.upload.addEventListener('progress', function(event) {
+                    if (event.lengthComputable) {
+                        const percentComplete = Math.round((event.loaded / event.total) * 100);
+                        progressBar.style.width = percentComplete + '%';
+                        progressBar.innerText = percentComplete + '%';
+                        
+                        if (percentComplete < 100) {
+                            statusText.innerText = `Streaming binary blocks: ${(event.loaded / (1024 * 1024)).toFixed(1)}MB sent...`;
+                        } else {
+                            statusText.innerText = "Processing video layers inside Cloudinary cloud cache... please wait.";
+                        }
+                    }
+                });
 
-                    // 3. Send URLs as a tiny text payload to your Render backend
-                    statusText.innerText = "Finishing up: Registering URLs in database...";
-                    
-                    const response = await fetch('/api/upload-movie', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            title: document.getElementById('movieTitle').value,
-                            vj: document.getElementById('movieVj').value,
-                            category: document.getElementById('movieCategory').value,
-                            posterUrl: posterUrl,
-                            videoUrl: videoUrl
-                        })
-                    });
+                xhr.onload = async function() {
+                    if (xhr.status === 200) {
+                        const videoJson = JSON.parse(xhr.responseText);
+                        const videoUrl = videoJson.secure_url;
 
-                    if (response.ok) {
-                        alert("✅ Success: Movie uploaded and published seamlessly!");
-                        window.location.reload();
+                        // 3. Send final paths to Render backend database
+                        statusText.innerText = "Finishing up: Registering items inside database registry...";
+                        
+                        const response = await fetch('/api/upload-movie', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                title: document.getElementById('movieTitle').value,
+                                vj: document.getElementById('movieVj').value,
+                                category: document.getElementById('movieCategory').value,
+                                posterUrl: posterUrl,
+                                videoUrl: videoUrl
+                            })
+                        });
+
+                        if (response.ok) {
+                            alert("✅ Success: Movie uploaded and published seamlessly!");
+                            window.location.reload();
+                        } else {
+                            alert("❌ Registration failed inside the backend index server.");
+                            resetForm();
+                        }
                     } else {
-                        alert("❌ Database registration failed.");
+                        alert("❌ Cloudinary cloud rejection: " + xhr.responseText);
                         resetForm();
                     }
-                } else {
-                    alert("❌ Cloudinary video upload rejected: " + xhr.responseText);
-                    resetForm();
-                }
-            };
+                };
 
-            xhr.send(videoData);
+                xhr.send(videoData);
 
-        } catch (err) {
-            alert("❌ Upload execution crashed: " + err.message);
-            resetForm();
-        }
+            } catch (err) {
+                alert("❌ Network processing execution crashed: " + err.message);
+                resetForm();
+            }
 
-        function resetForm() {
-            submitBtn.disabled = false;
-            submitBtn.innerText = "🚀 Upload Device Files to Platform";
-            progressContainer.style.display = 'none';
-            progressBar.style.width = '0%';
-            statusText.innerText = "";
-        }
-    });
-
-    // Keep your working dashboards fetching logic below intact
-    document.addEventListener("DOMContentLoaded", () => {
-        fetchAdminMovies(); 
-        fetchRegisteredUsers();
-    });
-</script>
+            function resetForm() {
+                submitBtn.disabled = false;
+                progressContainer.style.display = 'none';
+                progressBar.style.width = '0%';
+                statusText.innerText = "";
+            }
+        });
+    </script>
 </body>
 </html>
