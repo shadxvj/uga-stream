@@ -13,15 +13,28 @@ cloudinary.config({
 });
 
 // 2. Configure Multer to ONLY handle the image poster upload stream securely
-const imageStorage = new CloudinaryStorage({
+const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
-  params: {
-    folder: 'uga-stream-posters',
-    resource_type: 'image',
-    allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'jfif']
+  params: async (req, file) => {
+    const isVideo = file.fieldname === 'video';
+    if (isVideo) {
+      return {
+        folder: 'uga-stream-videos',
+        resource_type: 'video',
+        chunk_size: 6000000,
+        allowed_formats: ['mp4', 'mkv', 'avi', 'mov']
+      };
+    } else {
+      return {
+        folder: 'uga-stream-posters',
+        resource_type: 'image',
+        allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'jfif']
+      };
+    }
   }
 });
-const uploadPoster = multer({ storage: imageStorage });
+
+const upload = multer({ storage: storage });
 
 const app = express();
 const PORT = process.env.PORT || 5000; // Dynamic port tracking for Render configurations
@@ -47,29 +60,36 @@ let usersDatabase = [
    ========================================================================== */
 
 // API Endpoint to process the upload form from Admin Panel
-app.post('/api/upload-movie', uploadPoster.single('poster'), (req, res) => {
+app.post('/api/upload-movie', upload.fields([{ name: 'video', maxCount: 1 }, { name: 'poster', maxCount: 1 }]), (req, res) => {
     try {
-        const { title, category, vj, videoUrl } = req.body;
+        const { title, category, vj } = req.body;
 
-        // Defensive boundary guards: Stops crashes by sending clear warnings instead of breaking the engine
-        if (!req.file) {
-            return res.status(400).send('<h1>Upload Failed!</h1><p>Missing thumbnail poster image file. Please go back and pick an image.</p><a href="/admin.html">Go Back</a>');
-        }
-        if (!title || !vj || !videoUrl) {
-            return res.status(400).send('<h1>Upload Failed!</h1><p>Missing required text fields (Title, VJ, or Video Link Url).</p><a href="/admin.html">Go Back</a>');
+        if (!req.files || !req.files['video'] || !req.files['poster']) {
+            return res.status(400).send('<h1>Upload Failed!</h1><p>Please select both a video file and a poster image from your device.</p><a href="/admin.html">Go Back</a>');
         }
 
-        const posterCloudUrl = req.file.path; // Secured Cloudinary image reference URL path string
+        const videoUrl = req.files['video'][0].path;
+        const posterUrl = req.files['poster'][0].path;
 
-        // Structure a clean movie asset entry mapping directly to front-end keys
         const newMovie = {
             id: moviesDatabase.length + 1,
             title: title,
             category: category,
             vj: vj,
-            image: posterCloudUrl,
-            source: videoUrl // Points directly to your watch.html parameter hooks
+            image: posterUrl,
+            source: videoUrl
         };
+
+        moviesDatabase.push(newMovie);
+        console.log("⚡ New Device Movie Added Successfully:", newMovie);
+        
+        res.send('<h1>Upload Successful!</h1><p>Your media has been uploaded directly from your device.</p><a href="/admin.html">Go Back to Admin Panel</a>');
+    } catch (error) {
+        console.error("Upload process crashed:", error);
+        res.status(500).send('<h1>Upload Failed!</h1><p>Error Details: ' + error.message + '</p><a href="/admin.html">Go Back</a>');
+    }
+});
+
 
         moviesDatabase.push(newMovie);
         console.log("⚡ New Movie Published Successfully:", newMovie);
