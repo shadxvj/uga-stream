@@ -70,8 +70,8 @@ app.post('/api/upload-movie', upload.fields([{ name: 'video', maxCount: 1 }, { n
         }
 
         // FIXED: Using safe bracket array pointers to capture the string from AJAX packets
-        const videoUrl = req.files['video'][0] ? req.files['video'][0].path : null;
-        const posterUrl = req.files['poster'][0] ? req.files['poster'][0].path : null;
+        const videoUrl = req.files['video'] ? req.files['video'][0].path : null;
+const posterUrl = req.files['poster'] ? req.files['poster'][0].path : null;
 
         if (!videoUrl || !posterUrl) {
             return res.status(400).send('Cloud storage processing error. Try a smaller file format.');
