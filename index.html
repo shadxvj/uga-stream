@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UGA STREAM — Premium VJ-translated Cinema</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Stable CDN build for FontAwesome UI graphics icons -->
     <link rel="stylesheet" href="https://cloudflare.com">
     <style>
+        /* Responsive rules for the fullscreen background carousel banner */
         .hero-section {
             position: relative;
-            min-height: 85vh;
+            min-height: 75vh;
             width: 100%;
             display: flex;
             align-items: center;
@@ -48,39 +50,8 @@
             margin-bottom: 15px;
             font-weight: 800;
         }
-        
-        /* Dynamic Grid Layout Track Hooks */
-        .movie-showcase-container {
-            padding: 40px 6%;
-            background-color: #050505;
-            display: flex;
-            flex-direction: column;
-            gap: 50px;
-        }
-        .category-row-block {
-            display: flex;
-            flex-direction: column;
-        }
-        .category-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 20px;
-            letter-spacing: 0.5px;
-        }
-        .category-title span { color: #e50914; }
-        .movie-grid-track {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 20px;
-            width: 100%;
-        }
 
-        @media (max-width: 768px) {
-            .hero-section { min-height: 70vh; padding-top: 140px; }
-            .hero-title { font-size: 2.2rem !important; }
-        }
-                /* Movie Shelf Grid Alignment */
+        /* FIXED: Movie Shelf Grid Alignment to stop cards from stretching too big */
         .movie-grid-track {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -89,7 +60,7 @@
             margin-top: 15px;
         }
 
-        /* Netflix-Style Cinematic Movie Card Hooks */
+        /* Netflix-Style Cinematic Movie Card Layout Hooks */
         .movie-card {
             background-color: #111111;
             border-radius: 8px;
@@ -98,13 +69,11 @@
             cursor: pointer;
             transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
-
         .movie-card:hover {
             transform: translateY(-5px);
             border-color: #e50914;
             box-shadow: 0 10px 20px rgba(229, 9, 20, 0.2);
         }
-
         .poster-frame {
             width: 100%;
             height: 260px;
@@ -117,7 +86,6 @@
             color: rgba(255, 255, 255, 0.4);
             position: relative;
         }
-
         .poster-frame i {
             font-size: 3rem;
             opacity: 0;
@@ -125,13 +93,11 @@
             transform: scale(0.8);
             z-index: 3;
         }
-
         .movie-card:hover .poster-frame i {
             opacity: 1;
             color: #e50914;
             transform: scale(1);
         }
-
         .poster-frame::after {
             content: '';
             position: absolute;
@@ -143,28 +109,41 @@
             opacity: 0;
             transition: opacity 0.3s ease;
         }
-
         .movie-card:hover .poster-frame::after {
             opacity: 1;
         }
 
+        /* Profile Dropdown Active State Toggle Helper */
+        .profile-dropdown-card {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: #141414;
+            border: 1px solid #282828;
+            padding: 10px;
+            border-radius: 4px;
+            z-index: 100;
+        }
+        .profile-dropdown-card.show {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .hero-section { min-height: 70vh; padding-top: 140px; }
+            .hero-title { font-size: 2.2rem !important; line-height: 1.25; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- Promo Announcement Top Banner Link -->
-    <div class="quick-links-bar">
-        <div class="quick-links-content" style="display: flex; justify-content: center; align-items: center;">
-            <a href="#" style="text-decoration: none; color: #b3b3b3; font-size: 0.85rem;"><span class="badge-promo">PROMO</span> Join today for UGX 2,000</a>
-        </div>
-    </div>
-
-    <!-- Main Navigation Header System Layout -->
+    <!-- Main Navigation Header -->
     <header class="navbar">
         <div class="logo-container" onclick="window.location.reload();">
             <span class="logo-box">US</span>
             <span class="logo-text">UGA <span class="ug-text">STREAM</span></span>
         </div>
+
         <nav class="nav-links" id="nav-links">
             <a href="#" class="active">Home</a>
             <a href="#trending">Trending</a>
@@ -174,6 +153,7 @@
             <a href="#series">Series</a>
             <a href="#animation">Animation</a>
         </nav>
+
         <div class="nav-right-cluster">
             <div class="search-container">
                 <input type="text" id="movieSearch" placeholder="Search movies, VJs..." class="search-input">
@@ -181,83 +161,90 @@
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 </button>
             </div>
-            <div class="profile-menu-container">
-                <button class="profile-icon-btn" id="profileMenuBtn">
+
+            <div class="profile-menu-container" style="position: relative;">
+                <button class="profile-icon-btn" id="profileMenuBtn" aria-label="Account Menu">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 </button>
                 <div class="profile-dropdown-card" id="profileDropdown">
-                    <div class="dropdown-header">Welcome to UGA Stream</div>
-                    <a href="#" class="dropdown-item">Login Now</a>
-                    <a href="#" class="dropdown-item signup-accent">Sign Up Now</a>
+                    <div class="dropdown-header" style="color: #fff; padding: 5px 10px; font-weight: bold;">Welcome to UGA Stream</div>
+                    <a href="#login" class="dropdown-item" style="display: block; color: #bbb; padding: 5px 10px; text-decoration: none;">Login</a>
+                    <a href="#signup" class="dropdown-item signup-accent" style="display: block; color: #e50914; padding: 5px 10px; text-decoration: none; font-weight: bold;">Sign Up</a>
                 </div>
             </div>
-            <button class="menu-toggle" id="menu-toggle">
-                <span></span><span></span><span></span>
-            </button>
         </div>
     </header>
 
     <main class="content-wrapper">
-        <!-- Cinematic Promotional Banner Hero Presenter Box -->
+        <!-- Cinematic Hero Presentation Layer -->
         <section class="hero-section">
             <div class="hero-background-carousel">
                 <div class="hero-slider-track">
-                    <div class="slide" style="background-image: url('images/hero-bg1.jpg');"></div>
+                    <div class="slide" style="background-image: url('images/hero-bg1.jpg'); background-color: #111;"></div>
                 </div>
             </div>
             <div class="hero-overlay-gradient"></div>
+
             <div class="hero-content">
                 <div class="hero-tags">
-                    <span class="tag">2026</span><span class="tag">MOVIE</span><span class="tag vj-tag">LUGANDA VJ</span>
+                    <span class="tag">2026</span>
+                    <span class="tag">MOVIE</span>
+                    <span class="tag vj-tag">LUGANDA VJ</span>
                 </div>
                 <h1 class="hero-title">Uganda's home for VJ-translated cinema.</h1>
                 <p class="hero-description">Discover the latest movies in Luganda with premium streaming quality and local VJ flavor.</p>
+                <!-- CHANGED: Swapped button name text cleanly to Watch Now -->
                 <button class="download-btn" onclick="window.location.href='#trending'">
-                    <i class="fa-solid fa-arrow-down"></i> Browse Collection
+                    <i class="fa-solid fa-play"></i> Watch Now
                 </button>
             </div>
         </section>
 
-        <!-- DYNAMIC CINEMA DISCOVERY CONTAINER LAYOUT TRACKS -->
-        <div class="movie-showcase-container">
+        <!-- Dynamic Cinema Content Showcase Layers with Headings Restored -->
+        <div class="movie-showcase-container" style="padding: 40px 6%; display: flex; flex-direction: column; gap: 50px; background-color: #050505;">
             
+            <!-- 1. TRENDING CATEGORY -->
             <section class="category-row-block" id="trending">
-                <h2 class="category-title">Trending Movies <span>★</span></h2>
-                <div class="movie-grid-track" id="trending-grid"></div>
+                <h2 style="font-size: 1.5rem; font-weight: 700; color: #ffffff; margin-bottom: 10px;">Trending Movies <span style="color: #e50914;">★</span></h2>
+                <div class="movie-grid-track" id="trendingGrid"></div>
             </section>
 
+            <!-- 2. ACTION CATEGORY -->
             <section class="category-row-block" id="action">
-                <h2 class="category-title">Action <span>💥</span></h2>
-                <div class="movie-grid-track" id="action-grid"></div>
+                <h2 style="font-size: 1.5rem; font-weight: 700; color: #ffffff; margin-bottom: 10px;">Action <span style="color: #e50914;">💥</span></h2>
+                <div class="movie-grid-track" id="actionGrid"></div>
             </section>
 
+            <!-- 3. COMEDY CATEGORY -->
             <section class="category-row-block" id="comedy">
-                <h2 class="category-title">Comedy <span>😂</span></h2>
-                <div class="movie-grid-track" id="comedy-grid"></div>
+                <h2 style="font-size: 1.5rem; font-weight: 700; color: #ffffff; margin-bottom: 10px;">Comedy <span style="color: #e50914;">😂</span></h2>
+                <div class="movie-grid-track" id="comedyGrid"></div>
             </section>
 
+            <!-- 4. DRAMA CATEGORY -->
             <section class="category-row-block" id="drama">
-                <h2 class="category-title">Drama <span>🎭</span></h2>
-                <div class="movie-grid-track" id="drama-grid"></div>
+                <h2 style="font-size: 1.5rem; font-weight: 700; color: #ffffff; margin-bottom: 10px;">Drama <span style="color: #e50914;">🎭</span></h2>
+                <div class="movie-grid-track" id="dramaGrid"></div>
             </section>
 
+            <!-- 5. SERIES CATEGORY -->
             <section class="category-row-block" id="series">
-                <h2 class="category-title">Series <span>📺</span></h2>
-                <div class="movie-grid-track" id="series-grid"></div>
+                <h2 style="font-size: 1.5rem; font-weight: 700; color: #ffffff; margin-bottom: 10px;">TV Series <span style="color: #e50914;">📺</span></h2>
+                <div class="movie-grid-track" id="seriesGrid"></div>
             </section>
 
+            <!-- 6. ANIMATION CATEGORY -->
             <section class="category-row-block" id="animation">
-                <h2 class="category-title">Animation <span>🦊</span></h2>
-                <div class="movie-grid-track" id="animation-grid"></div>
+                <h2 style="font-size: 1.5rem; font-weight: 700; color: #ffffff; margin-bottom: 10px;">Animation <span style="color: #e50914;">🦊</span></h2>
+                <div class="movie-grid-track" id="animationGrid"></div>
             </section>
 
         </div>
     </main>
 
-    <!-- LIVE DATA CAPTURE AND DOM RENDERING ENGINE -->
-      <!-- INTERACTIVE APP DOM LAYER CONTROL SCRIPTS -->
+    <!-- INTERACTIVE APP DOM LAYER CONTROL SCRIPTS -->
     <script>
-        // 1. Account/Profile Interface Dropdown Toggler Link
+        // 1. Account/Profile Dropdown Toggler
         const profileBtn = document.getElementById('profileMenuBtn');
         const profileDropdown = document.getElementById('profileDropdown');
 
@@ -266,43 +253,35 @@
                 e.stopPropagation();
                 profileDropdown.classList.toggle('show');
             });
-            
-            document.addEventListener('click', function() {
-                profileDropdown.classList.remove('show');
-            });
+            document.addEventListener('click', () => profileDropdown.classList.remove('show'));
         }
 
-        // 2. Central Live Catalog Sync Engine for Multiple Categories
+        // 2. Central Live Catalog Sync Engine for Multiple Rows
         async function fetchLiveApplicationCatalog() {
             try {
-                // Fetch current records from memory backend
                 const response = await fetch('/api/movies');
                 const uploadedMovies = await response.json();
 
-                // Define all valid platform category sections matching your HTML IDs
                 const categories = ['trending', 'action', 'comedy', 'drama', 'series', 'animation'];
 
                 categories.forEach(cat => {
-                    // Look for the specific container box matching your layout IDs
-                    const gridTrack = document.getElementById(cat + 'Grid') || document.getElementById(cat);
+                    const gridTrack = document.getElementById(cat + 'Grid');
                     if (!gridTrack) return;
 
-                    // Filter out the films belonging strictly to this category group
                     const categoryMovies = uploadedMovies.filter(movie => movie.category === cat);
 
                     if (categoryMovies.length === 0) {
-                        gridTrack.innerHTML = `<p style="color: #444; font-style: italic; padding: 10px 0; font-size: 0.9rem;">No videos uploaded in this category yet.</p>`;
+                        gridTrack.innerHTML = `<p style="color: #555; font-style: italic; font-size: 0.9rem; padding: 10px 0;">No videos uploaded in this category yet.</p>`;
                         return;
                     }
 
-                    // Populate the category shelf layout instantly with its clean visual cards
                     gridTrack.innerHTML = categoryMovies.map(movie => `
                         <div class="movie-card" onclick="window.location.href='watch.html?video=${encodeURIComponent(movie.source)}'">
                             <div class="poster-frame" style="background-image: url('${movie.image}');">
                                 <i class="fa-solid fa-circle-play"></i>
                             </div>
                             <div style="padding: 12px;">
-                                <h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; color: #fff;">${movie.title}</h4>
+                                <h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; color: #fff; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">${movie.title}</h4>
                                 <p style="font-size: 0.8rem; color: #e50914; font-weight: bold; margin: 0;">${movie.vj}</p>
                             </div>
                         </div>
@@ -313,7 +292,6 @@
             }
         }
 
-        // Initialize execution as soon as document layers resolve completely
         document.addEventListener("DOMContentLoaded", () => {
             fetchLiveApplicationCatalog();
         });
