@@ -5,122 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Uga Stream — VJ Admin Panel</title>
     <style>
-        body { 
-            background-color: #0d0d0d; 
-            color: #fff; 
-            font-family: sans-serif; 
-            padding: 30px; 
-            margin: 0;
-        }
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto 30px auto;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 15px;
-        }
-        .admin-layout-grid {
-            display: grid;
-            grid-template-columns: 1fr 1.3fr;
-            gap: 35px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .form-container { 
-            background: #1a1a1a; 
-            padding: 30px; 
-            border-radius: 8px; 
-            border: 1px solid #f39c12; 
-            height: fit-content;
-        }
-        .dashboard-section {
-            background: #111;
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 8px;
-            padding: 25px;
-            margin-bottom: 30px;
-        }
+        body { background-color: #0d0d0d; color: #fff; font-family: sans-serif; padding: 30px; margin: 0; }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto 30px auto; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
+        .admin-layout-grid { display: grid; grid-template-columns: 1fr 1.3fr; gap: 35px; max-width: 1200px; margin: 0 auto; }
+        .form-container { background: #1a1a1a; padding: 30px; border-radius: 8px; border: 1px solid #f39c12; height: fit-content; }
+        .dashboard-section { background: #111; border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 25px; margin-bottom: 30px; }
         h2, h3 { color: #f39c12; margin-top: 0; }
         label { display: block; margin-top: 15px; font-weight: bold; font-size: 0.9rem; }
-        input, select { 
-            width: 100%; 
-            padding: 12px; 
-            margin-top: 5px; 
-            background: #2b2b2b; 
-            color: #fff; 
-            border: 1px solid #444; 
-            border-radius: 4px; 
-            box-sizing: border-box; 
-            outline: none;
-            font-size: 0.95rem;
-        }
+        input, select { width: 100%; padding: 12px; margin-top: 5px; background: #2b2b2b; color: #fff; border: 1px solid #444; border-radius: 4px; box-sizing: border-box; outline: none; font-size: 0.95rem; }
         input:focus, select:focus { border-color: #f39c12; }
-        button { 
-            background: #f39c12; 
-            color: #000; 
-            border: none; 
-            width: 100%; 
-            padding: 14px; 
-            margin-top: 25px; 
-            font-weight: bold; 
-            cursor: pointer; 
-            border-radius: 4px; 
-            font-size: 1rem; 
-        }
+        button { background: #f39c12; color: #000; border: none; width: 100%; padding: 14px; margin-top: 25px; font-weight: bold; cursor: pointer; border-radius: 4px; font-size: 1rem; }
         button:hover { background: #e08e0b; }
-        .logout-btn {
-            background: #e50914; 
-            color: white; 
-            border: none; 
-            padding: 8px 16px; 
-            border-radius: 4px; 
-            cursor: pointer; 
-            font-weight: bold;
-            width: auto;
-            margin: 0;
-        }
-        .logout-btn:hover { background: #b81d24; }
-        
-        .users-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            font-size: 0.9rem;
-        }
-        .users-table th {
-            background-color: #1a1a1a;
-            color: #f39c12;
-            text-align: left;
-            padding: 12px 10px;
-            border: 1px solid rgba(255,255,255,0.08);
-        }
-        
-        #adminMoviesList {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 15px;
-        }
-        @media (max-width: 992px) {
-            .admin-layout-grid { grid-template-columns: 1fr; }
-        }
+        .logout-btn { background: #e50914; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: bold; width: auto; margin: 0; }
+        .users-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9rem; }
+        .users-table th { background-color: #1a1a1a; color: #f39c12; text-align: left; padding: 12px 10px; border: 1px solid rgba(255,255,255,0.08); }
+        #adminMoviesList { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
+        @media (max-width: 992px) { .admin-layout-grid { grid-template-columns: 1fr; } }
     </style>
-
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const isAdminLoggedIn = localStorage.getItem("adminAuthenticated");
-            
             if (isAdminLoggedIn !== "true") {
-                const passwordAttempt = prompt("🔒 Restricted Access: Enter Admin Password to continue:");
+                const passwordAttempt = prompt("🔒 Restricted Access: Enter Admin Password:");
                 if (passwordAttempt === "UgaStream2026") {
                     localStorage.setItem("adminAuthenticated", "true");
-                    alert("✅ Access Granted. Welcome back Admin!");
                     fetchAdminMovies(); 
                     fetchRegisteredUsers();
                 } else {
-                    alert("❌ Incorrect password. Access Denied.");
                     window.location.href = "index.html"; 
                 }
             } else {
@@ -129,106 +40,73 @@
             }
         });
 
-        function adminLogout() {
-            localStorage.removeItem("adminAuthenticated");
-            window.location.href = "index.html";
-        }
-
         async function fetchAdminMovies() {
             const listContainer = document.getElementById('adminMoviesList');
             if (!listContainer) return;
-            
             try {
                 const response = await fetch('/api/movies');
                 const movies = await response.json();
-                
                 if (!movies || movies.length === 0) {
-                    listContainer.innerHTML = `<p style="color: #666; font-style: italic; font-size: 0.9rem;">No videos registered yet. Fill out the form on the left to add content.</p>`;
+                    listContainer.innerHTML = `<p style="color: #666; font-style: italic;">No videos uploaded yet.</p>`;
                     return;
                 }
-                
                 listContainer.innerHTML = ''; 
                 movies.forEach(movie => {
                     const row = document.createElement('div');
                     row.style.cssText = "display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 12px 16px; border-radius: 6px;";
                     row.innerHTML = `
                         <div style="display: flex; align-items: center; gap: 15px;">
-                            <img src="${movie.image}" style="width: 45px; height: 60px; object-fit: cover; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1);">
+                            <img src="${movie.image}" style="width: 45px; height: 60px; object-fit: cover; border-radius: 4px;">
                             <div>
-                                <h4 style="margin: 0; color: #fff; font-size: 1rem; font-weight: 600;">${movie.title}</h4>
-                                <p style="margin: 4px 0 0 0; color: #888; font-size: 0.8rem;"><span style="color: #f39c12; font-weight: 600;">VJ ${movie.vj}</span> • Category: <span style="text-transform: capitalize;">${movie.category}</span></p>
+                                <h4 style="margin: 0; color: #fff;">${movie.title}</h4>
+                                <p style="margin: 4px 0 0 0; color: #888; font-size: 0.8rem;"><span style="color: #f39c12;">VJ ${movie.vj}</span> • Category: ${movie.category}</p>
                             </div>
                         </div>
-                        <button type="button" onclick="deleteMovie(${movie.id}, '${movie.title.replace(/'/g, "\\'")}')" style="background: #e50914; color: #fff; border: none; padding: 8px 16px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.85rem; width: auto; margin: 0;">🗑️ Delete</button>
+                        <button type="button" onclick="deleteMovie(${movie.id})" style="background: #e50914; color: #fff; border: none; padding: 8px 16px; border-radius: 4px; font-weight: bold; cursor: pointer; width: auto; margin: 0;">🗑️ Delete</button>
                     `;
                     listContainer.appendChild(row);
                 });
-            } catch (error) {
-                console.error("Error communicating with inventory API:", error);
-            }
+            } catch (error) { console.error(error); }
         }
 
-        async function deleteMovie(id, title) {
-            if (confirm(`⚠️ Are you sure you want to delete "${title}" from UGA STREAM?`)) {
-                try {
-                    const response = await fetch(`/api/movies/${id}`, { method: 'DELETE' });
-                    const result = await response.json();
-                    if (result.success) {
-                        alert(`✅ Movie deleted successfully.`);
-                        fetchAdminMovies(); 
-                    } else {
-                        alert(`❌ Failure: ${result.message}`);
-                    }
-                } catch (error) {
-                    console.error("Network issue processing item deletion:", error);
-                }
+        async function deleteMovie(id) {
+            if (confirm("⚠️ Delete this movie?")) {
+                const response = await fetch(`/api/movies/${id}`, { method: 'DELETE' });
+                const result = await response.json();
+                if (result.success) { fetchAdminMovies(); }
             }
         }
 
         async function fetchRegisteredUsers() {
             const tableBody = document.getElementById('usersTableBody');
             if (!tableBody) return;
-
             try {
                 const response = await fetch('/api/users');
                 const users = await response.json();
-
-                if (!users || users.length === 0) {
-                    tableBody.innerHTML = `<tr><td colspan="4" style="padding: 12px; text-align: center; color: #666; font-style: italic;">No users registered yet.</td></tr>`;
-                    return;
-                }
-
                 tableBody.innerHTML = ''; 
                 users.forEach(user => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td style="padding: 10px; border: 1px solid rgba(255,255,255,0.08);">${user.username || 'Unknown'}</td>
-                        <td style="padding: 10px; border: 1px solid rgba(255,255,255,0.08);">${user.phone || 'N/A'}</td>
-                        <td style="padding: 10px; border: 1px solid rgba(255,255,255,0.08); color: #f39c12; font-weight: bold; text-transform: uppercase;">${user.plan || 'none'}</td>
-                        <td style="padding: 10px; border: 1px solid rgba(255,255,255,0.08); color: #ff4d4d; font-family: monospace;">${user.password || '••••'}</td>
+                        <td style="padding: 10px; border: 1px solid rgba(255,255,255,0.08);">${user.username}</td>
+                        <td style="padding: 10px; border: 1px solid rgba(255,255,255,0.08);">${user.phone}</td>
+                        <td style="padding: 10px; border: 1px solid rgba(255,255,255,0.08); color: #f39c12; font-weight: bold;">${user.plan}</td>
+                        <td style="padding: 10px; border: 1px solid rgba(255,255,255,0.08); color: #ff4d4d;">${user.password}</td>
                     `;
                     tableBody.appendChild(row);
                 });
-            } catch (error) {
-                console.error("Error fetching database users:", error);
-            }
+            } catch (error) { console.error(error); }
         }
     </script>
 </head>
 <body>
-
     <div class="admin-header">
         <h2>Uga Stream Management Center</h2>
-        <button type="button" onclick="adminLogout()" class="logout-btn">🔒 Lock Panel</button>
+        <button type="button" onclick="localStorage.removeItem('adminAuthenticated'); window.location.reload();" class="logout-btn">🔒 Lock Panel</button>
     </div>
-
     <div class="admin-layout-grid">
-        
-        <!-- LEFT COLUMN: CONTENT MANAGEMENT STREAMING UPLOAD FORM -->
         <div class="form-container">
-            <h3>Upload New Content from Device</h3>
-            <form id="deviceUploadForm" enctype="multipart/form-data">
-                
+            <h3>Upload New Content (Link Method)</h3>
+            <form id="simpleUploadForm">
                 <label>Movie Title:</label>
                 <input type="text" id="movieTitle" required placeholder="e.g., Gladiator 2">
 
@@ -245,155 +123,55 @@
                     <option value="animation">🦊 Animation</option>
                 </select>
 
-                <!-- 1. VIDEO FILE PICKER (From Device) -->
-                <label>Select Movie Video (.mp4 / .mkv from device):</label>
-                <input type="file" id="videoFile" accept="video/*" required>
+                <label>Poster Image URL:</label>
+                <input type="text" id="posterUrl" required placeholder="Paste Cloudinary Poster .jpg link">
 
-                <!-- 2. POSTER IMAGE FILE PICKER (From Device) -->
-                <label>Select Thumbnail Poster Image (.jpg / .png / .jfif):</label>
-                <input type="file" id="posterFile" accept="image/*" required>
+                <label>Video Stream URL:</label>
+                <input type="text" id="videoUrl" required placeholder="Paste Cloudinary Video .mp4 link">
 
-                <!-- PROGRESS BAR VIEW LAYER -->
-                <div id="uploadProgressContainer" style="display: none; margin-top: 20px; background: #222; border-radius: 4px; border: 1px solid #333; overflow: hidden; height: 24px;">
-                    <div id="uploadProgressBar" style="width: 0%; height: 100%; background: #f39c12; display: flex; align-items: center; justify-content: center; color: #000; font-weight: bold; font-size: 0.85rem;">0%</div>
-                </div>
-                <p id="uploadStatusText" style="margin-top: 8px; font-size: 0.85rem; color: #aaa; text-align: center; font-style: italic;"></p>
-
-                <button type="submit" id="submitBtn">🚀 Upload Device Files to Platform</button>
+                <button type="submit" id="submitBtn">🚀 Publish Movie to App</button>
             </form>
         </div>
-
-        <!-- RIGHT DASHBOARD COLUMN: MONITORING METRICS -->
         <div>
             <div class="dashboard-section">
                 <h3>Live Movie Registry Catalog</h3>
-                <div id="adminMoviesList">
-                    <!-- Populated dynamically via JS -->
-                </div>
+                <div id="adminMoviesList"></div>
             </div>
-
             <div class="dashboard-section">
                 <h3>Registered User Database Metrics</h3>
                 <table class="users-table">
-                    <thead>
-                        <tr>
-                            <th>Username</th>
-                            <th>Phone/Contact</th>
-                            <th>Tier Plan</th>
-                            <th>Access Key</th>
-                        </tr>
-                    </thead>
-                    <tbody id="usersTableBody">
-                        <!-- Populated dynamically via JS -->
-                    </tbody>
+                    <thead><tr><th>Username</th><th>Phone</th><th>Tier Plan</th><th>Access Key</th></tr></thead>
+                    <tbody id="usersTableBody"></tbody>
                 </table>
             </div>
         </div>
     </div>
-
-    <!-- DIRECT TO CLOUDINARY UPLOAD LOGIC SCRIPT SYSTEM -->
     <script>
-        // Configuration Settings - POPULATED SECURELY WITH YOUR ACCOUNT LIVE CONSOLE ENDPOINTS
-        const CLOUD_NAME = "d3ejbxsx"; 
-        const UPLOAD_PRESET = "p8nasi3c"; 
-
-        document.getElementById('deviceUploadForm').addEventListener('submit', async function(e) {
+        document.getElementById('simpleUploadForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-
             const submitBtn = document.getElementById('submitBtn');
-            const progressContainer = document.getElementById('uploadProgressContainer');
-            const progressBar = document.getElementById('uploadProgressBar');
-            const statusText = document.getElementById('uploadStatusText');
-
-            const videoFile = document.getElementById('videoFile').files[0];
-            const posterFile = document.getElementById('posterFile').files[0];
-
             submitBtn.disabled = true;
-            progressContainer.style.display = 'block';
+            submitBtn.innerText = "Publishing...";
 
-            try {
-                // 1. Upload Poster Image directly to Cloudinary
-                statusText.innerText = "1/2: Sending thumbnail poster image to Cloudinary...";
-                const posterData = new FormData();
-                posterData.append('file', posterFile);
-                posterData.append('upload_preset', UPLOAD_PRESET);
+            const response = await fetch('/api/upload-movie', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    title: document.getElementById('movieTitle').value,
+                    vj: document.getElementById('movieVj').value,
+                    category: document.getElementById('movieCategory').value,
+                    posterUrl: document.getElementById('posterUrl').value,
+                    videoUrl: document.getElementById('videoUrl').value
+                })
+            });
 
-                const posterRes = await fetch("https://" + "://cloudinary.com" + "v1_1/" + CLOUD_NAME + "/image/upload", {
-                    method: 'POST',
-                    body: posterData
-                });
-                const posterJson = await posterRes.json();
-                const posterUrl = posterJson.secure_url;
-
-                // 2. Upload Video using XHR streaming packets directly to Cloudinary
-                statusText.innerText = "2/2: Direct streaming movie file to Cloudinary...";
-                
-                const videoData = new FormData();
-                videoData.append('file', videoFile);
-                videoData.append('upload_preset', UPLOAD_PRESET);
-
-                const xhr = new XMLHttpRequest();
-                xhr.open('POST', "https://" + "://cloudinary.com" + "v1_1/" + CLOUD_NAME + "/video/upload", true);
-
-                xhr.upload.addEventListener('progress', function(event) {
-                    if (event.lengthComputable) {
-                        const percentComplete = Math.round((event.loaded / event.total) * 100);
-                        progressBar.style.width = percentComplete + '%';
-                        progressBar.innerText = percentComplete + '%';
-                        
-                        if (percentComplete < 100) {
-                            statusText.innerText = `Streaming binary blocks: ${(event.loaded / (1024 * 1024)).toFixed(1)}MB sent...`;
-                        } else {
-                            statusText.innerText = "Processing video layers inside Cloudinary cloud cache... please wait.";
-                        }
-                    }
-                });
-
-                xhr.onload = async function() {
-                    if (xhr.status === 200) {
-                        const videoJson = JSON.parse(xhr.responseText);
-                        const videoUrl = videoJson.secure_url;
-
-                        // 3. Send final paths to Render backend database
-                        statusText.innerText = "Finishing up: Registering items inside database registry...";
-                        
-                        const response = await fetch('/api/upload-movie', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                title: document.getElementById('movieTitle').value,
-                                vj: document.getElementById('movieVj').value,
-                                category: document.getElementById('movieCategory').value,
-                                posterUrl: posterUrl,
-                                videoUrl: videoUrl
-                            })
-                        });
-
-                        if (response.ok) {
-                            alert("✅ Success: Movie uploaded and published seamlessly!");
-                            window.location.reload();
-                        } else {
-                            alert("❌ Registration failed inside the backend index server.");
-                            resetForm();
-                        }
-                    } else {
-                        alert("❌ Cloudinary cloud rejection: " + xhr.responseText);
-                        resetForm();
-                    }
-                };
-
-                xhr.send(videoData);
-
-            } catch (err) {
-                alert("❌ Network processing execution crashed: " + err.message);
-                resetForm();
-            }
-
-            function resetForm() {
+            if (response.ok) {
+                alert("✅ Success: Movie published instantly!");
+                window.location.reload();
+            } else {
+                alert("❌ Upload failed.");
                 submitBtn.disabled = false;
-                progressContainer.style.display = 'none';
-                progressBar.style.width = '0%';
-                statusText.innerText = "";
+                submitBtn.innerText = "🚀 Publish Movie to App";
             }
         });
     </script>
