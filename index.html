@@ -237,11 +237,15 @@
                 <button class="profile-icon-btn" id="profileMenuBtn" aria-label="Account Menu">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 </button>
-                <div class="profile-dropdown-card" id="profileDropdown">
-                    <div class="dropdown-header" style="color: #fff; padding: 5px 10px; font-weight: bold;">Welcome to UGA Stream</div>
-                    <a href="#login" class="dropdown-item" style="display: block; color: #bbb; padding: 5px 10px; text-decoration: none;">Login</a>
-                    <a href="#signup" class="dropdown-item signup-accent" style="display: block; color: #e50914; padding: 5px 10px; text-decoration: none; font-weight: bold;">Sign Up</a>
-                </div>
+               <div class="profile-dropdown-card" id="profileDropdown">
+    <div class="dropdown-header" style="color: #fff; padding: 5px 10px; font-weight: bold;">Welcome to UGA Stream</div>
+    
+    <!-- ⚡ REPLACE YOUR LOGIN LINK WITH THIS: -->
+    <a href="#" onclick="toggleAuthModal('loginModal', true); return false;" class="dropdown-item" style="display: block; color: #bbb; padding: 5px 10px; text-decoration: none;">Login</a>
+    
+    <!-- ⚡ REPLACE YOUR SIGN UP LINK WITH THIS: -->
+    <a href="#" onclick="toggleAuthModal('signUpModal', true); return false;" class="dropdown-item signup-accent" style="display: block; color: #e50914; padding: 5px 10px; text-decoration: none; font-weight: bold;">Sign Up</a>
+</div>
             </div>
         </div>
     </header>
