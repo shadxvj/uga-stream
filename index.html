@@ -187,87 +187,68 @@
     </main>
 
     <!-- LIVE DATA CAPTURE AND DOM RENDERING ENGINE -->
+      <!-- INTERACTIVE APP DOM LAYER CONTROL SCRIPTS -->
     <script>
-        let globalCatalogMemory = [];
+        // 1. Account/Profile Interface Dropdown Toggler Link
+        const profileBtn = document.getElementById('profileMenuBtn');
+        const profileDropdown = document.getElementById('profileDropdown');
 
-        // 1. Fetch live uploaded movie arrays from backend API endpoints
-        async function fetchLiveApplicationCatalog() {
-            try {
-                const response = await fetch('/api/movies');
-                globalCatalogMemory = await response.json();
-                renderCatalogGrids(globalCatalogMemory);
-            } catch (error) {
-                console.error("API Stream registry fetch failure:", error);
-            }
-        }
-
-        // 2. Clear placeholder boxes and populate grids automatically sorted by category
-        function renderCatalogGrids(movies) {
-            const categories = ['trending', 'action', 'comedy', 'drama', 'series', 'animation'];
+        if (profileBtn && profileDropdown) {
+            profileBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                profileDropdown.classList.toggle('show');
+            });
             
-            categories.forEach(cat => {
-                const gridElement = document.getElementById(`${cat}-grid`);
-                if (!gridElement) return;
-
-                const filteredMovies = movies.filter(m => m.category.toLowerCase() === cat);
-
-                if (filteredMovies.length === 0) {
-                    gridElement.innerHTML = `<p style="color: #444; font-size: 0.9rem; font-style: italic; margin: 10px 0;">No entries uploaded under this translation filter slot yet...</p>`;
-                    return;
-                }
-
-                gridElement.innerHTML = filteredMovies.map(movie => `
-                    <div class="movie-card" onclick="window.location.href='watch.html?video=${encodeURIComponent(movie.source)}'">
-                        <div class="poster-frame" style="background-image: url('${movie.image}');">
-                            <i class="fa-solid fa-circle-play"></i>
-                        </div>
-                        <div style="padding: 12px;">
-                            <h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; color: #fff;">${movie.title}</h4>
-                            <p style="font-size: 0.8rem; color: #e50914; font-weight: bold; margin: 0;">${movie.vj}</p>
-                        </div>
-                    </div>
-                `).join('');
+            document.addEventListener('click', function() {
+                profileDropdown.classList.remove('show');
             });
         }
 
-        // 3. User interaction navigation control blocks
+        // 2. Central Live Catalog Sync Engine for Multiple Categories
+        async function fetchLiveApplicationCatalog() {
+            try {
+                // Fetch current records from memory backend
+                const response = await fetch('/api/movies');
+                const uploadedMovies = await response.json();
+
+                // Define all valid platform category sections matching your HTML IDs
+                const categories = ['trending', 'action', 'comedy', 'drama', 'series', 'animation'];
+
+                categories.forEach(cat => {
+                    // Look for the specific container box matching your layout IDs
+                    const gridTrack = document.getElementById(cat + 'Grid') || document.getElementById(cat);
+                    if (!gridTrack) return;
+
+                    // Filter out the films belonging strictly to this category group
+                    const categoryMovies = uploadedMovies.filter(movie => movie.category === cat);
+
+                    if (categoryMovies.length === 0) {
+                        gridTrack.innerHTML = `<p style="color: #444; font-style: italic; padding: 10px 0; font-size: 0.9rem;">No videos uploaded in this category yet.</p>`;
+                        return;
+                    }
+
+                    // Populate the category shelf layout instantly with its clean visual cards
+                    gridTrack.innerHTML = categoryMovies.map(movie => `
+                        <div class="movie-card" onclick="window.location.href='watch.html?video=${encodeURIComponent(movie.source)}'">
+                            <div class="poster-frame" style="background-image: url('${movie.image}');">
+                                <i class="fa-solid fa-circle-play"></i>
+                            </div>
+                            <div style="padding: 12px;">
+                                <h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; color: #fff;">${movie.title}</h4>
+                                <p style="font-size: 0.8rem; color: #e50914; font-weight: bold; margin: 0;">${movie.vj}</p>
+                            </div>
+                        </div>
+                    `).join('');
+                });
+            } catch (error) {
+                console.error("Critical dashboard catalog sync error:", error);
+            }
+        }
+
+        // Initialize execution as soon as document layers resolve completely
         document.addEventListener("DOMContentLoaded", () => {
             fetchLiveApplicationCatalog();
-
-    // 3. Central Dynamic Catalog Sync Engine
-    async function fetchLiveApplicationCatalog() {
-        try {
-            const response = await fetch('/api/movies');
-            const uploadedMovies = await response.json();
-            
-            const gridTrack = document.getElementById('trendingGrid');
-            if (!gridTrack) return;
-
-                        if (!uploadedMovies || uploadedMovies.length === 0) {
-                gridTrack.innerHTML = `<p style="color: #666; font-style: italic; padding: 20px 0;">No live videos found in this category slot yet. Check back soon!</p>`;
-                return;
-            }
-
-            // Maps over your database strings array natively to populate your storefront cards layout instantly
-            gridTrack.innerHTML = uploadedMovies.map(movie => `
-                <div class="movie-card" onclick="window.location.href='watch.html?video=${encodeURIComponent(movie.source)}'">
-                    <div class="poster-frame" style="background-image: url('${movie.image}');">
-                        <i class="fa-solid fa-circle-play"></i>
-                    </div>
-                    <div style="padding: 12px;">
-                        <h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; color: #fff;">${movie.title}</h4>
-                        <p style="font-size: 0.8rem; color: #e50914; font-weight: bold; margin: 0;">${movie.vj}</p>
-                    </div>
-                </div>
-            `).join('');
-        } catch (error) {
-            console.error("Critical dashboard catalog sync error:", error);
-        }
-    }
-
-    // Initialize execution as soon as document layers resolve completely
-    fetchLiveApplicationCatalog();
-});
-</script>
+        });
+    </script>
 </body>
 </html>
