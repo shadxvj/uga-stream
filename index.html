@@ -417,24 +417,62 @@
             }
         }
 
-        document.addEventListener("DOMContentLoaded", () => {
-            fetchLiveApplicationCatalog();
-                    document.addEventListener("DOMContentLoaded", () => {
-            fetchLiveApplicationCatalog();
+     document.addEventListener("DOMContentLoaded", () => {
+    // 1. Initialize your movie catalog fetch
+    fetchLiveApplicationCatalog();
+
+    // 2. Setup your Login Profile Button popup listeners
+    const profileMenuBtn = document.getElementById('profileMenuBtn');
+    const authOverlay = document.getElementById('authOverlay');
+
+    if (profileMenuBtn) {
+        profileMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openAuthModal('login');
         });
+    }
 
-        // ==========================================
-        // PASTE THE SECOND CODE BLOCK (AUTH SCRIPTS) HERE
-        // ==========================================
-        function toggleAuthModal(modalId, show) {
-            const modal = document.getElementById(modalId);
-            if (modal) modal.style.display = show ? 'flex' : 'none';
-        }
+    if (authOverlay) {
+        authOverlay.addEventListener('click', (e) => {
+            if (e.target === authOverlay) {
+                closeAuthModal();
+            }
+        });
+    }
+});
 
-        function switchAuthModals(hideId, showId) {
-            toggleAuthModal(hideId, false);
-            toggleAuthModal(showId, true);
-        }
+// 3. Helper functions to manage show/hide states cleanly
+function openAuthModal(view = 'login') {
+    const overlay = document.getElementById('authOverlay');
+    if (overlay) {
+        overlay.style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Stop background scrolling
+        switchCard(view);
+    }
+}
+
+function closeAuthModal() {
+    const overlay = document.getElementById('authOverlay');
+    if (overlay) {
+        overlay.style.display = 'none';
+        document.body.style.overflow = 'auto'; // Restore dashboard scrolling
+    }
+}
+
+function switchCard(type) {
+    const loginCard = document.getElementById('loginCard');
+    const signupCard = document.getElementById('signupCard');
+    
+    if (!loginCard || !signupCard) return;
+
+    if (type === 'login') {
+        loginCard.style.display = 'block';
+        signupCard.style.display = 'none';
+    } else {
+        loginCard.style.display = 'none';
+        signupCard.style.display = 'block';
+    }
+}
 
         // Intercept profile menu links dynamically to display forms smoothly
         const loginLink = document.querySelector('a[href="#login"]');
