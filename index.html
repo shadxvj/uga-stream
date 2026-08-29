@@ -419,7 +419,244 @@
 
         document.addEventListener("DOMContentLoaded", () => {
             fetchLiveApplicationCatalog();
+                    document.addEventListener("DOMContentLoaded", () => {
+            fetchLiveApplicationCatalog();
+        });
+
+        // ==========================================
+        // PASTE THE SECOND CODE BLOCK (AUTH SCRIPTS) HERE
+        // ==========================================
+        function toggleAuthModal(modalId, show) {
+            const modal = document.getElementById(modalId);
+            if (modal) modal.style.display = show ? 'flex' : 'none';
+        }
+
+        function switchAuthModals(hideId, showId) {
+            toggleAuthModal(hideId, false);
+            toggleAuthModal(showId, true);
+        }
+
+        // Intercept profile menu links dynamically to display forms smoothly
+        const loginLink = document.querySelector('a[href="#login"]');
+        const signupLink = document.querySelector('a[href="#signup"]');
+
+        if (loginLink) {
+            loginLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                toggleAuthModal('loginModal', true);
+            });
+        }
+        if (signupLink) {
+            signupLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                toggleAuthModal('signUpModal', true);
+            });
+        }
+
+        // Handle user registration pipeline operations 
+        document.getElementById('userSignUpForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('regUsername').value;
+            const phone = document.getElementById('regPhone').value;
+            const plan = document.getElementById('regPlan').value;
+            const password = document.getElementById('regPassword').value;
+
+            if (password.length < 6) {
+                alert("⚠️ Security Restriction: Your password choice must be exactly 6 characters or longer!");
+                return;
+            }
+
+            const response = await fetch('/api/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, phone, plan, password })
+            });
+
+            const result = await response.json();
+            if (response.ok || result.success) {
+                alert(`🎉 Account created! Welcome ${username}. Please login now.`);
+                switchAuthModals('signUpModal', 'loginModal');
+            } else {
+                alert("❌ Signup Denied: " + (result.message || "Number already registered."));
+            }
+        });
+
+        // Handle application entrance authorization logic checks
+        document.getElementById('userLoginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const phone = document.getElementById('logPhone').value;
+            const password = document.getElementById('logPassword').value;
+
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone, password })
+            });
+
+            const result = await response.json();
+            if (response.ok && result.success) {
+                alert(`👋 Authentication Verified! Welcome back, ${result.user.username}!`);
+                localStorage.setItem("userProfile", JSON.stringify(result.user));
+                window.location.reload();
+            } else {
+                alert("❌ Sign In Rejected: Invalid phone number configuration or password key mismatch.");
+            }
         });
     </script>
+
+        });
+    </script>
+        <!-- ==========================================
+         AUTHENTICATION SYSTEM (MODAL OVERLAYS)
+         ========================================== -->
+    <style>
+        .auth-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        .auth-card {
+            background-color: #141414;
+            border: 1px solid #333;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+            box-sizing: border-box;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        .auth-card h3 {
+            color: #fff;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+        .auth-close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #aaa;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        .auth-close-btn:hover { color: #fff; }
+        .auth-field {
+            margin-bottom: 20px;
+        }
+        .auth-field label {
+            display: block;
+            color: #aaa;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        .auth-input {
+            width: 100%;
+            padding: 12px;
+            background: #333;
+            border: 1px solid transparent;
+            color: #fff;
+            border-radius: 4px;
+            box-sizing: border-box;
+            outline: none;
+            font-size: 0.95rem;
+        }
+        .auth-input:focus {
+            border-color: #e50914;
+        }
+        .auth-submit-btn {
+            background-color: #e50914;
+            color: #fff;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            font-weight: bold;
+            font-size: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+        .auth-submit-btn:hover { background-color: #b81d24; }
+        .auth-switch-text {
+            color: #777;
+            font-size: 0.85rem;
+            margin-top: 15px;
+            text-align: center;
+        }
+        .auth-switch-text span {
+            color: #fff;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    </style>
+
+    <!-- SIGN UP CONTAINER MODAL -->
+    <div id="signUpModal" class="auth-modal">
+        <div class="auth-card">
+            <button class="auth-close-btn" onclick="toggleAuthModal('signUpModal', false)">&times;</button>
+            <h3>Create Account</h3>
+            <form id="userSignUpForm">
+                <div class="auth-field">
+                    <label>Username:</label>
+                    <input type="text" id="regUsername" required placeholder="e.g., Ivan_K" class="auth-input">
+                </div>
+                <div class="auth-field">
+                    <label>Phone Number (Contact Details):</label>
+                    <input type="tel" id="regPhone" required placeholder="e.g., 0772123456" class="auth-input">
+                </div>
+                <div class="auth-field">
+                    <label>Subscription Tier Plan:</label>
+                    <select id="regPlan" class="auth-input">
+                        <option value="daily">Daily Pass — 500 UGX</option>
+                        <option value="weekly">Weekly Access — 2,000 UGX</option>
+                        <option value="monthly">Monthly Premium — 5,000 UGX</option>
+                    </select>
+                </div>
+                <div class="auth-field">
+                    <label>Password (Strictly 6 characters minimum):</label>
+                    <!-- minlength="6" handles frontend security checks naturally -->
+                    <input type="password" id="regPassword" required minlength="6" maxlength="20" placeholder="••••••" class="auth-input">
+                </div>
+                <button type="submit" class="auth-submit-btn">🚀 Join Platform</button>
+                <div class="auth-switch-text">Already registered? <span onclick="switchAuthModals('signUpModal', 'loginModal')">Sign In here</span></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- LOGIN CONTAINER MODAL -->
+    <div id="loginModal" class="auth-modal">
+        <div class="auth-card">
+            <button class="auth-close-btn" onclick="toggleAuthModal('loginModal', false)">&times;</button>
+            <h3>Sign In</h3>
+            <form id="userLoginForm">
+                <div class="auth-field">
+                    <label>Registered Phone Number:</label>
+                    <input type="tel" id="logPhone" required placeholder="e.g., 0772123456" class="auth-input">
+                </div>
+                <div class="auth-field">
+                    <label>Enter Password Security Key:</label>
+                    <input type="password" id="logPassword" required placeholder="••••••" class="auth-input">
+                </div>
+                <button type="submit" class="auth-submit-btn">🔑 Access Stream</button>
+                <div class="auth-switch-text">New to UGA Stream? <span onclick="switchAuthModals('loginModal', 'signUpModal')">Register now</span></div>
+            </form>
+        </div>
+    </div>
+
 </body>
 </html>
