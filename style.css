@@ -323,18 +323,19 @@ body {
     z-index: 5;
 }
 
+/* Slider Track Block Config (Adjusted for 5 total sliding blocks) */
 .hero-slider-track {
     display: flex;
-    width: 400%;
+    width: 500%; /* 5 slots total * 100% */
     height: 100%;
     position: absolute;
     top: 0;
     left: 0;
-    animation: slideLeftToRight 16s infinite ease-in-out;
+    animation: slideLeftToRight 16s infinite ease-in-out; /* 4 seconds per image */
 }
 
 .slide {
-    width: 25%;
+    width: 20%; /* 100% divided by 5 slots gives exactly 20% each */
     height: 100%;
     background-size: cover;
     background-position: center;
@@ -342,13 +343,18 @@ body {
     background-color: #111111;
 }
 
+/* 
+   4 Distinct Stops: 
+   0% to 21% (Image 1), 25% to 46% (Image 2), 50% to 71% (Image 3), 75% to 96% (Image 4)
+*/
 @keyframes slideLeftToRight {
-    0%, 20% { transform: translateX(0); }
-    25%, 45% { transform: translateX(-25%); }
-    50%, 70% { transform: translateX(-50%); }
-    75%, 95% { transform: translateX(-75%); }
-    100% { transform: translateX(0); }
+    0%, 21% { transform: translateX(0); }
+    25%, 46% { transform: translateX(-20%); }
+    50%, 71% { transform: translateX(-40%); }
+    75%, 96% { transform: translateX(-60%); }
+    100% { transform: translateX(-80%); } /* Instant seamless snap reset back to start */
 }
+
 
 /* ==========================================================================
    4. FORM LAYOUT WRAPPERS & UTILITIES
