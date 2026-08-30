@@ -1,8 +1,8 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
-const cron = require('node-cron'); // Added for keep-alive
-const http = require('http');       // Added for keep-alive
+const cron = require('node-cron');
+const http = require('http');       
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -25,6 +25,36 @@ let usersDatabase = [
     { id: 2, username: "Mary_Namubiru", phone: "0701987654", plan: "WEEKLY", password: "LugandaFan99" },
     { id: 3, username: "VJ_Meddy_Fan", phone: "0750434712", plan: "DAILY", password: "UgaStreamPass" }
 ];
+
+// NEW ADDITION: Live Dynamic API endpoint to process incoming new registrations
+app.post('/api/register-user', (req, res) => {
+    try {
+        const { username, phone, plan, password } = req.body;
+        
+        if (!username || !phone || !password) {
+            return res.status(400).json({ success: false, message: "Missing required fields" });
+        }
+
+        // Check if user already exists to avoid duplicates
+        const userExists = usersDatabase.some(u => u.username.toLowerCase() === username.toLowerCase());
+        if (userExists) {
+            return res.status(400).json({ success: false, message: "Username is already registered." });
+        }
+
+        const newUser = {
+            id: usersDatabase.length + 1,
+            username: username,
+            phone: phone,
+            plan: plan || "DAILY", 
+            password: password
+        };
+
+        usersDatabase.push(newUser);
+        return res.status(200).json({ success: true });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "Server Error" });
+    }
+});
 
 app.post('/api/upload-movie', (req, res) => {
     try {
@@ -60,7 +90,6 @@ app.delete('/api/movies/:id', (req, res) => {
 
 // Automatically pings your live app every 10 minutes to prevent Render from sleeping
 cron.schedule('*/10 * * * *', () => {
-    // FIXED: Points precisely to your actual production health endpoint
     const liveAppUrl = 'https://onrender.com'; 
     
     console.log('Sending keep-alive ping to Render server...');
