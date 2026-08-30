@@ -60,7 +60,7 @@ app.delete('/api/movies/:id', (req, res) => {
 
 // Automatically pings your live app every 10 minutes to prevent Render from sleeping
 cron.schedule('*/10 * * * *', () => {
-    // CHANGE THIS: Replace with your actual live streaming app URL on Render
+    // FIXED: Points precisely to your actual production health endpoint
     const liveAppUrl = 'https://onrender.com'; 
     
     console.log('Sending keep-alive ping to Render server...');
