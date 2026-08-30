@@ -27,6 +27,7 @@ let usersDatabase = [
 ];
 
 // NEW ADDITION: Live Dynamic API endpoint to process incoming new registrations
+// API Endpoint to process and save new user registrations (With unique phone checks)
 app.post('/api/register-user', (req, res) => {
     try {
         const { username, phone, plan, password } = req.body;
@@ -35,16 +36,23 @@ app.post('/api/register-user', (req, res) => {
             return res.status(400).json({ success: false, message: "Missing required fields" });
         }
 
-        // Check if user already exists to avoid duplicates
+        // 1. Check if Username already exists
         const userExists = usersDatabase.some(u => u.username.toLowerCase() === username.toLowerCase());
         if (userExists) {
-            return res.status(400).json({ success: false, message: "Username is already registered." });
+            return res.status(400).json({ success: false, message: "Username is already taken." });
         }
 
+        // 2. FIXED: Check if Phone Number already exists in the database metrics
+        const phoneExists = usersDatabase.some(u => u.phone === phone.trim());
+        if (phoneExists) {
+            return res.status(400).json({ success: false, message: "This phone number is already registered!" });
+        }
+
+        // Structure the verified new subscriber object record
         const newUser = {
             id: usersDatabase.length + 1,
             username: username,
-            phone: phone,
+            phone: phone.trim(),
             plan: plan || "DAILY", 
             password: password
         };
@@ -55,6 +63,7 @@ app.post('/api/register-user', (req, res) => {
         return res.status(500).json({ success: false, message: "Server Error" });
     }
 });
+
 
 app.post('/api/upload-movie', (req, res) => {
     try {
