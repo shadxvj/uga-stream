@@ -733,7 +733,7 @@ function switchCard(type) {
         <button class="close-modal-btn" onclick="closeAuthModal()">&times;</button>
         <h2>Create Account</h2>
         <p class="auth-subtitle">Watch trailers and cinema dubbed streams</p>
-        <form class="auth-form" onsubmit="event.preventDefault(); alert('Account registered!');">
+        <form class="auth-form" id="viewerSignupForm">
             <div class="input-group">
                 <label for="signupUser">Username</label>
                 <input type="text" id="signupUser" class="form-input" placeholder="e.g., Ivan_K" required>
@@ -753,6 +753,48 @@ function switchCard(type) {
         </p>
     </div>
 </div>
+document.addEventListener('DOMContentLoaded', () => {
+    const signupForm = document.getElementById('viewerSignupForm');
+    if (signupForm) {
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Collect the exact field values from your input IDs
+            const usernameInput = document.getElementById('signupUser').value.trim();
+            const phoneInput = document.getElementById('signupPhone').value.trim();
+            const passwordInput = document.getElementById('signupPassword').value;
+
+            const registrationPayload = {
+                username: usernameInput,
+                phone: phoneInput,
+                plan: "DAILY", // Default fallback plan indicator tier
+                password: passwordInput
+            };
+
+            try {
+                // Post the details directly over to your server.js API route track
+                const response = await fetch('/api/register-user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(registrationPayload)
+                });
+                
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    alert("🎉 Welcome to Uga Stream! Account active.");
+                    signupForm.reset();
+                    if(typeof closeAuthModal !== 'undefined') closeAuthModal();
+                } else {
+                    alert(`❌ Registration failed: ${data.message || 'Check inputs.'}`);
+                }
+            } catch (error) {
+                console.error("Network upload link fault:", error);
+                alert("❌ Cannot reach server database.");
+            }
+        });
+    }
+});
 
 </body>
 </html>
