@@ -753,6 +753,11 @@ function switchCard(type) {
         </p>
     </div>
 </div>
+        <!-- Line 754: This is your existing closing div tag from your form card modal -->
+    </div> 
+
+   <script>
+
 document.addEventListener('DOMContentLoaded', () => {
     const signupForm = document.getElementById('viewerSignupForm');
     if (signupForm) {
@@ -789,12 +794,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert(`❌ Registration failed: ${data.message || 'Check inputs.'}`);
                 }
             } catch (error) {
-                console.error("Network upload link fault:", error);
+                console.error("Network upload link fault:", error);f
                 alert("❌ Cannot reach server database.");
             }
         });
     }
 });
+</script>
 
+    
 </body>
 </html>
