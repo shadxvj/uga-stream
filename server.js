@@ -108,7 +108,30 @@ cron.schedule('*/10 * * * *', () => {
         console.error('Keep-alive ping failed:', err.message);
     });
 });
+// =========================================================================
+// PASTE THE PROTECTED ROUTE CODE RIGHT HERE (ABOVE APP.LISTEN)
+// =========================================================================
+const path = require('path');
 
+// 1. Secret Endpoint to handle admin validation token handshakes
+app.post('/api/admin/auth', (req, res) => {
+    const { secretKey } = req.body;
+    if (secretKey === "UgaStream2026") {
+        return res.json({ approved: true, token: "SECURE_UGA_VJS_ACCESS_2026" });
+    }
+    return res.status(403).json({ approved: false, message: "Access Denied." });
+});
+
+// 2. SECRET ROUTE PATH: Type this path into your browser to manage movies
+app.get('/uga-admin-portal', (req, res) => {
+    res.sendFile(path.join(__dirname, 'private', 'admin.html'));
+});
+
+
+// 3. THIS IS THE LINE THAT MUST REMAIN AT THE VERY BOTTOM OF YOUR FILE:
+app.listen(PORT, () => {
+    console.log(`Server active on port ${PORT}`);
+});
 app.listen(PORT, () => {
     console.log(`🚀 Server active on port ${PORT}`);
 });
