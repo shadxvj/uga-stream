@@ -437,12 +437,13 @@
     const profileMenuBtn = document.getElementById('profileMenuBtn');
     const authOverlay = document.getElementById('authOverlay');
 
-    if (profileMenuBtn) {
-        profileMenuBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            openAuthModal('login');
-        });
-    }
+   // Change line 441 - 444 to this:
+if (profileMenuBtn) {
+    profileMenuBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openAuthModal('signup'); // <-- CHANGED HERE from 'login' to 'signup'
+    });
+}
 
     if (authOverlay) {
         authOverlay.addEventListener('click', (e) => {
@@ -667,6 +668,30 @@ function switchCard(type) {
                     <label>Phone Number (Contact Details):</label>
                     <input type="tel" id="regPhone" required placeholder="e.g., 0772123456" class="auth-input">
                 </div>
+               <!-- 1. Look right below line 560 for your signup phone number field: -->
+<div class="auth-form-group">
+    <label>PHONE NUMBER</label>
+    <input type="tel" ...>
+</div>
+
+<!-- =====================================================================
+     PASTE THE ENTIRE CHOOSE SUBSCRIPTION PLAN BLOCK RIGHT HERE (PASTE IT HERE)
+     ===================================================================== -->
+<div class="auth-form-group" style="margin-bottom: 20px;">
+    <label style="display: block; color: #8c8c8c; font-size: 0.85rem; margin-bottom: 6px; font-weight: 600;">CHOOSE SUBSCRIPTION PLAN</label>
+    <select id="userPlan" class="auth-input-field" style="width: 100%; padding: 12px; background: #2b2b2b; color: #fff; border: 1px solid #444; border-radius: 4px; cursor: pointer;" required>
+        <option value="Daily Pass">Daily Pass — 2,000 UGX / 24hrs</option>
+        <option value="Weekly Pass">Weekly Pass — 5,000 UGX / 7 Days</option>
+        <option value="Monthly Premium">Monthly Premium — 25,000 UGX / Month</option>
+        <option value="Annual Pass">Annual Pass — 150,000 UGX / Year</option>
+    </select>
+</div>
+
+<!-- 2. Your existing password block will naturally sit right below it: -->
+<div class="auth-form-group">
+    <label>PASSWORD</label>
+    <input type="password" ...>
+</div>
                 <div class="auth-field">
                     <label>Subscription Tier Plan:</label>
                     <select id="regPlan" class="auth-input">
