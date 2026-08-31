@@ -111,7 +111,6 @@ cron.schedule('*/10 * * * *', () => {
 // =========================================================================
 // PASTE THE PROTECTED ROUTE CODE RIGHT HERE (ABOVE APP.LISTEN)
 // =========================================================================
-const path = require('path');
 
 // 1. Secret Endpoint to handle admin validation token handshakes
 app.post('/api/admin/auth', (req, res) => {
