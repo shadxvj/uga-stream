@@ -121,16 +121,59 @@ app.post('/api/admin/auth', (req, res) => {
     return res.status(403).json({ approved: false, message: "Access Denied." });
 });
 
-// 2. SECRET ROUTE PATH: Type this path into your browser to manage movies
-app.get('/uga-admin-portal', (req, res) => {
-    res.sendFile(path.join(__dirname, 'private', 'admin.html'));
-});
 
+
+// =========================================================================
+// PASTE THE FLUTTERWAVE CODE RIGHT HERE (BELOW ADMIN PORTAL, ABOVE LISTEN)
+// =========================================================================
+const Flutterwave = require('flutterwave-node-v3');
+const flw = new Flutterwave(process.env.FLW_PUBLIC_KEY, process.env.FLW_SECRET_KEY);
+
+app.post('/api/process-momo', async (req, res) => {
+    try {
+        const { phone, amount, plan } = req.body;
+        if (!phone || !amount) {
+            return res.status(400).json({ success: false, message: "Missing phone number or plan details." });
+        }
+
+        let cleanedPhone = phone.trim().replace(/\s+/g, '');
+        if (cleanedPhone.startsWith('0')) {
+            cleanedPhone = '256' + cleanedPhone.substring(1);
+        }
+
+               let detectedNetwork = "MTN"; 
+        if (cleanedPhone.startsWith('25675') || cleanedPhone.startsWith('25670') || cleanedPhone.startsWith('25674')) {
+            detectedNetwork = "AIRTEL";
+        }
+
+        console.log(`[PAYMENT] Triggering ${amount} UGX collection to ${cleanedPhone} (${detectedNetwork})`);
+
+        const paymentPayload = {
+            phone_number: cleanedPhone,
+            amount: amount,
+            currency: 'UGX',
+            email: 'payments@ugastream.com',
+            tx_ref: `ugastream-${Date.now()}`,
+            network: detectedNetwork
+        };
+
+        const response = await flw.MobileMoney.uganda(paymentPayload);
+
+        if (response.status === 'success') {
+            return res.status(200).json({ 
+                success: true, 
+                message: "Network prompt dispatched! Check your physical phone screen to input your PIN." 
+            });
+        } else {
+            return res.status(400).json({ success: false, message: response.message || "Transaction declined." });
+        }
+    } catch (error) {
+        console.error("[GATEWAY ERROR]:", error);
+        return res.status(500).json({ success: false, message: "Payment gateway connection timeout." });
+    }
+});
 
 // 3. THIS IS THE LINE THAT MUST REMAIN AT THE VERY BOTTOM OF YOUR FILE:
-app.listen(PORT, () => {
-    console.log(`Server active on port ${PORT}`);
-});
 app.listen(PORT, () => {
     console.log(`🚀 Server active on port ${PORT}`);
 });
