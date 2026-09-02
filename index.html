@@ -877,6 +877,53 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
     </div>
 </div>
+    <!-- CHECKOUT INTERACTION CONTROLLER -->
+    <script>
+        let selectedAmount = 0;
+        let selectedPlanName = "";
+
+        // Call this function when a non-subscribed user tries to login or click get started
+        function triggerSubscriptionFlow() {
+            document.getElementById('subscriptionModal').style.display = 'flex';
+            document.getElementById('step-select-plan').style.display = 'block';
+            document.getElementById('step-momo-collect').style.display = 'none';
+        }
+
+        // Handles the step transition when a user picks a price package
+        function selectUgaPlan(amount, planLabel) {
+            selectedAmount = amount;
+            selectedPlanName = planLabel;
+            
+            document.getElementById('step-select-plan').style.display = 'none';
+            document.getElementById('step-momo-collect').style.display = 'block';
+            document.getElementById('momo-price-feedback').innerText = `Total Due: ${amount.toLocaleString()} UGX (${planLabel})`;
+        }
+
+        // Dispatches the data to your Flutterwave server route
+        async function executeMomoPaymentRequest() {
+            const userPhone = document.getElementById('subscriberPhone').value.trim();
+            if (!userPhone) return alert("Please enter a valid phone number!");
+
+            alert("Sending request to payment operator... Please monitor your phone screen for the prompt.");
+
+            try {
+                const response = await fetch('/api/process-momo', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone: userPhone, amount: selectedAmount, plan: selectedPlanName })
+                });
+                
+                const outcome = await response.json();
+                if (outcome.success) {
+                    alert("Network prompt dispatched successfully! Check your phone to complete your payment.");
+                } else {
+                    alert("Transaction initialization failed: " + outcome.message);
+                }
+            } catch (err) {
+                alert("Server error connecting to checkout engine.");
+            }
+        }
+    </script>
     
 </body>
 </html>
