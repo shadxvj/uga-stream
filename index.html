@@ -827,6 +827,56 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
+<!-- CINEMATIC SUBSCRIPTION & CHECKOUT WORKFLOW MODAL -->
+<div id="subscriptionModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: #111; border: 1px solid #e50914; border-radius: 12px; max-width: 450px; width: 100%; padding: 30px; box-shadow: 0 0 30px rgba(229, 9, 20, 0.4); text-align: center;">
+        
+        <!-- STEP A: PLAN SELECTION -->
+        <div id="step-select-plan">
+            <h3 style="font-size: 1.6rem; font-weight: 800; margin-bottom: 10px; color: #fff;">Activate Uga Stream Access</h3>
+            <p style="color: #bbb; font-size: 0.9rem; margin-bottom: 24px;">Select a premium plan to instantly unlock local VJ-translated blockbusters.</p>
+            
+            <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px;">
+                <label style="display: flex; justify-content: space-between; align-items: center; background: #222; padding: 14px; border-radius: 6px; cursor: pointer; border: 1px solid #333;" onclick="selectUgaPlan(2000, 'DAILY')">
+                    <span style="font-weight: 700; color:#fff;">Daily Pass</span>
+                    <span style="color: #e50914; font-weight: 800;">2,000 UGX</span>
+                </label>
+                <label style="display: flex; justify-content: space-between; align-items: center; background: #222; padding: 14px; border-radius: 6px; cursor: pointer; border: 1px solid #333;" onclick="selectUgaPlan(5000, 'WEEKLY')">
+                    <span style="font-weight: 700; color:#fff;">Weekly Pass</span>
+                    <span style="color: #e50914; font-weight: 800;">5,000 UGX</span>
+                </label>
+                <label style="display: flex; justify-content: space-between; align-items: center; background: #222; padding: 14px; border-radius: 6px; cursor: pointer; border: 1px solid #333;" onclick="selectUgaPlan(20000, 'MONTHLY')">
+                    <span style="font-weight: 700; color:#fff;">Monthly Premium</span>
+                    <span style="color: #e50914; font-weight: 800;">20,000 UGX</span>
+                </label>
+                <label style="display: flex; justify-content: space-between; align-items: center; background: #222; padding: 14px; border-radius: 6px; cursor: pointer; border: 1px solid #333;" onclick="selectUgaPlan(200000, 'ANNUALLY')">
+                    <span style="font-weight: 700; color:#fff;">Annual Mega Pass</span>
+                    <span style="color: #e50914; font-weight: 800;">200,000 UGX</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- STEP B: MOBILE MONEY GATEWAY COLLECTOR -->
+        <div id="step-momo-collect" style="display: none;">
+            <h3 style="font-size: 1.4rem; font-weight: 800; margin-bottom: 10px; color: #fff;">Mobile Money Checkout</h3>
+            <p id="momo-price-feedback" style="color: #e50914; font-weight: bold; margin-bottom: 20px;"></p>
+            
+            <div style="text-align: left; margin-bottom: 20px;">
+                <label style="font-size: 0.85rem; color: #bbb; display: block; margin-bottom: 6px;">Enter Airtel or MTN Number:</label>
+                <input type="tel" id="subscriberPhone" placeholder="075XXXXXXX" style="width: 100%; background: #222; border: 1px solid #444; border-radius: 6px; padding: 14px; color: #fff; font-size: 1rem; outline: none;">
+            </div>
+
+            <button onclick="executeMomoPaymentRequest()" style="width: 100%; background: #e50914; color: #fff; border: none; padding: 14px; font-size: 1rem; font-weight: bold; border-radius: 6px; cursor: pointer;">
+                Initiate Secure Payment
+            </button>
+            
+            <p style="color: #666; font-size: 0.75rem; margin-top: 15px;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                A prompt will appear securely on your phone to complete authentication.
+            </p>
+        </div>
+    </div>
+</div>
     
 </body>
 </html>
