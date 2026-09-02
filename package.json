@@ -1,5 +1,4 @@
-{
-    "dependencies": {
+  "dependencies": {
     "cloudinary": "^2.0.0",
     "express": "^5.2.1",
     "flutterwave-node-v3": "^1.1.2",
@@ -7,4 +6,3 @@
     "multer-storage-cloudinary": "^4.0.0",
     "node-cron": "^3.0.3"
   }
-}
