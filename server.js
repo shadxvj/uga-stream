@@ -126,54 +126,65 @@ app.post('/api/admin/auth', (req, res) => {
 // =========================================================================
 // PASTE THE FLUTTERWAVE CODE RIGHT HERE (BELOW ADMIN PORTAL, ABOVE LISTEN)
 // =========================================================================
-const Flutterwave = require('flutterwave-node-v3');
-const flw = new Flutterwave(process.env.FLW_PUBLIC_KEY, process.env.FLW_SECRET_KEY);
+const axios = require('axios');
 
+// API Endpoint to initiate Pesapal V3 Mobile Money Checkout session
 app.post('/api/process-momo', async (req, res) => {
     try {
         const { phone, amount, plan } = req.body;
+
         if (!phone || !amount) {
-            return res.status(400).json({ success: false, message: "Missing phone number or plan details." });
+            return res.status(400).json({ success: false, message: "Missing required checkout parameters." });
         }
 
-        let cleanedPhone = phone.trim().replace(/\s+/g, '');
-        if (cleanedPhone.startsWith('0')) {
-            cleanedPhone = '256' + cleanedPhone.substring(1);
-        }
+        // 1. Authenticate with Pesapal to obtain an Access Token
+        const authResponse = await axios.post('https://pay.pesapal.com/v3/api/Auth/RequestToken', {
+            consumer_key: process.env.PESAPAL_CONSUMER_KEY,
+            consumer_secret: process.env.PESAPAL_CONSUMER_SECRET
+        }, {
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
+        });
 
-               let detectedNetwork = "MTN"; 
-        if (cleanedPhone.startsWith('25675') || cleanedPhone.startsWith('25670') || cleanedPhone.startsWith('25674')) {
-            detectedNetwork = "AIRTEL";
-        }
+        const accessToken = authResponse.data.token;
 
-        console.log(`[PAYMENT] Triggering ${amount} UGX collection to ${cleanedPhone} (${detectedNetwork})`);
-
-        const paymentPayload = {
-            phone_number: cleanedPhone,
-            amount: amount,
-            currency: 'UGX',
-            email: 'payments@ugastream.com',
-            tx_ref: `ugastream-${Date.now()}`,
-            network: detectedNetwork
+        // 2. Format variables and configure payload
+        const cleanedPhone = phone.trim();
+        const orderPayload = {
+            id: `ugastream-${Date.now()}`,
+            amount: parseFloat(amount),
+            currency: "UGX",
+            description: `Uga Stream ${plan} Subscription`,
+            callback_url: "https://onrender.com",
+            notification_id: "00000000-0000-0000-0000-000000000000", // Default operational tracking format
+            billing_address: {
+                email_address: "payments@ugastream.com",
+                phone_number: cleanedPhone,
+                country_code: "UG",
+                first_name: "UgaStream",
+                last_name: "Subscriber"
+            }
         };
 
-        const response = await flw.MobileMoney.uganda(paymentPayload);
+        // 3. Request a payment redirect URL from Pesapal SubmitOrderRequest API
+        const orderResponse = await axios.post('https://pay.pesapal.com/v3/api/Transactions/SubmitOrderRequest', orderPayload, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
 
-        if (response.status === 'success') {
+        if (orderResponse.data && orderResponse.data.redirect_url) {
             return res.status(200).json({ 
                 success: true, 
-                message: "Network prompt dispatched! Check your physical phone screen to input your PIN." 
+                redirectUrl: orderResponse.data.redirect_url 
             });
         } else {
-            return res.status(400).json({ success: false, message: response.message || "Transaction declined." });
+            return res.status(400).json({ success: false, message: "Failed to initialize Pesapal gateway session." });
         }
+
     } catch (error) {
-        console.error("[GATEWAY ERROR]:", error);
+        console.error("[PESAPAL ERROR]:", error.response ? error.response.data : error.message);
         return res.status(500).json({ success: false, message: "Payment gateway connection timeout." });
     }
-});
-
-// 3. THIS IS THE LINE THAT MUST REMAIN AT THE VERY BOTTOM OF YOUR FILE:
-app.listen(PORT, () => {
-    console.log(`🚀 Server active on port ${PORT}`);
 });
