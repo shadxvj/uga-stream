@@ -771,7 +771,56 @@ function switchCard(type) {
                 <label for="signupPassword">Password</label>
                 <input type="password" id="signupPassword" class="form-input" placeholder="Minimum 6 characters" required>
             </div>
-            <button type="submit" class="form-submit-btn">Get Started</button>
+                        <!-- INTEGRATED SUBSCRIPTION PLAN SELECTOR TIER -->
+            <div class="input-group" style="margin-bottom: 24px; text-align: left;">
+                <label style="display: block; font-size: 0.85rem; color: #b3b3b3; margin-bottom: 10px; font-weight: 600;">
+                    <i class="fas fa-credit-card" style="color: #e50914; margin-right: 4px;"></i> Select Premium Access Plan:
+                </label>
+                
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <!-- DAILY PLAN -->
+                    <label style="display: flex; justify-content: space-between; align-items: center; background: #222; border: 1px solid #333; padding: 12px 16px; border-radius: 6px; cursor: pointer; transition: border-color 0.2s;" class="plan-option-card">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <input type="radio" name="signupPlan" value="DAILY" checked style="accent-color: #e50914;" onclick="updateSelectedPlanData(2000, 'DAILY')">
+                            <span style="font-weight: 600; color: #fff; font-size: 0.95rem;">Daily Pass</span>
+                        </div>
+                        <span style="color: #e50914; font-weight: 800; font-size: 0.95rem;">2,000 UGX</span>
+                    </label>
+
+                    <!-- WEEKLY PLAN -->
+                    <label style="display: flex; justify-content: space-between; align-items: center; background: #222; border: 1px solid #333; padding: 12px 16px; border-radius: 6px; cursor: pointer; transition: border-color 0.2s;" class="plan-option-card">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <input type="radio" name="signupPlan" value="WEEKLY" style="accent-color: #e50914;" onclick="updateSelectedPlanData(5000, 'WEEKLY')">
+                            <span style="font-weight: 600; color: #fff; font-size: 0.95rem;">Weekly Pass</span>
+                        </div>
+                        <span style="color: #e50914; font-weight: 800; font-size: 0.95rem;">5,000 UGX</span>
+                    </label>
+
+                    <!-- MONTHLY PLAN -->
+                    <label style="display: flex; justify-content: space-between; align-items: center; background: #222; border: 1px solid #333; padding: 12px 16px; border-radius: 6px; cursor: pointer; transition: border-color 0.2s;" class="plan-option-card">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <input type="radio" name="signupPlan" value="MONTHLY" style="accent-color: #e50914;" onclick="updateSelectedPlanData(20000, 'MONTHLY')">
+                            <span style="font-weight: 600; color: #fff; font-size: 0.95rem;">Monthly Premium</span>
+                        </div>
+                        <span style="color: #e50914; font-weight: 800; font-size: 0.95rem;">20,000 UGX</span>
+                    </label>
+
+                    <!-- ANNUAL PLAN -->
+                    <label style="display: flex; justify-content: space-between; align-items: center; background: #222; border: 1px solid #333; padding: 12px 16px; border-radius: 6px; cursor: pointer; transition: border-color 0.2s;" class="plan-option-card">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <input type="radio" name="signupPlan" value="ANNUALLY" style="accent-color: #e50914;" onclick="updateSelectedPlanData(200000, 'ANNUALLY')">
+                            <span style="font-weight: 600; color: #fff; font-size: 0.95rem;">Annual Mega Pass</span>
+                        </div>
+                        <span style="color: #e50914; font-weight: 800; font-size: 0.95rem;">200,000 UGX</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- MAIN SIGNUP SUBMIT ACTION BUTTON -->
+            <button type="button" onclick="handleFormRegistrationAndPayment()" class="form-submit-btn" style="width: 100%; background-color: #e50914; color: #ffffff; border: none; padding: 14px; font-size: 1rem; font-weight: bold; border-radius: 4px; cursor: pointer; transition: background-color 0.2s;">
+                Sign Up & Pay Securely
+            </button>
+
         </form>
         <p style="margin-top: 20px; font-size: 0.9rem; color: #999; text-align: center;">
             Already have an account? <a href="#" onclick="switchCard('login')" style="color: #e50914; text-decoration: none; font-weight: bold;">Sign in</a>.
@@ -786,45 +835,73 @@ function switchCard(type) {
 document.addEventListener('DOMContentLoaded', () => {
     const signupForm = document.getElementById('viewerSignupForm');
     if (signupForm) {
-        signupForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            // Collect the exact field values from your input IDs
-            const usernameInput = document.getElementById('signupUser').value.trim();
-            const phoneInput = document.getElementById('signupPhone').value.trim();
-            const passwordInput = document.getElementById('signupPassword').value;
+       // Global memory variables to track selection state
+window.currentSelectedAmount = 2000;
+window.currentSelectedPlanLabel = "DAILY";
 
-            const registrationPayload = {
-                username: usernameInput,
-                phone: phoneInput,
-                plan: "DAILY", // Default fallback plan indicator tier
-                password: passwordInput
-            };
+window.updateSelectedPlanData = function(amount, planLabel) {
+    window.currentSelectedAmount = amount;
+    window.currentSelectedPlanLabel = planLabel;
+    console.log(`Plan changed to: ${planLabel} (${amount} UGX)`);
+};
 
-            try {
-                // Post the details directly over to your server.js API route track
-                const response = await fetch('/api/register-user', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(registrationPayload)
-                });
-                
-                const data = await response.json();
+window.handleFormRegistrationAndPayment = async function() {
+    // Collect the exact field values from your input IDs from your screenshot
+    const usernameInput = document.getElementById('signupUser')?.value.trim();
+    const phoneInput = document.getElementById('signupPhone')?.value.trim();
+    const passwordInput = document.getElementById('signupPassword')?.value;
 
-                if (response.ok && data.success) {
-                    alert("🎉 Welcome to Uga Stream! Account active.");
-                    signupForm.reset();
-                    if(typeof closeAuthModal !== 'undefined') closeAuthModal();
-                } else {
-                    alert(`❌ Registration failed: ${data.message || 'Check inputs.'}`);
-                }
-            } catch (error) {
-                console.error("Network upload link fault:", error);f
-                alert("❌ Cannot reach server database.");
-            }
-        });
+    if (!usernameInput || !phoneInput || !passwordInput) {
+        return alert("Please fill out your Username, Phone Number, and Password completely before signing up!");
     }
-});
+
+    try {
+        alert("Registering profile and initializing checkout... Please click OK.");
+
+        // 1. Post the details directly over to your server.js API route track
+        const registerResponse = await fetch('/api/register-user', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                username: usernameInput, 
+                phone: phoneInput, 
+                password: passwordInput,
+                plan: window.currentSelectedPlanLabel 
+            })
+        });
+
+        const registerResult = await registerResponse.json();
+        
+        if (!registerResponse.ok) {
+            return alert("Registration Check Failed: " + registerResult.message);
+        }
+
+        // 2. Instantly call the secure Pesapal checkout initialization endpoint
+        const paymentResponse = await fetch('/api/process-momo', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                phone: phoneInput, 
+                amount: window.currentSelectedAmount, 
+                plan: window.currentSelectedPlanLabel 
+            })
+        });
+        
+        const paymentResult = await paymentResponse.json();
+        
+        if (paymentResult.success && paymentResult.redirectUrl) {
+            // Forward user to input their transaction mobile money PIN inside Pesapal's secure UI
+            window.location.href = paymentResult.redirectUrl;
+        } else {
+            alert("Payment gateway failed to initialize: " + paymentResult.message);
+        }
+
+    } catch (err) {
+        console.error("Workflow tracking failure details:", err);
+        alert("An error occurred connecting to the backend server framework.");
+    }
+};
+
 </script>
 
 <!-- CINEMATIC SUBSCRIPTION & CHECKOUT WORKFLOW MODAL -->
