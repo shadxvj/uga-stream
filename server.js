@@ -112,8 +112,8 @@ cron.schedule('*/10 * * * *', () => {
 // PASTE THE PROTECTED ROUTE CODE RIGHT HERE (ABOVE APP.LISTEN)
 // Serves the actual Admin Dashboard HTML page layout to the browser
 app.get('/uga-admin-portal', (req, res) => {
-    res.sendFile(path.join(__dirname, 'watch.html'));
-}); // <--- 🟢 MAKE SURE THIS CLOSING BRACKET AND PARENTHESIS IS HERE ON LINE 116!
+    res.sendFile(path.join(__dirname, 'index.html')); // 🟢 Updated from watch.html to index.html
+}); 
 
 // 1. Secret Endpoint to handle admin validation token handshakes
 app.post('/api/admin/auth', (req, res) => {
