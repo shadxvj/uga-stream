@@ -127,6 +127,50 @@ app.post('/api/admin/auth', (req, res) => {
 // PASTE THE FLUTTERWAVE CODE RIGHT HERE (BELOW ADMIN PORTAL, ABOVE LISTEN)
 // =========================================================================
 const axios = require('axios');
+// =========================================================================
+// AUTOMATIC PESAPAL IPN REGISTRATION HELPER
+// =========================================================================
+async function registerPesapalIPN() {
+    try {
+        console.log("⏳ [PESAPAL SETUP]: Authenticating to register IPN...");
+        
+        // 1. Get Access Token
+        const authResponse = await axios.post('https://pesapal.com', {
+            consumer_key: process.env.PESAPAL_CONSUMER_KEY || "qk8/C/87b+uaKL3/TSd25/nbnMeVvVvG",
+            consumer_secret: process.env.PESAPAL_CONSUMER_SECRET || "YOUR_ACTUAL_SECRET_HERE" // Make sure this matches your secret!
+        }, {
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
+        });
+
+        const accessToken = authResponse.data.token;
+
+        // 2. Register Webhook Endpoint URL
+        console.log("⏳ [PESAPAL SETUP]: Registering Webhook Route URL...");
+        const ipnPayload = {
+            "url": "https://onrender.com",
+            "ipn_notification_type": "GET"
+        };
+
+        const ipnResponse = await axios.post('https://pesapal.com', ipnPayload, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+
+        console.log("=========================================================================");
+        console.log("🎉 [SUCCESS] PESAPAL IPN REGISTERED SUCCESSFULLY!");
+        console.log(`📌 YOUR LIVE IPN ID IS: ${ipnResponse.data.ipn_id}`);
+        console.log("=========================================================================");
+
+    } catch (error) {
+        console.error("❌ [IPN REGISTRATION ERROR]:", error.response ? error.response.data : error.message);
+    }
+}
+
+// Fire registration 5 seconds after the server boots up smoothly
+setTimeout(registerPesapalIPN, 5000);
 
 // API Endpoint to initiate Pesapal V3 Mobile Money Checkout session
 app.post('/api/process-momo', async (req, res) => {
