@@ -846,7 +846,7 @@ window.updateSelectedPlanData = function(amount, planLabel) {
 };
 
 window.handleFormRegistrationAndPayment = async function() {
-    // Collect the exact field values from your input IDs from your screenshot
+    // Corrected to match your exact HTML field IDs from line 764, 768, and 772
     const usernameInput = document.getElementById('signupUser')?.value.trim();
     const phoneInput = document.getElementById('signupPhone')?.value.trim();
     const passwordInput = document.getElementById('signupPassword')?.value;
@@ -858,7 +858,7 @@ window.handleFormRegistrationAndPayment = async function() {
     try {
         alert("Registering profile and initializing checkout... Please click OK.");
 
-        // 1. Post the details directly over to your server.js API route track
+        // 1. Post details directly to your server.js registration engine
         const registerResponse = await fetch('/api/register-user', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -873,10 +873,10 @@ window.handleFormRegistrationAndPayment = async function() {
         const registerResult = await registerResponse.json();
         
         if (!registerResponse.ok) {
-            return alert("Registration Check Failed: " + registerResult.message);
+            return alert("Registration Check Failed: " + (registerResult.message || "Username or phone number error."));
         }
 
-        // 2. Instantly call the secure Pesapal checkout initialization endpoint
+        // 2. Call your Pesapal checkout gateway link generator route
         const paymentResponse = await fetch('/api/process-momo', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -890,7 +890,7 @@ window.handleFormRegistrationAndPayment = async function() {
         const paymentResult = await paymentResponse.json();
         
         if (paymentResult.success && paymentResult.redirectUrl) {
-            // Forward user to input their transaction mobile money PIN inside Pesapal's secure UI
+            // Instantly transfer user directly to Pesapal's official secure mobile money PIN prompt
             window.location.href = paymentResult.redirectUrl;
         } else {
             alert("Payment gateway failed to initialize: " + paymentResult.message);
@@ -901,7 +901,6 @@ window.handleFormRegistrationAndPayment = async function() {
         alert("An error occurred connecting to the backend server framework.");
     }
 };
-
 </script>
 
 <!-- CINEMATIC SUBSCRIPTION & CHECKOUT WORKFLOW MODAL -->
