@@ -188,3 +188,8 @@ app.post('/api/process-momo', async (req, res) => {
         return res.status(500).json({ success: false, message: "Payment gateway connection timeout." });
     }
 });
+// THIS MUST BE AT THE VERY BOTTOM OF YOUR SERVER.JS FILE
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Server fully active and listening on port ${PORT}`);
+});
+
