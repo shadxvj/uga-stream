@@ -232,8 +232,53 @@ app.post('/api/process-momo', async (req, res) => {
         return res.status(500).json({ success: false, message: "Payment gateway connection timeout." });
     }
 });
-// THIS MUST BE AT THE VERY BOTTOM OF YOUR SERVER.JS FILE
-app.listen(PORT, '0.0.0.0', () => {
+// =========================================================================
+// SERVER STARTUP & AUTOMATIC PESAPAL IPN REGISTRATION
+// =========================================================================
+app.listen(PORT, '0.0.0.0', async () => {
     console.log(`🚀 Server fully active and listening on port ${PORT}`);
-});
+    
+    try {
+        console.log("⏳ [PESAPAL AUTO-SETUP]: Authenticating with Pesapal API...");
+        
+        // 1. Authenticate using the environment variables already stored in Render
+        const authResponse = await axios.post('https://pesapal.com', {
+            consumer_key: process.env.PESAPAL_CONSUMER_KEY,
+            consumer_secret: process.env.PESAPAL_CONSUMER_SECRET
+        }, {
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
+        });
 
+        const accessToken = authResponse.data.token;
+        console.log("✅ [PESAPAL AUTO-SETUP]: Access Token retrieved successfully.");
+
+        // 2. Send the registration request to Pesapal's official servers
+        console.log("⏳ [PESAPAL AUTO-SETUP]: Submitting live webhook configuration...");
+        const ipnPayload = {
+            "url": "https://onrender.com",
+            "ipn_notification_type": "POST"
+        };
+
+        const ipnResponse = await axios.post('https://pesapal.com', ipnPayload, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+
+        // 3. Print the resulting ID directly into your Render console output
+        if (ipnResponse.data && ipnResponse.data.ipn_id) {
+            console.log("=========================================================================");
+            console.log("🎉 SUCCESS! PESAPAL INSTANT PAYMENT NOTIFICATION IS LIVE!");
+            console.log(`📌 YOUR TRUE IPN ID IS: ${ipnResponse.data.ipn_id}`);
+            console.log("=========================================================================");
+        } else {
+            console.log("❌ [PESAPAL AUTO-SETUP]: Unexpected response format:", ipnResponse.data);
+        }
+
+    } catch (error) {
+        console.error("❌ [PESAPAL AUTO-SETUP CRITICAL ERROR]:");
+        console.error(error.response ? JSON.stringify(error.response.data) : error.message);
+    }
+});
