@@ -112,7 +112,7 @@ cron.schedule('*/10 * * * *', () => {
 // PASTE THE PROTECTED ROUTE CODE RIGHT HERE (ABOVE APP.LISTEN)
 // Serves the secure Admin Dashboard layout from your hidden private folder
 app.get('/uga-admin-portal', (req, res) => {
-    res.sendFile(path.join(__dirname, 'private', 'watch.html')); // 🟢 Added 'private' directory mapping
+    res.sendFile(path.join(__dirname, 'private', 'admin.html')); // 🟢 Change 'admin.html' to match your exact file name
 });
 
 // 1. Secret Endpoint to handle admin validation token handshakes
