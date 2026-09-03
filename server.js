@@ -110,6 +110,11 @@ cron.schedule('*/10 * * * *', () => {
 });
 // =========================================================================
 // PASTE THE PROTECTED ROUTE CODE RIGHT HERE (ABOVE APP.LISTEN)
+// Serves the actual Admin Dashboard HTML page layout to the browser
+app.get('/uga-admin-portal', (req, res) => {
+    res.sendFile(path.join(__dirname, 'watch.html')); 
+    // Note: If your admin HTML file is named something else (like admin.html), change 'watch.html' to that file name!
+
 // =========================================================================
 
 // 1. Secret Endpoint to handle admin validation token handshakes
