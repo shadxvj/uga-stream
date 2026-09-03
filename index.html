@@ -758,7 +758,7 @@ function switchCard(type) {
         <button class="close-modal-btn" onclick="closeAuthModal()">&times;</button>
         <h2>Create Account</h2>
         <p class="auth-subtitle">Watch trailers and cinema dubbed streams</p>
-        <form class="auth-form" id="viewerSignupForm">
+        <form class="auth-form" id="viewerSignupForm" onsubmit="event.preventDefault(); handleFormRegistrationAndPayment();">
             <div class="input-group">
                 <label for="signupUser">Username</label>
                 <input type="text" id="signupUser" class="form-input" placeholder="e.g., Ivan_K" required>
@@ -817,9 +817,9 @@ function switchCard(type) {
             </div>
 
             <!-- MAIN SIGNUP SUBMIT ACTION BUTTON -->
-            <button type="button" onclick="handleFormRegistrationAndPayment()" class="form-submit-btn" style="width: 100%; background-color: #e50914; color: #ffffff; border: none; padding: 14px; font-size: 1rem; font-weight: bold; border-radius: 4px; cursor: pointer; transition: background-color 0.2s;">
-                Sign Up & Pay Securely
-            </button>
+           <button type="submit" class="form-submit-btn" style="width: 100%; background-color: #e50914; color: #ffffff; border: none; padding: 14px; font-size: 1rem; font-weight: bold; border-radius: 4px; cursor: pointer; transition: background-color 0.2s;">
+    Sign Up & Pay Securely
+</button>
 
         </form>
         <p style="margin-top: 20px; font-size: 0.9rem; color: #999; text-align: center;">
