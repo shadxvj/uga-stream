@@ -149,10 +149,7 @@ async function registerPesapalIPN() {
 
         // 2. Register Webhook Endpoint URL
         console.log("⏳ [PESAPAL SETUP]: Registering Webhook Route URL...");
-        const ipnPayload = {
-            "url": "https://onrender.com",
-            "ipn_notification_type": "GET"
-        };
+       console.log("➡️ PESAPAL RAW RESPONSE:", ipnResponse.data);
 
         const ipnResponse = await axios.post('https://pesapal.com', ipnPayload, {
             headers: {
