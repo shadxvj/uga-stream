@@ -827,26 +827,20 @@ function switchCard(type) {
         </p>
     </div>
 </div>
-        <!-- Line 754: This is your existing closing div tag from your form card modal -->
-    </div> 
-
-   <script>
-
-document.addEventListener('DOMContentLoaded', () => {
-    const signupForm = document.getElementById('viewerSignupForm');
-    if (signupForm) {
-       // Global memory variables to track selection state
+     <script>
+// Global tracking state variables
 window.currentSelectedAmount = 2000;
 window.currentSelectedPlanLabel = "DAILY";
 
+// Updates payment choices dynamically
 window.updateSelectedPlanData = function(amount, planLabel) {
     window.currentSelectedAmount = amount;
     window.currentSelectedPlanLabel = planLabel;
-    console.log(`Plan changed to: ${planLabel} (${amount} UGX)`);
+    console.log(`Plan configuration loaded: ${planLabel} - ${amount} UGX`);
 };
 
+// Form submission handler routing variables to Pesapal gateway endpoints
 window.handleFormRegistrationAndPayment = async function() {
-    // Corrected to match your exact HTML field IDs from line 764, 768, and 772
     const usernameInput = document.getElementById('signupUser')?.value.trim();
     const phoneInput = document.getElementById('signupPhone')?.value.trim();
     const passwordInput = document.getElementById('signupPassword')?.value;
@@ -858,7 +852,7 @@ window.handleFormRegistrationAndPayment = async function() {
     try {
         alert("Registering profile and initializing checkout... Please click OK.");
 
-        // 1. Post details directly to your server.js registration engine
+        // 1. Post details to your registration framework route setup
         const registerResponse = await fetch('/api/register-user', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -873,10 +867,10 @@ window.handleFormRegistrationAndPayment = async function() {
         const registerResult = await registerResponse.json();
         
         if (!registerResponse.ok) {
-            return alert("Registration Check Failed: " + (registerResult.message || "Username or phone number error."));
+            return alert("Registration Check Failed: " + (registerResult.message || "Account creation error."));
         }
 
-        // 2. Call your Pesapal checkout gateway link generator route
+        // 2. Dispatches variables securely to your Pesapal transaction API
         const paymentResponse = await fetch('/api/process-momo', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -890,7 +884,7 @@ window.handleFormRegistrationAndPayment = async function() {
         const paymentResult = await paymentResponse.json();
         
         if (paymentResult.success && paymentResult.redirectUrl) {
-            // Instantly transfer user directly to Pesapal's official secure mobile money PIN prompt
+            // Forward browser link instantly directly to the secure checkout page
             window.location.href = paymentResult.redirectUrl;
         } else {
             alert("Payment gateway failed to initialize: " + paymentResult.message);
@@ -902,6 +896,7 @@ window.handleFormRegistrationAndPayment = async function() {
     }
 };
 </script>
+
 
 <!-- CINEMATIC SUBSCRIPTION & CHECKOUT WORKFLOW MODAL -->
 <div id="subscriptionModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; align-items: center; justify-content: center; padding: 20px;">
