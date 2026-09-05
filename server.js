@@ -13,8 +13,6 @@ const LIVE_APP_URL = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT
 
 // Dynamically handle either live production keys or test sandbox keys safely
 const PESAPAL_BASE_URL = (process.env.PESAPAL_CONSUMER_KEY && process.env.PESAPAL_CONSUMER_KEY.includes('qk8/'))
-    ? 'https://pesapal.com'
-    : 'https://pesapal.com';
 
 console.log(`ℹ️ [PESAPAL ROUTING ACTIVE]: Target Base Domain set to: ${PESAPAL_BASE_URL}`);
 
