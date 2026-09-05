@@ -902,94 +902,266 @@ window.handleFormRegistrationAndPayment = async function() {
 <div id="subscriptionModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; align-items: center; justify-content: center; padding: 20px;">
     <div style="background: #111; border: 1px solid #e50914; border-radius: 12px; max-width: 450px; width: 100%; padding: 30px; box-shadow: 0 0 30px rgba(229, 9, 20, 0.4); text-align: center;">
         
-        <!-- STEP A: PLAN SELECTION -->
-        <div id="step-select-plan">
-            <h3 style="font-size: 1.6rem; font-weight: 800; margin-bottom: 10px; color: #fff;">Activate Uga Stream Access</h3>
-            <p style="color: #bbb; font-size: 0.9rem; margin-bottom: 24px;">Select a premium plan to instantly unlock local VJ-translated blockbusters.</p>
-            
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px;">
-                <label style="display: flex; justify-content: space-between; align-items: center; background: #222; padding: 14px; border-radius: 6px; cursor: pointer; border: 1px solid #333;" onclick="selectUgaPlan(2000, 'DAILY')">
-                    <span style="font-weight: 700; color:#fff;">Daily Pass</span>
-                    <span style="color: #e50914; font-weight: 800;">2,000 UGX</span>
-                </label>
-                <label style="display: flex; justify-content: space-between; align-items: center; background: #222; padding: 14px; border-radius: 6px; cursor: pointer; border: 1px solid #333;" onclick="selectUgaPlan(5000, 'WEEKLY')">
-                    <span style="font-weight: 700; color:#fff;">Weekly Pass</span>
-                    <span style="color: #e50914; font-weight: 800;">5,000 UGX</span>
-                </label>
-                <label style="display: flex; justify-content: space-between; align-items: center; background: #222; padding: 14px; border-radius: 6px; cursor: pointer; border: 1px solid #333;" onclick="selectUgaPlan(20000, 'MONTHLY')">
-                    <span style="font-weight: 700; color:#fff;">Monthly Premium</span>
-                    <span style="color: #e50914; font-weight: 800;">20,000 UGX</span>
-                </label>
-                <label style="display: flex; justify-content: space-between; align-items: center; background: #222; padding: 14px; border-radius: 6px; cursor: pointer; border: 1px solid #333;" onclick="selectUgaPlan(200000, 'ANNUALLY')">
-                    <span style="font-weight: 700; color:#fff;">Annual Mega Pass</span>
-                    <span style="color: #e50914; font-weight: 800;">200,000 UGX</span>
-                </label>
-            </div>
+      <!-- Combined Subscription Registration & Login Modal -->
+<div class="modal-overlay" id="authModal">
+    <div class="auth-container-box" style="background: #141414; padding: 30px; border-radius: 8px; max-width: 450px; width: 100%; border: 1px solid #222; margin: 0 auto;">
+        
+        <!-- Tab Switches to change views -->
+        <div style="display: flex; gap: 10px; margin-bottom: 25px; border-bottom: 1px solid #222; padding-bottom: 15px;">
+            <button id="tabRegisterBtn" onclick="switchAuthTab('register')" style="flex: 1; padding: 12px; background: #e50914; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 4px; font-size: 0.95rem;">New Account</button>
+            <button id="tabLoginBtn" onclick="switchAuthTab('login')" style="flex: 1; padding: 12px; background: #222; color: #aaa; border: none; font-weight: bold; cursor: pointer; border-radius: 4px; font-size: 0.95rem;">Subscriber Login</button>
         </div>
 
-        <!-- STEP B: MOBILE MONEY GATEWAY COLLECTOR -->
-        <div id="step-momo-collect" style="display: none;">
-            <h3 style="font-size: 1.4rem; font-weight: 800; margin-bottom: 10px; color: #fff;">Mobile Money Checkout</h3>
-            <p id="momo-price-feedback" style="color: #e50914; font-weight: bold; margin-bottom: 20px;"></p>
+        <!-- NEW SIGNUP & REGISTER VIEW PANEL -->
+        <div id="registerFormPanel">
+            <h3 style="margin-bottom: 5px; color: #fff;">Create Stream Account</h3>
+            <p style="color: #666; font-size: 0.85rem; margin-bottom: 15px;">Fill in your details below to set up access credentials.</p>
             
-            <div style="text-align: left; margin-bottom: 20px;">
-                <label style="font-size: 0.85rem; color: #bbb; display: block; margin-bottom: 6px;">Enter Airtel or MTN Number:</label>
-                <input type="tel" id="subscriberPhone" placeholder="075XXXXXXX" style="width: 100%; background: #222; border: 1px solid #444; border-radius: 6px; padding: 14px; color: #fff; font-size: 1rem; outline: none;">
-            </div>
+            <input type="text" id="regUser" placeholder="Username" class="auth-input-field" style="width: 100%; padding: 12px; margin-bottom: 12px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px;">
+            <input type="text" id="regPhone" placeholder="Phone Number (e.g., 0772123456)" class="auth-input-field" style="width: 100%; padding: 12px; margin-bottom: 12px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px;">
+            <input type="password" id="regPass" placeholder="Create Password" class="auth-input-field" style="width: 100%; padding: 12px; margin-bottom: 20px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px;">
+            
+            <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 10px; color: #fff;">Activate Uga Stream Access</h3>
+            <p style="color: #bbb; font-size: 0.9rem; margin-bottom: 20px;">Select a premium plan to instantly unlock local VJs.</p>
 
-            <button onclick="executeMomoPaymentRequest()" style="width: 100%; background: #e50914; color: #fff; border: none; padding: 14px; font-size: 1rem; font-weight: bold; border-radius: 6px; cursor: pointer;">
-                Initiate Secure Payment
-            </button>
-            
-            <p style="color: #666; font-size: 0.75rem; margin-top: 15px;">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                A prompt will appear securely on your phone to complete authentication.
-            </p>
+            <!-- Dropdown Selector mapped directly to our checkout script engine values -->
+            <select id="regPlan" style="width: 100%; padding: 14px; background: #222; border: 1px solid #e50914; color: #fff; border-radius: 4px; font-weight: bold; margin-bottom: 20px; font-size: 0.95rem; outline: none;">
+                <option value="DAILY|1000">Daily Pass — 1,000 UGX</option>
+                <option value="WEEKLY|5000">Weekly Pass — 5,000 UGX</option>
+                <option value="MONTHLY|20000">Monthly Premium — 20,000 UGX</option>
+                <option value="ANNUAL|200000">Annual Mega Pass — 200,000 UGX</option>
+            </select>
+
+            <button class="auth-action-btn" onclick="processRegistrationAndCheckout()" style="width: 100%; padding: 14px; background: #e50914; color: white; border: none; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 1rem;">Sign Up & Pay Securely</button>
         </div>
+
+        <!-- HIDDEN REGISTERED SUBSCRIBER LOGIN VIEW PANEL -->
+        <div id="loginFormPanel" style="display: none;">
+            <h3 style="margin-bottom: 5px; color: #fff;">Welcome Back!</h3>
+            <p style="color: #666; font-size: 0.85rem; margin-bottom: 15px;">Enter your phone number and password to verify your stream plan.</p>
+            
+            <input type="text" id="loginPhone" placeholder="Registered Phone Number (07...)" class="auth-input-field" style="width: 100%; padding: 12px; margin-bottom: 12px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px;">
+            <input type="password" id="loginPass" placeholder="Enter Password" class="auth-input-field" style="width: 100%; padding: 12px; margin-bottom: 20px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px;">
+            
+            <button class="auth-action-btn" style="width: 100%; padding: 14px; background: #ff9900; color: #000; border: none; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 1rem;" onclick="processSubscriberLogin()">Unlock & Stream Cinema</button>
+        </div>
+
+        <button class="cancel-modal-btn" style="width: 100%; padding: 12px; background: transparent; color: #777; border: none; cursor: pointer; margin-top: 10px; font-weight: 600;" onclick="closeAuthModal()">Cancel / Back to Browsing</button>
     </div>
 </div>
-    <!-- CHECKOUT INTERACTION CONTROLLER -->
-    <script>
-        let selectedAmount = 0;
-        let selectedPlanName = "";
 
-        // Call this function when a non-subscribed user tries to login or click get started
-        function triggerSubscriptionFlow() {
-            document.getElementById('subscriptionModal').style.display = 'flex';
-            document.getElementById('step-select-plan').style.display = 'block';
-            document.getElementById('step-momo-collect').style.display = 'none';
+   let currentSubscriberSession = null;
+
+// UI View Toggle management helpers
+function switchAuthTab(targetTab) {
+    const regPanel = document.getElementById('registerFormPanel');
+    const loginPanel = document.getElementById('loginFormPanel');
+    const regTabBtn = document.getElementById('tabRegisterBtn');
+    const loginTabBtn = document.getElementById('tabLoginBtn');
+
+    if (targetTab === 'register') {
+        if (regPanel) regPanel.style.display = 'block';
+        if (loginPanel) loginPanel.style.display = 'none';
+        if (regTabBtn) { regTabBtn.style.background = '#e50914'; regTabBtn.style.color = '#fff'; }
+        if (loginTabBtn) { loginTabBtn.style.background = '#222'; loginTabBtn.style.color = '#aaa'; }
+    } else {
+        if (regPanel) regPanel.style.display = 'none';
+        if (loginPanel) loginPanel.style.display = 'block';
+        if (regTabBtn) { regTabBtn.style.background = '#222'; regTabBtn.style.color = '#aaa'; }
+        if (loginTabBtn) { loginTabBtn.style.background = '#ff9900'; loginTabBtn.style.color = '#000'; }
+    }
+}
+
+function openAuthModal() { 
+    const modal = document.getElementById('authModal');
+    if (modal) modal.classList.add('show'); 
+}
+function closeAuthModal() { 
+    const modal = document.getElementById('authModal');
+    if (modal) modal.classList.remove('show'); 
+}
+
+// Bind top header click trigger logic if element exists
+const authActionBtn = document.getElementById('authMenuAction');
+if (authActionBtn) {
+    authActionBtn.onclick = openAuthModal;
+}
+
+// Bind landing hero banner "Watch Now" action trigger block
+const watchNowHeroBtn = document.querySelector('.hero-content .auth-action-btn');
+if (watchNowHeroBtn) {
+    watchNowHeroBtn.onclick = (e) => {
+        e.preventDefault();
+        evaluateGatewayAccessPermission(null);
+    };
+}
+
+// ====== CENTRAL GATEWAY INTERCEPTOR CONTROL ======
+function evaluateGatewayAccessPermission(videoStreamingUrl = null) {
+    if (!currentSubscriberSession || !currentSubscriberSession.plan) {
+        alert("🔒 Premium Content Locked. Please log into an active account or sign up via mobile money to watch.");
+        openAuthModal();
+    } else {
+        if (videoStreamingUrl) {
+            launchProtectedCinemaStream(videoStreamingUrl);
+        } else {
+            alert(`Welcome back, ${currentSubscriberSession.username}! Pick any movie below to start streaming.`);
         }
+    }
+}
 
-        // Handles the step transition when a user picks a price package
-        function selectUgaPlan(amount, planLabel) {
-            selectedAmount = amount;
-            selectedPlanName = planLabel;
-            
-            document.getElementById('step-select-plan').style.display = 'none';
-            document.getElementById('step-momo-collect').style.display = 'block';
-            document.getElementById('momo-price-feedback').innerText = `Total Due: ${amount.toLocaleString()} UGX (${planLabel})`;
-        }
+// Handle login submission verification
+async function processSubscriberLogin() {
+    const phoneField = document.getElementById('loginPhone');
+    const passField = document.getElementById('loginPass');
+    
+    if (!phoneField || !passField) return;
+    
+    const phone = phoneField.value.trim();
+    const password = passField.value;
 
-       async function executeMomoPaymentRequest() {
-    const userPhone = document.getElementById('subscriberPhone').value.trim();
-    if (!userPhone) return alert("Please enter a valid phone number!");
+    if (!phone || !password) {
+        return alert("Please fill in both phone and password fields.");
+    }
 
     try {
-        const response = await fetch('/api/process-momo', {
+        const response = await fetch('/api/login-user', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ phone: userPhone, amount: selectedAmount, plan: selectedPlanName })
+            body: JSON.stringify({ phone, password })
         });
-        
-        const outcome = await response.json();
-        if (outcome.success && outcome.redirectUrl) {
-            // Redirect the user right into Pesapal's secure mobile money screen
-            window.location.href = outcome.redirectUrl;
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+            currentSubscriberSession = data.user;
+            alert(`🎉 Success! Access verified for ${currentSubscriberSession.username}. Plan Active: ${currentSubscriberSession.plan}`);
+            
+            const actionText = document.getElementById('authMenuAction');
+            if (actionText) actionText.innerText = `Active Account: ${currentSubscriberSession.username}`;
+            closeAuthModal();
         } else {
-            alert("Transaction initialization failed: " + outcome.message);
+            alert(data.message || "Login authentication failed.");
         }
     } catch (err) {
-        alert("Server error connecting to checkout engine.");
+        console.error("Login route error connection failure:", err);
+        alert("Server communication error during authentication process.");
+    }
+}
+
+// Map movies catalog grid layout dynamically with secure click handlers
+async function loadMoviesDatabaseTrack() {
+    try {
+        const response = await fetch('/api/movies');
+        const movies = await response.json();
+
+        const trendingTrack = document.getElementById('trending-track');
+        const actionTrack = document.getElementById('action-track');
+        const comedyTrack = document.getElementById('comedy-track');
+
+        if (trendingTrack) trendingTrack.innerHTML = '';
+        if (actionTrack) actionTrack.innerHTML = '';
+        if (comedyTrack) comedyTrack.innerHTML = '';
+
+        movies.forEach(movie => {
+            const card = document.createElement('div');
+            card.className = 'movie-card';
+            card.onclick = () => evaluateGatewayAccessPermission(movie.source);
+            
+            card.innerHTML = `
+                <div class="poster-frame" style="background-image: url('${movie.image || ''}')">
+                    <i class="fa-solid fa-play"></i>
+                </div>
+                <div class="movie-details-box">
+                    <div class="movie-card-title">${movie.title}</div>
+                    <div class="movie-card-vj">Translated by ${movie.vj}</div>
+                </div>
+            `;
+
+            if (movie.category === 'trending' && trendingTrack) {
+                trendingTrack.appendChild(card);
+            } else if (movie.category === 'action' && actionTrack) {
+                actionTrack.appendChild(card);
+            } else if (comedyTrack) {
+                comedyTrack.appendChild(card);
+            }
+        });
+    } catch (err) {
+        console.error("Failed to map dynamic content catalogue tracks:", err);
+    }
+}
+
+window.addEventListener('DOMContentLoaded', loadMoviesDatabaseTrack);
+
+// Handle Registration and processing payload execution loops
+async function processRegistrationAndCheckout() {
+    const userField = document.getElementById('regUser');
+    const phoneField = document.getElementById('regPhone');
+    const passField = document.getElementById('regPass');
+    const planField = document.getElementById('regPlan');
+    
+    if (!userField || !phoneField || !passField || !planField) return;
+
+    const username = userField.value.trim();
+    const phone = phoneField.value.trim();
+    const password = passField.value;
+    const planSelection = planField.value.split('|');
+
+    if (!username || !phone || !password) {
+        alert("Please completely fill in all processing fields.");
+        return;
+    }
+
+    const planName = planSelection[0];
+    const planAmount = planSelection[1];
+
+    try {
+        const regResponse = await fetch('/api/register-user', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, phone, plan: planName, password })
+        });
+        const regData = await regResponse.json();
+
+        if (!regResponse.ok) {
+            return alert(regData.message || "Registration processing error encountered.");
+        }
+
+        currentSubscriberSession = regData.user;
+
+        const checkoutResponse = await fetch('/api/process-momo', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phone, amount: planAmount, plan: planName, username })
+        });
+        const checkoutData = await checkoutResponse.json();
+
+        if (checkoutData.success && checkoutData.redirect_url) {
+            window.location.href = checkoutData.redirect_url;
+        } else {
+            alert("Pesapal payment link generation failed. Double-check environment variables configuration.");
+        }
+    } catch (err) {
+        console.error("Checkout configuration network break error:", err);
+        alert("Network error executing mobile money transaction.");
+    }
+}
+
+function launchProtectedCinemaStream(streamUrl) {
+    if (!streamUrl) return alert("This stream target does not have a video track loaded.");
+    const player = document.getElementById('cinemaIframePlayer');
+    const modal = document.getElementById('playerModal');
+    if (player && modal) {
+        player.src = streamUrl;
+        modal.classList.add('show');
+    }
+}
+
+function closePlayerModal() {
+    const player = document.getElementById('cinemaIframePlayer');
+    const modal = document.getElementById('playerModal');
+    if (player && modal) {
+        modal.classList.remove('show');
+        player.src = '';
     }
 }
 
