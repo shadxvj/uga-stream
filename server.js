@@ -8,13 +8,15 @@ const axios = require('axios');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Dynamic application link from Render variables environment configurations
+// Dynamic application link from Render environment variables
 const LIVE_APP_URL = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
 
-// Dynamically handle either live production keys or test sandbox keys safely
+// Automatically switch routing bases depending on your Render keys
 const PESAPAL_BASE_URL = (process.env.PESAPAL_CONSUMER_KEY && process.env.PESAPAL_CONSUMER_KEY.includes('qk8/'))
+    ? 'https://pesapal.com'
+    : 'https://pesapal.com';
 
-console.log(`ℹ️ [PESAPAL ROUTING ACTIVE]: Target Base Domain set to: ${PESAPAL_BASE_URL}`);
+console.log(`ℹ️ [PESAPAL MODE DETECTED]: Using base endpoint: ${PESAPAL_BASE_URL}`);
 
 app.use(express.static(path.join(__dirname)));
 app.use(express.json());
@@ -35,43 +37,43 @@ let usersDatabase = [
     { id: 3, username: "VJ_Meddy_Fan", phone: "0750434712", plan: "DAILY", password: "UgaStreamPass" }
 ];
 
-// API Endpoint to process subscriber verification logs
+// API Endpoint to authenticate existing subscribers
 app.post('/api/login-user', (req, res) => {
     try {
         const { phone, password } = req.body;
         if (!phone || !password) {
-            return res.status(400).json({ success: false, message: "Missing required login information." });
+            return res.status(400).json({ success: false, message: "Missing phone or password." });
         }
         const user = usersDatabase.find(u => u.phone === phone.trim() && u.password === password);
         if (!user) {
-            return res.status(401).json({ success: false, message: "Invalid phone number or access password." });
+            return res.status(401).json({ success: false, message: "Invalid credentials." });
         }
         return res.status(200).json({ 
             success: true, 
             user: { username: user.username, phone: user.phone, plan: user.plan } 
         });
     } catch (error) {
-        return res.status(500).json({ success: false, message: "Server login processing error." });
+        return res.status(500).json({ success: false, message: "Server login error." });
     }
 });
 
-// API Endpoint to process new dynamic registrations
+// API Endpoint to process and save new user registrations
 app.post('/api/register-user', (req, res) => {
     try {
         const { username, phone, plan, password } = req.body;
         
         if (!username || !phone || !password) {
-            return res.status(400).json({ success: false, message: "Missing fields required to process account." });
+            return res.status(400).json({ success: false, message: "Missing required fields" });
         }
 
         const userExists = usersDatabase.some(u => u.username.toLowerCase() === username.toLowerCase());
         if (userExists) {
-            return res.status(400).json({ success: false, message: "Username selection is already occupied." });
+            return res.status(400).json({ success: false, message: "Username is already taken." });
         }
 
         const phoneExists = usersDatabase.some(u => u.phone === phone.trim());
         if (phoneExists) {
-            return res.status(400).json({ success: false, message: "This mobile contact is already registered." });
+            return res.status(400).json({ success: false, message: "This phone number is already registered!" });
         }
 
         const newUser = {
@@ -85,7 +87,7 @@ app.post('/api/register-user', (req, res) => {
         usersDatabase.push(newUser);
         return res.status(200).json({ success: true, user: newUser });
     } catch (error) {
-        return res.status(500).json({ success: false, message: "Internal server generation error." });
+        return res.status(500).json({ success: false, message: "Server Error" });
     }
 });
 
@@ -124,9 +126,9 @@ app.delete('/api/movies/:id', (req, res) => {
 cron.schedule('*/10 * * * *', () => {
     console.log('Sending keep-alive ping to Render server...');
     http.get(LIVE_APP_URL, (res) => {
-        console.log(`Keep-alive tracking clean. Status: ${res.statusCode}`);
+        console.log(`Keep-alive successful. Status Code: ${res.statusCode}`);
     }).on('error', (err) => {
-        console.error('Keep-alive ping skipped:', err.message);
+        console.error('Keep-alive ping failed:', err.message);
     });
 });
 
@@ -143,13 +145,13 @@ app.post('/api/admin/auth', (req, res) => {
 });
 
 // =========================================================================
-// AUTOMATIC INTEGRATED PESAPAL WEBHOCK V3 ENGINE CONFIGURATOR
+// AUTOMATIC PESAPAL IPN REGISTRATION HELPER
 // =========================================================================
 let cachedIpnId = null; 
 
 async function registerPesapalIPN() {
     try {
-        console.log("⏳ [PESAPAL SETUP]: Verifying key tokens...");
+        console.log("⏳ [PESAPAL SETUP]: Authenticating to register IPN...");
         
         const authResponse = await axios.post(`${PESAPAL_BASE_URL}/api/Auth/RequestToken`, {
             consumer_key: process.env.PESAPAL_CONSUMER_KEY || "qk8/C/87b+uaKL3/TSd25/nbnMeVvVvG",
@@ -159,7 +161,7 @@ async function registerPesapalIPN() {
         });
 
         const accessToken = authResponse.data.token;
-        console.log("⏳ [PESAPAL SETUP]: Sending callback endpoint url map...");
+        console.log("⏳ [PESAPAL SETUP]: Registering Webhook Route URL...");
 
         const ipnPayload = {
             url: `${LIVE_APP_URL}/api/pesapal-ipn`,
@@ -177,10 +179,11 @@ async function registerPesapalIPN() {
         if (ipnResponse.data && ipnResponse.data.ipn_id) {
             cachedIpnId = ipnResponse.data.ipn_id;
             console.log("=========================================================================");
-            console.log(`🎉 [SUCCESS] PESAPAL ROUTING REGISTERED! IPN ID: ${cachedIpnId}`);
+            console.log("🎉 [SUCCESS] PESAPAL IPN REGISTERED SUCCESSFULLY!");
+            console.log(`📌 YOUR LIVE IPN ID IS: ${cachedIpnId}`);
             console.log("=========================================================================");
         } else {
-            console.log("❌ [PESAPAL AUTO-SETUP]: Setup payload parsing error:", ipnResponse.data);
+            console.log("❌ [PESAPAL AUTO-SETUP]: Unexpected response format:", ipnResponse.data);
         }
 
     } catch (error) {
@@ -191,14 +194,15 @@ async function registerPesapalIPN() {
 setTimeout(registerPesapalIPN, 5000);
 
 // =========================================================================
-// USER ORDER CHECKOUT CONTROLLERS
+// PESAPAL PAYMENTS ENDPOINTS
 // =========================================================================
+
 app.post('/api/process-momo', async (req, res) => {
     try {
         const { phone, amount, plan, username } = req.body;
 
         if (!phone || !amount || !username) {
-            return res.status(400).json({ success: false, message: "Missing tracking criteria data." });
+            return res.status(400).json({ success: false, message: "Missing required checkout parameters." });
         }
 
         const authResponse = await axios.post(`${PESAPAL_BASE_URL}/api/Auth/RequestToken`, {
@@ -243,14 +247,13 @@ app.post('/api/process-momo', async (req, res) => {
 
     } catch (error) {
         console.error("❌ [CHECKOUT ERROR]:", error.response ? error.response.data : error.message);
-        return res.status(500).json({ success: false, message: "Failed to initialize Pesapal gateway session." });
+        return res.status(500).json({ success: false, message: "Pesapal payment setup failed." });
     }
 });
 
 app.get('/api/pesapal-ipn', async (req, res) => {
-app.get('/api/pesapal-ipn', async (req, res) => {
     const { OrderTrackingId, OrderMerchantReference } = req.query;
-    console.log(`✉️ Incoming callback message update captured from Pesapal: ${OrderTrackingId}`);
+    console.log(`✉️ Received Pesapal IPN: ${OrderTrackingId} | Ref: ${OrderMerchantReference}`);
 
     try {
         const authResponse = await axios.post(`${PESAPAL_BASE_URL}/api/Auth/RequestToken`, {
@@ -270,7 +273,7 @@ app.get('/api/pesapal-ipn', async (req, res) => {
         });
 
         if (statusResponse.data && statusResponse.data.status_code === 1) {
-            console.log(`✅ Transaction payment successfully executed for reference ID: ${OrderMerchantReference}`);
+            console.log(`✅ Payment successful for Reference: ${OrderMerchantReference}!`);
         }
 
         return res.status(200).json({
@@ -279,11 +282,12 @@ app.get('/api/pesapal-ipn', async (req, res) => {
             Status: "Success"
         });
 
-    } catch (error) {
-        console.error("❌ [IPN STATUS QUERY BROKEN]:", error.message);
-        return res.status(500).send("IPN Verification Failed");
+       } catch (error) {
+        console.error("❌ [IPN STATUS ERROR]:", error.message);
+        return res.status(500).send("IPN Process Failed");
     }
+});
 
 app.listen(PORT, () => {
-    console.log(`🚀 UgaStream backend execution initialized on network port: ${PORT}`);
+    console.log(`🚀 UgaStream backend live on port ${PORT}`);
 });
