@@ -1093,26 +1093,35 @@ async function loadMoviesDatabaseTrack() {
 window.addEventListener('DOMContentLoaded', loadMoviesDatabaseTrack);
 
 // Handle Registration and processing payload execution loops
+// Handle Registration and processing payload execution loops
 async function processRegistrationAndCheckout() {
     const userField = document.getElementById('regUser');
     const phoneField = document.getElementById('regPhone');
     const passField = document.getElementById('regPass');
-    const planField = document.getElementById('regPlan');
     
-    if (!userField || !phoneField || !passField || !planField) return;
+    if (!userField || !phoneField || !passField) return;
 
     const username = userField.value.trim();
     const phone = phoneField.value.trim();
     const password = passField.value;
-    const planSelection = planField.value.split('|');
 
-    if (!username || !phone || !password) {
-        alert("Please completely fill in all processing fields.");
+    // FIX: Look for whichever premium pricing radio circle is clicked by the user
+    const selectedRadioPlan = document.querySelector('input[name="plan"]:checked');
+    
+    if (!selectedRadioPlan) {
+        alert("Please select an access plan option to continue.");
         return;
     }
 
-    const planName = planSelection[0];
-    const planAmount = planSelection[1];
+    if (!username || !phone || !password) {
+        alert("Please completely fill in all account processing fields.");
+        return;
+    }
+
+    // Read values dynamically (expects strings like "DAILY|1000" or "WEEKLY|5000")
+    const planDetails = selectedRadioPlan.value.split('|');
+    const planName = planDetails[0];
+    const planAmount = planDetails[1];
 
     try {
         const regResponse = await fetch('/api/register-user', {
