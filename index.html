@@ -903,52 +903,66 @@ window.handleFormRegistrationAndPayment = async function() {
     <div style="background: #111; border: 1px solid #e50914; border-radius: 12px; max-width: 450px; width: 100%; padding: 30px; box-shadow: 0 0 30px rgba(229, 9, 20, 0.4); text-align: center;">
         
       <!-- Combined Subscription Registration & Login Modal -->
+<!-- Combined Subscription Registration & Login Modal -->
 <div class="modal-overlay" id="authModal">
-    <div class="auth-container-box" style="background: #141414; padding: 30px; border-radius: 8px; max-width: 450px; width: 100%; border: 1px solid #222; margin: 0 auto;">
+    <div class="auth-container-box" style="background: #141414; padding: 30px; border-radius: 8px; max-width: 450px; width: 100%; border: 1px solid #222; margin: 0 auto; position: relative;">
         
-        <!-- Tab Switches to change views -->
+        <!-- Cross Close Button on Top Right -->
+        <span onclick="closeAuthModal()" style="position: absolute; top: 15px; right: 20px; color: #777; font-size: 1.5rem; cursor: pointer; font-weight: bold;">&times;</span>
+
+        <!-- View Tab Selectors -->
         <div style="display: flex; gap: 10px; margin-bottom: 25px; border-bottom: 1px solid #222; padding-bottom: 15px;">
             <button id="tabRegisterBtn" onclick="switchAuthTab('register')" style="flex: 1; padding: 12px; background: #e50914; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 4px; font-size: 0.95rem;">New Account</button>
-            <button id="tabLoginBtn" onclick="switchAuthTab('login')" style="flex: 1; padding: 12px; background: #222; color: #aaa; border: none; font-weight: bold; cursor: pointer; border-radius: 4px; font-size: 0.95rem;">Subscriber Login</button>
+            <button id="tabLoginBtn" onclick="switchAuthTab('login')" style="flex: 1; padding: 12px; background: #222; color: #aaa; border: none; font-weight: bold; cursor: pointer; border-radius: 4px; font-size: 0.95rem;">Existing Login</button>
         </div>
 
-        <!-- NEW SIGNUP & REGISTER VIEW PANEL -->
+        <!-- 1. REGISTRATION FORM MODE PANEL -->
         <div id="registerFormPanel">
             <h3 style="margin-bottom: 5px; color: #fff;">Create Stream Account</h3>
-            <p style="color: #666; font-size: 0.85rem; margin-bottom: 15px;">Fill in your details below to set up access credentials.</p>
+            <p style="color: #666; font-size: 0.85rem; margin-bottom: 15px;">Watch trailers and cinema dubbed streams</p>
             
-            <input type="text" id="regUser" placeholder="Username" class="auth-input-field" style="width: 100%; padding: 12px; margin-bottom: 12px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px;">
-            <input type="text" id="regPhone" placeholder="Phone Number (e.g., 0772123456)" class="auth-input-field" style="width: 100%; padding: 12px; margin-bottom: 12px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px;">
-            <input type="password" id="regPass" placeholder="Create Password" class="auth-input-field" style="width: 100%; padding: 12px; margin-bottom: 20px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px;">
+            <label style="color: #aaa; font-size: 0.8rem; text-transform: uppercase; font-weight: bold; display: block; margin-bottom: 5px;">Username</label>
+            <input type="text" id="regUser" placeholder="e.g. KILOLO" style="width: 100%; padding: 12px; margin-bottom: 15px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px; outline: none;">
             
-            <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 10px; color: #fff;">Activate Uga Stream Access</h3>
-            <p style="color: #bbb; font-size: 0.9rem; margin-bottom: 20px;">Select a premium plan to instantly unlock local VJs.</p>
-
-            <!-- Dropdown Selector mapped directly to our checkout script engine values -->
-            <select id="regPlan" style="width: 100%; padding: 14px; background: #222; border: 1px solid #e50914; color: #fff; border-radius: 4px; font-weight: bold; margin-bottom: 20px; font-size: 0.95rem; outline: none;">
-                <option value="DAILY|1000">Daily Pass — 1,000 UGX</option>
-                <option value="WEEKLY|5000">Weekly Pass — 5,000 UGX</option>
-                <option value="MONTHLY|20000">Monthly Premium — 20,000 UGX</option>
-                <option value="ANNUAL|200000">Annual Mega Pass — 200,000 UGX</option>
+            <label style="color: #aaa; font-size: 0.8rem; text-transform: uppercase; font-weight: bold; display: block; margin-bottom: 5px;">Phone Number</label>
+            <input type="text" id="regPhone" placeholder="e.g. 0750434717" style="width: 100%; padding: 12px; margin-bottom: 15px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px; outline: none;">
+            
+            <label style="color: #aaa; font-size: 0.8rem; text-transform: uppercase; font-weight: bold; display: block; margin-bottom: 5px;">Password</label>
+            <input type="password" id="regPass" placeholder="******" style="width: 100%; padding: 12px; margin-bottom: 20px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px; outline: none;">
+            
+            <label style="color: #aaa; font-size: 0.85rem; font-weight: bold; margin-bottom: 12px; display: block;">SELECT PREMIUM ACCESS PLAN:</label>
+            
+            <!-- Safe Dropdown Option to ensure values split cleanly without layout breakdown -->
+            <select id="regPlan" style="width: 100%; padding: 14px; background: #222; border: 1px solid #e50914; color: #fff; border-radius: 4px; font-weight: bold; margin-bottom: 25px; font-size: 0.95rem; outline: none; cursor: pointer;">
+                <option value="DAILY|2000">DAILY PASS — 2,000 UGX</option>
+                <option value="WEEKLY|5000">WEEKLY PASS — 5,000 UGX</option>
+                <option value="MONTHLY|20000">MONTHLY PREMIUM — 20,000 UGX</option>
+                <option value="ANNUAL|200000">ANNUAL MEGA PASS — 200,000 UGX</option>
             </select>
 
-            <button class="auth-action-btn" onclick="processRegistrationAndCheckout()" style="width: 100%; padding: 14px; background: #e50914; color: white; border: none; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 1rem;">Sign Up & Pay Securely</button>
+            <button class="auth-action-btn" onclick="processRegistrationAndCheckout()" style="width: 100%; padding: 14px; background: #e50914; color: white; border: none; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 1rem; text-transform: uppercase;">Sign Up & Pay Securely</button>
         </div>
 
-        <!-- HIDDEN REGISTERED SUBSCRIBER LOGIN VIEW PANEL -->
+        <!-- 2. NEW LOG IN MODE PANEL -->
         <div id="loginFormPanel" style="display: none;">
-            <h3 style="margin-bottom: 5px; color: #fff;">Welcome Back!</h3>
-            <p style="color: #666; font-size: 0.85rem; margin-bottom: 15px;">Enter your phone number and password to verify your stream plan.</p>
+            <h3 style="margin-bottom: 5px; color: #fff;">Welcome Back</h3>
+            <p style="color: #666; font-size: 0.85rem; margin-bottom: 20px;">Log in to verify your active plan and resume streaming cinema.</p>
             
-            <input type="text" id="loginPhone" placeholder="Registered Phone Number (07...)" class="auth-input-field" style="width: 100%; padding: 12px; margin-bottom: 12px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px;">
-            <input type="password" id="loginPass" placeholder="Enter Password" class="auth-input-field" style="width: 100%; padding: 12px; margin-bottom: 20px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px;">
+            <label style="color: #aaa; font-size: 0.8rem; text-transform: uppercase; font-weight: bold; display: block; margin-bottom: 5px;">Phone Number</label>
+            <input type="text" id="loginPhone" placeholder="Enter registered phone number" style="width: 100%; padding: 12px; margin-bottom: 15px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px; outline: none;">
             
-            <button class="auth-action-btn" style="width: 100%; padding: 14px; background: #ff9900; color: #000; border: none; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 1rem;" onclick="processSubscriberLogin()">Unlock & Stream Cinema</button>
+            <label style="color: #aaa; font-size: 0.8rem; text-transform: uppercase; font-weight: bold; display: block; margin-bottom: 5px;">Password</label>
+            <input type="password" id="loginPass" placeholder="******" style="width: 100%; padding: 12px; margin-bottom: 25px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px; outline: none;">
+            
+            <button class="auth-action-btn" onclick="processSubscriberLogin()" style="width: 100%; padding: 14px; background: #ff9900; color: #000; border: none; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 1rem; text-transform: uppercase;">Unlock & Stream Cinema</button>
         </div>
 
-        <button class="cancel-modal-btn" style="width: 100%; padding: 12px; background: transparent; color: #777; border: none; cursor: pointer; margin-top: 10px; font-weight: 600;" onclick="closeAuthModal()">Cancel / Back to Browsing</button>
     </div>
 </div>
+
+
+      
+        
 
    let currentSubscriberSession = null;
 
