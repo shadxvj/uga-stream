@@ -964,9 +964,9 @@ window.handleFormRegistrationAndPayment = async function() {
       
         
 
-   let currentSubscriberSession = null;
+  let currentSubscriberSession = null;
 
-// UI View Toggle management helpers
+// Clean Tab Switching View Controller
 function switchAuthTab(targetTab) {
     const regPanel = document.getElementById('registerFormPanel');
     const loginPanel = document.getElementById('loginFormPanel');
@@ -995,13 +995,10 @@ function closeAuthModal() {
     if (modal) modal.classList.remove('show'); 
 }
 
-// Bind top header click trigger logic if element exists
+// Bind navbar and banner actions
 const authActionBtn = document.getElementById('authMenuAction');
-if (authActionBtn) {
-    authActionBtn.onclick = openAuthModal;
-}
+if (authActionBtn) authActionBtn.onclick = openAuthModal;
 
-// Bind landing hero banner "Watch Now" action trigger block
 const watchNowHeroBtn = document.querySelector('.hero-content .auth-action-btn');
 if (watchNowHeroBtn) {
     watchNowHeroBtn.onclick = (e) => {
@@ -1010,7 +1007,7 @@ if (watchNowHeroBtn) {
     };
 }
 
-// ====== CENTRAL GATEWAY INTERCEPTOR CONTROL ======
+// Central Access Gateway Guard
 function evaluateGatewayAccessPermission(videoStreamingUrl = null) {
     if (!currentSubscriberSession || !currentSubscriberSession.plan) {
         alert("🔒 Premium Content Locked. Please log into an active account or sign up via mobile money to watch.");
@@ -1019,23 +1016,18 @@ function evaluateGatewayAccessPermission(videoStreamingUrl = null) {
         if (videoStreamingUrl) {
             launchProtectedCinemaStream(videoStreamingUrl);
         } else {
-            alert(`Welcome back, ${currentSubscriberSession.username}! Pick any movie below to start streaming.`);
+            alert(`Welcome back, ${currentSubscriberSession.username}! Select any movie row below to stream.`);
         }
     }
 }
 
-// Handle login submission verification
+// Handler to Log In Existing Subscriptions
 async function processSubscriberLogin() {
-    const phoneField = document.getElementById('loginPhone');
-    const passField = document.getElementById('loginPass');
-    
-    if (!phoneField || !passField) return;
-    
-    const phone = phoneField.value.trim();
-    const password = passField.value;
+    const phone = document.getElementById('loginPhone').value.trim();
+    const password = document.getElementById('loginPass').value;
 
     if (!phone || !password) {
-        return alert("Please fill in both phone and password fields.");
+        return alert("Please enter both your phone number and password.");
     }
 
     try {
@@ -1048,21 +1040,21 @@ async function processSubscriberLogin() {
 
         if (response.ok && data.success) {
             currentSubscriberSession = data.user;
-            alert(`🎉 Success! Access verified for ${currentSubscriberSession.username}. Plan Active: ${currentSubscriberSession.plan}`);
+            alert(`🎉 Access verified! Welcome back, ${currentSubscriberSession.username}. Plan Status: ${currentSubscriberSession.plan}`);
             
             const actionText = document.getElementById('authMenuAction');
-            if (actionText) actionText.innerText = `Active Account: ${currentSubscriberSession.username}`;
+            if (actionText) actionText.innerText = `Account: ${currentSubscriberSession.username}`;
             closeAuthModal();
         } else {
-            alert(data.message || "Login authentication failed.");
+            alert(data.message || "Invalid login credentials.");
         }
     } catch (err) {
-        console.error("Login route error connection failure:", err);
-        alert("Server communication error during authentication process.");
+        console.error("Login verification broke:", err);
+        alert("Communication failure with authentication database.");
     }
 }
 
-// Map movies catalog grid layout dynamically with secure click handlers
+// Load Content and Map Secure Grid Clicks
 async function loadMoviesDatabaseTrack() {
     try {
         const response = await fetch('/api/movies');
@@ -1100,42 +1092,27 @@ async function loadMoviesDatabaseTrack() {
             }
         });
     } catch (err) {
-        console.error("Failed to map dynamic content catalogue tracks:", err);
+        console.error("Failed to map catalogue tracks:", err);
     }
 }
 
 window.addEventListener('DOMContentLoaded', loadMoviesDatabaseTrack);
 
-// Handle Registration and processing payload execution loops
-// Handle Registration and processing payload execution loops
+// Handle Account Creation and Pesapal Transaction Initializer
 async function processRegistrationAndCheckout() {
-    const userField = document.getElementById('regUser');
-    const phoneField = document.getElementById('regPhone');
-    const passField = document.getElementById('regPass');
-    
-    if (!userField || !phoneField || !passField) return;
+    const username = document.getElementById('regUser').value.trim();
+    const phone = document.getElementById('regPhone').value.trim();
+    const password = document.getElementById('regPass').value;
+    const planValue = document.getElementById('regPlan').value;
 
-    const username = userField.value.trim();
-    const phone = phoneField.value.trim();
-    const password = passField.value;
-
-    // FIX: Look for whichever premium pricing radio circle is clicked by the user
-    const selectedRadioPlan = document.querySelector('input[name="plan"]:checked');
-    
-    if (!selectedRadioPlan) {
-        alert("Please select an access plan option to continue.");
+    if (!username || !phone || !password || !planValue) {
+        alert("Please completely fill out all registration fields.");
         return;
     }
 
-    if (!username || !phone || !password) {
-        alert("Please completely fill in all account processing fields.");
-        return;
-    }
-
-    // Read values dynamically (expects strings like "DAILY|1000" or "WEEKLY|5000")
-    const planDetails = selectedRadioPlan.value.split('|');
-    const planName = planDetails[0];
-    const planAmount = planDetails[1];
+    const planSelection = planValue.split('|');
+    const planName = planSelection[0];
+    const planAmount = planSelection[1];
 
     try {
         const regResponse = await fetch('/api/register-user', {
@@ -1146,7 +1123,7 @@ async function processRegistrationAndCheckout() {
         const regData = await regResponse.json();
 
         if (!regResponse.ok) {
-            return alert(regData.message || "Registration processing error encountered.");
+            return alert(regData.message || "Registration error processing information.");
         }
 
         currentSubscriberSession = regData.user;
@@ -1161,11 +1138,11 @@ async function processRegistrationAndCheckout() {
         if (checkoutData.success && checkoutData.redirect_url) {
             window.location.href = checkoutData.redirect_url;
         } else {
-            alert("Pesapal payment link generation failed. Double-check environment variables configuration.");
+            alert("Payment initiation failed. Account saved. Use the Login tab to reconnect.");
         }
     } catch (err) {
-        console.error("Checkout configuration network break error:", err);
-        alert("Network error executing mobile money transaction.");
+        console.error("Checkout break error:", err);
+        alert("Transaction routing timeout error connection.");
     }
 }
 
