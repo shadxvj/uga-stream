@@ -170,17 +170,17 @@ async function registerPesapalIPN() {
 
         const accessToken = authResponse.data.token;
 
-        // 2. Register Webhook Endpoint URL
-        console.log("⏳ [PESAPAL SETUP]: Registering Webhook Route URL...");
-       console.log("➡️ PESAPAL RAW RESPONSE:", ipnResponse.data);
+      //  FIXED ORDER:
+const ipnResponse = await axios.post('https://pesapal.com', ipnPayload, {
+    headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+    }
+});
 
-        const ipnResponse = await axios.post('https://pesapal.com', ipnPayload, {
-            headers: {
-                'Authorization': `Bearer ${accessToken}`,
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }
-        });
+console.log("➡️ PESAPAL RAW RESPONSE:", ipnResponse.data); // Works perfectly here!
+
 
         console.log("=========================================================================");
         console.log("🎉 [SUCCESS] PESAPAL IPN REGISTERED SUCCESSFULLY!");
