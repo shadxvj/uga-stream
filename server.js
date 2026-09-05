@@ -3,8 +3,20 @@ const fs = require('fs');
 const path = require('path');
 const cron = require('node-cron');
 const http = require('http');       
+const axios = require('axios');
+
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// Dynamic application link from Render variables environment configurations
+const LIVE_APP_URL = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
+
+// Dynamically handle either live production keys or test sandbox keys safely
+const PESAPAL_BASE_URL = (process.env.PESAPAL_CONSUMER_KEY && process.env.PESAPAL_CONSUMER_KEY.includes('qk8/'))
+    ? 'https://pesapal.com'
+    : 'https://pesapal.com';
+
+console.log(`ℹ️ [PESAPAL ROUTING ACTIVE]: Target Base Domain set to: ${PESAPAL_BASE_URL}`);
 
 app.use(express.static(path.join(__dirname)));
 app.use(express.json());
@@ -14,7 +26,6 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Lightweight health route for the self-pinger to hit
 app.get('/api/health', (req, res) => {
     res.status(200).json({ status: "alive" });
 });
@@ -26,29 +37,45 @@ let usersDatabase = [
     { id: 3, username: "VJ_Meddy_Fan", phone: "0750434712", plan: "DAILY", password: "UgaStreamPass" }
 ];
 
-// NEW ADDITION: Live Dynamic API endpoint to process incoming new registrations
-// API Endpoint to process and save new user registrations (With unique phone checks)
+// API Endpoint to process subscriber verification logs
+app.post('/api/login-user', (req, res) => {
+    try {
+        const { phone, password } = req.body;
+        if (!phone || !password) {
+            return res.status(400).json({ success: false, message: "Missing required login information." });
+        }
+        const user = usersDatabase.find(u => u.phone === phone.trim() && u.password === password);
+        if (!user) {
+            return res.status(401).json({ success: false, message: "Invalid phone number or access password." });
+        }
+        return res.status(200).json({ 
+            success: true, 
+            user: { username: user.username, phone: user.phone, plan: user.plan } 
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "Server login processing error." });
+    }
+});
+
+// API Endpoint to process new dynamic registrations
 app.post('/api/register-user', (req, res) => {
     try {
         const { username, phone, plan, password } = req.body;
         
         if (!username || !phone || !password) {
-            return res.status(400).json({ success: false, message: "Missing required fields" });
+            return res.status(400).json({ success: false, message: "Missing fields required to process account." });
         }
 
-        // 1. Check if Username already exists
         const userExists = usersDatabase.some(u => u.username.toLowerCase() === username.toLowerCase());
         if (userExists) {
-            return res.status(400).json({ success: false, message: "Username is already taken." });
+            return res.status(400).json({ success: false, message: "Username selection is already occupied." });
         }
 
-        // 2. FIXED: Check if Phone Number already exists in the database metrics
         const phoneExists = usersDatabase.some(u => u.phone === phone.trim());
         if (phoneExists) {
-            return res.status(400).json({ success: false, message: "This phone number is already registered!" });
+            return res.status(400).json({ success: false, message: "This mobile contact is already registered." });
         }
 
-        // Structure the verified new subscriber object record
         const newUser = {
             id: usersDatabase.length + 1,
             username: username,
@@ -58,35 +85,11 @@ app.post('/api/register-user', (req, res) => {
         };
 
         usersDatabase.push(newUser);
-        return res.status(200).json({ success: true });
+        return res.status(200).json({ success: true, user: newUser });
     } catch (error) {
-        return res.status(500).json({ success: false, message: "Server Error" });
+        return res.status(500).json({ success: false, message: "Internal server generation error." });
     }
-    // API Endpoint to authenticate existing subscribers
-app.post('/api/login-user', (req, res) => {
-    try {
-        const { phone, password } = req.body;
-
-        if (!phone || !password) {
-            return res.status(400).json({ success: false, message: "Missing phone or password." });
-        }
-
-        // Search the database array for matching credentials
-        const user = usersDatabase.find(u => u.phone === phone.trim() && u.password === password);
-        
-        if (!user) {
-            return res.status(401).json({ success: false, message: "Invalid phone number or password." });
-        }
-
-        // Return user profile and plan safely
-        return res.status(200).json({ 
-            success: true, 
-            user: { username: user.username, phone: user.phone, plan: user.plan } 
-        });
-    } catch (error) {
-        return res.status(500).json({ success: false, message: "Server login error." });
-    }
-
+});
 
 app.post('/api/upload-movie', (req, res) => {
     try {
@@ -120,25 +123,19 @@ app.delete('/api/movies/:id', (req, res) => {
     } catch (error) { return res.status(500).json({ success: false }); }
 });
 
-// Automatically pings your live app every 10 minutes to prevent Render from sleeping
 cron.schedule('*/10 * * * *', () => {
-    const liveAppUrl = 'https://onrender.com'; 
-    
     console.log('Sending keep-alive ping to Render server...');
-    http.get(liveAppUrl, (res) => {
-        console.log(`Keep-alive successful. Status Code: ${res.statusCode}`);
+    http.get(LIVE_APP_URL, (res) => {
+        console.log(`Keep-alive tracking clean. Status: ${res.statusCode}`);
     }).on('error', (err) => {
-        console.error('Keep-alive ping failed:', err.message);
+        console.error('Keep-alive ping skipped:', err.message);
     });
 });
-// =========================================================================
-// PASTE THE PROTECTED ROUTE CODE RIGHT HERE (ABOVE APP.LISTEN)
-// Serves the secure Admin Dashboard layout from your hidden private folder
+
 app.get('/uga-admin-portal', (req, res) => {
-    res.sendFile(path.join(__dirname, 'private', 'admin.html')); // 🟢 Change 'admin.html' to match your exact file name
+    res.sendFile(path.join(__dirname, 'private', 'admin.html')); 
 });
 
-// 1. Secret Endpoint to handle admin validation token handshakes
 app.post('/api/admin/auth', (req, res) => {
     const { secretKey } = req.body;
     if (secretKey === "UgaStream2026") {
@@ -147,98 +144,92 @@ app.post('/api/admin/auth', (req, res) => {
     return res.status(403).json({ approved: false, message: "Access Denied." });
 });
 
+// =========================================================================
+// AUTOMATIC INTEGRATED PESAPAL WEBHOCK V3 ENGINE CONFIGURATOR
+// =========================================================================
+let cachedIpnId = null; 
 
-
-// =========================================================================
-// PASTE THE FLUTTERWAVE CODE RIGHT HERE (BELOW ADMIN PORTAL, ABOVE LISTEN)
-// =========================================================================
-const axios = require('axios');
-// =========================================================================
-// AUTOMATIC PESAPAL IPN REGISTRATION HELPER
-// =========================================================================
 async function registerPesapalIPN() {
     try {
-        console.log("⏳ [PESAPAL SETUP]: Authenticating to register IPN...");
+        console.log("⏳ [PESAPAL SETUP]: Verifying key tokens...");
         
-        // 1. Get Access Token
-        const authResponse = await axios.post('https://pesapal.com', {
+        const authResponse = await axios.post(`${PESAPAL_BASE_URL}/api/Auth/RequestToken`, {
             consumer_key: process.env.PESAPAL_CONSUMER_KEY || "qk8/C/87b+uaKL3/TSd25/nbnMeVvVvG",
-            consumer_secret: process.env.PESAPAL_CONSUMER_SECRET || "YOUR_ACTUAL_SECRET_HERE" // Make sure this matches your secret!
+            consumer_secret: process.env.PESAPAL_CONSUMER_SECRET || "YOUR_ACTUAL_SECRET_HERE"
         }, {
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
         });
 
         const accessToken = authResponse.data.token;
+        console.log("⏳ [PESAPAL SETUP]: Sending callback endpoint url map...");
 
-      //  FIXED ORDER:
-                const ipnPayload = {
-            url: "https://onrender.com",
+        const ipnPayload = {
+            url: `${LIVE_APP_URL}/api/pesapal-ipn`,
             ipn_notification_type: "GET"
         };
 
-const ipnResponse = await axios.post('https://pesapal.com', ipnPayload, {
-    headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-    }
-});
+        const ipnResponse = await axios.post(`${PESAPAL_BASE_URL}/api/URLSetup/RegisterURL`, ipnPayload, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
 
-console.log("➡️ PESAPAL RAW RESPONSE:", ipnResponse.data); // Works perfectly here!
-
-
-        console.log("=========================================================================");
-        console.log("🎉 [SUCCESS] PESAPAL IPN REGISTERED SUCCESSFULLY!");
-        console.log(`📌 YOUR LIVE IPN ID IS: ${ipnResponse.data.ipn_id}`);
-        console.log("=========================================================================");
+        if (ipnResponse.data && ipnResponse.data.ipn_id) {
+            cachedIpnId = ipnResponse.data.ipn_id;
+            console.log("=========================================================================");
+            console.log(`🎉 [SUCCESS] PESAPAL ROUTING REGISTERED! IPN ID: ${cachedIpnId}`);
+            console.log("=========================================================================");
+        } else {
+            console.log("❌ [PESAPAL AUTO-SETUP]: Setup payload parsing error:", ipnResponse.data);
+        }
 
     } catch (error) {
         console.error("❌ [IPN REGISTRATION ERROR]:", error.response ? error.response.data : error.message);
     }
 }
 
-// Fire registration 5 seconds after the server boots up smoothly
 setTimeout(registerPesapalIPN, 5000);
 
-// API Endpoint to initiate Pesapal V3 Mobile Money Checkout session
+// =========================================================================
+// USER ORDER CHECKOUT CONTROLLERS
+// =========================================================================
 app.post('/api/process-momo', async (req, res) => {
     try {
-        const { phone, amount, plan } = req.body;
+        const { phone, amount, plan, username } = req.body;
 
-        if (!phone || !amount) {
-            return res.status(400).json({ success: false, message: "Missing required checkout parameters." });
+        if (!phone || !amount || !username) {
+            return res.status(400).json({ success: false, message: "Missing tracking criteria data." });
         }
 
-        // 1. Authenticate with Pesapal to obtain an Access Token
-        const authResponse = await axios.post('https://pay.pesapal.com/v3/api/Auth/RequestToken', {
-            consumer_key: process.env.PESAPAL_CONSUMER_KEY,
-            consumer_secret: process.env.PESAPAL_CONSUMER_SECRET
+        const authResponse = await axios.post(`${PESAPAL_BASE_URL}/api/Auth/RequestToken`, {
+            consumer_key: process.env.PESAPAL_CONSUMER_KEY || "qk8/C/87b+uaKL3/TSd25/nbnMeVvVvG",
+            consumer_secret: process.env.PESAPAL_CONSUMER_SECRET || "YOUR_ACTUAL_SECRET_HERE"
         }, {
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
         });
 
         const accessToken = authResponse.data.token;
+        const merchantReference = `ugastream-${Date.now()}`;
 
-        // 2. Format variables and configure payload
-        const cleanedPhone = phone.trim();
         const orderPayload = {
-            id: `ugastream-${Date.now()}`,
+            id: merchantReference,
             amount: parseFloat(amount),
             currency: "UGX",
-            description: `Uga Stream ${plan} Subscription`,
-            callback_url: "https://onrender.com",
-            notification_id: "00000000-0000-0000-0000-000000000000", // Default operational tracking format
+            description: `Payment for UgaStream ${plan} Plan`,
+            callback_url: `${LIVE_APP_URL}/index.html?payment=complete`,
+            notification_id: cachedIpnId,
             billing_address: {
-                email_address: "payments@ugastream.com",
-                phone_number: cleanedPhone,
-                country_code: "UG",
-                first_name: "UgaStream",
-                last_name: "Subscriber"
+                email_address: "payment@ugastream.com",
+                phone_number: phone.trim(),
+                first_name: username,
+                last_name: "Subscriber",
+                country_code: "UG"
             }
         };
 
-        // 3. Request a payment redirect URL from Pesapal SubmitOrderRequest API
-        const orderResponse = await axios.post('https://pay.pesapal.com/v3/api/Transactions/SubmitOrderRequest', orderPayload, {
+        const orderResponse = await axios.post(`${PESAPAL_BASE_URL}/api/Transactions/SubmitOrderRequest`, orderPayload, {
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
                 'Content-Type': 'application/json',
@@ -246,67 +237,55 @@ app.post('/api/process-momo', async (req, res) => {
             }
         });
 
-        if (orderResponse.data && orderResponse.data.redirect_url) {
-            return res.status(200).json({ 
-                success: true, 
-                redirectUrl: orderResponse.data.redirect_url 
-            });
-        } else {
-            return res.status(400).json({ success: false, message: "Failed to initialize Pesapal gateway session." });
-        }
+        return res.status(200).json({
+            success: true,
+            redirect_url: orderResponse.data.redirect_url,
+            order_tracking_id: orderResponse.data.order_tracking_id
+        });
 
     } catch (error) {
-        console.error("[PESAPAL ERROR]:", error.response ? error.response.data : error.message);
-        return res.status(500).json({ success: false, message: "Payment gateway connection timeout." });
+        console.error("❌ [CHECKOUT ERROR]:", error.response ? error.response.data : error.message);
+        return res.status(500).json({ success: false, message: "Failed to initialize Pesapal gateway session." });
     }
 });
-// =========================================================================
-// SERVER STARTUP & AUTOMATIC PESAPAL IPN REGISTRATION
-// =========================================================================
-app.listen(PORT, '0.0.0.0', async () => {
-    console.log(`🚀 Server fully active and listening on port ${PORT}`);
-    
+
+app.get('/api/pesapal-ipn', async (req, res) => {
+app.get('/api/pesapal-ipn', async (req, res) => {
+    const { OrderTrackingId, OrderMerchantReference } = req.query;
+    console.log(`✉️ Incoming callback message update captured from Pesapal: ${OrderTrackingId}`);
+
     try {
-        console.log("⏳ [PESAPAL AUTO-SETUP]: Authenticating with Pesapal API...");
-        
-        // 1. Authenticate using the environment variables already stored in Render
-        const authResponse = await axios.post('https://pesapal.com', {
-            consumer_key: process.env.PESAPAL_CONSUMER_KEY,
-            consumer_secret: process.env.PESAPAL_CONSUMER_SECRET
+        const authResponse = await axios.post(`${PESAPAL_BASE_URL}/api/Auth/RequestToken`, {
+            consumer_key: process.env.PESAPAL_CONSUMER_KEY || "qk8/C/87b+uaKL3/TSd25/nbnMeVvVvG",
+            consumer_secret: process.env.PESAPAL_CONSUMER_SECRET || "YOUR_ACTUAL_SECRET_HERE"
         }, {
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
         });
 
         const accessToken = authResponse.data.token;
-        console.log("✅ [PESAPAL AUTO-SETUP]: Access Token retrieved successfully.");
 
-        // 2. Send the registration request to Pesapal's official servers
-        console.log("⏳ [PESAPAL AUTO-SETUP]: Submitting live webhook configuration...");
-        const ipnPayload = {
-            "url": "https://onrender.com",
-            "ipn_notification_type": "POST"
-        };
-
-        const ipnResponse = await axios.post('https://pesapal.com', ipnPayload, {
+        const statusResponse = await axios.get(`${PESAPAL_BASE_URL}/api/Transactions/GetTransactionStatus?orderTrackingId=${OrderTrackingId}`, {
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
-                'Content-Type': 'application/json',
                 'Accept': 'application/json'
             }
         });
 
-        // 3. Print the resulting ID directly into your Render console output
-        if (ipnResponse.data && ipnResponse.data.ipn_id) {
-            console.log("=========================================================================");
-            console.log("🎉 SUCCESS! PESAPAL INSTANT PAYMENT NOTIFICATION IS LIVE!");
-            console.log(`📌 YOUR TRUE IPN ID IS: ${ipnResponse.data.ipn_id}`);
-            console.log("=========================================================================");
-        } else {
-            console.log("❌ [PESAPAL AUTO-SETUP]: Unexpected response format:", ipnResponse.data);
+        if (statusResponse.data && statusResponse.data.status_code === 1) {
+            console.log(`✅ Transaction payment successfully executed for reference ID: ${OrderMerchantReference}`);
         }
 
+        return res.status(200).json({
+            OrderTrackingId: OrderTrackingId,
+            OrderMerchantReference: OrderMerchantReference,
+            Status: "Success"
+        });
+
     } catch (error) {
-        console.error("❌ [PESAPAL AUTO-SETUP CRITICAL ERROR]:");
-        console.error(error.response ? JSON.stringify(error.response.data) : error.message);
+        console.error("❌ [IPN STATUS QUERY BROKEN]:", error.message);
+        return res.status(500).send("IPN Verification Failed");
     }
+
+app.listen(PORT, () => {
+    console.log(`🚀 UgaStream backend execution initialized on network port: ${PORT}`);
 });
