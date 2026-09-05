@@ -62,7 +62,30 @@ app.post('/api/register-user', (req, res) => {
     } catch (error) {
         return res.status(500).json({ success: false, message: "Server Error" });
     }
-});
+    // API Endpoint to authenticate existing subscribers
+app.post('/api/login-user', (req, res) => {
+    try {
+        const { phone, password } = req.body;
+
+        if (!phone || !password) {
+            return res.status(400).json({ success: false, message: "Missing phone or password." });
+        }
+
+        // Search the database array for matching credentials
+        const user = usersDatabase.find(u => u.phone === phone.trim() && u.password === password);
+        
+        if (!user) {
+            return res.status(401).json({ success: false, message: "Invalid phone number or password." });
+        }
+
+        // Return user profile and plan safely
+        return res.status(200).json({ 
+            success: true, 
+            user: { username: user.username, phone: user.phone, plan: user.plan } 
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "Server login error." });
+    }
 
 
 app.post('/api/upload-movie', (req, res) => {
