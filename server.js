@@ -171,6 +171,11 @@ async function registerPesapalIPN() {
         const accessToken = authResponse.data.token;
 
       //  FIXED ORDER:
+                const ipnPayload = {
+            url: "https://onrender.com",
+            ipn_notification_type: "GET"
+        };
+
 const ipnResponse = await axios.post('https://pesapal.com', ipnPayload, {
     headers: {
         'Authorization': `Bearer ${accessToken}`,
