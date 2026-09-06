@@ -904,17 +904,12 @@ window.handleFormRegistrationAndPayment = async function() {
         
       <!-- Combined Subscription Registration & Login Modal -->
 <!-- Combined Subscription Registration & Login Modal -->
+<!-- Combined Subscription Registration & Login Modal -->
 <div class="modal-overlay" id="authModal">
     <div class="auth-container-box" style="background: #141414; padding: 30px; border-radius: 8px; max-width: 450px; width: 100%; border: 1px solid #222; margin: 0 auto; position: relative;">
         
-        <!-- Cross Close Button on Top Right -->
+        <!-- Close Button cross icon -->
         <span onclick="closeAuthModal()" style="position: absolute; top: 15px; right: 20px; color: #777; font-size: 1.5rem; cursor: pointer; font-weight: bold;">&times;</span>
-
-        <!-- View Tab Selectors -->
-        <div style="display: flex; gap: 10px; margin-bottom: 25px; border-bottom: 1px solid #222; padding-bottom: 15px;">
-            <button id="tabRegisterBtn" onclick="switchAuthTab('register')" style="flex: 1; padding: 12px; background: #e50914; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 4px; font-size: 0.95rem;">New Account</button>
-            <button id="tabLoginBtn" onclick="switchAuthTab('login')" style="flex: 1; padding: 12px; background: #222; color: #aaa; border: none; font-weight: bold; cursor: pointer; border-radius: 4px; font-size: 0.95rem;">Existing Login</button>
-        </div>
 
         <!-- 1. REGISTRATION FORM MODE PANEL -->
         <div id="registerFormPanel">
@@ -932,7 +927,6 @@ window.handleFormRegistrationAndPayment = async function() {
             
             <label style="color: #aaa; font-size: 0.85rem; font-weight: bold; margin-bottom: 12px; display: block;">SELECT PREMIUM ACCESS PLAN:</label>
             
-            <!-- Safe Dropdown Option to ensure values split cleanly without layout breakdown -->
             <select id="regPlan" style="width: 100%; padding: 14px; background: #222; border: 1px solid #e50914; color: #fff; border-radius: 4px; font-weight: bold; margin-bottom: 25px; font-size: 0.95rem; outline: none; cursor: pointer;">
                 <option value="DAILY|2000">DAILY PASS — 2,000 UGX</option>
                 <option value="WEEKLY|5000">WEEKLY PASS — 5,000 UGX</option>
@@ -941,9 +935,14 @@ window.handleFormRegistrationAndPayment = async function() {
             </select>
 
             <button class="auth-action-btn" onclick="processRegistrationAndCheckout()" style="width: 100%; padding: 14px; background: #e50914; color: white; border: none; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 1rem; text-transform: uppercase;">Sign Up & Pay Securely</button>
+            
+            <!-- Direct link block switcher toggle mechanism -->
+            <p style="color: #aaa; text-align: center; margin-top: 20px; font-size: 0.9rem;">
+                Already active? <span onclick="switchAuthTab('login')" style="color: #ff9900; cursor: pointer; font-weight: bold; text-decoration: underline;">Login here to stream</span>
+            </p>
         </div>
 
-        <!-- 2. NEW LOG IN MODE PANEL -->
+        <!-- 2. HIDDEN LOG IN MODE PANEL -->
         <div id="loginFormPanel" style="display: none;">
             <h3 style="margin-bottom: 5px; color: #fff;">Welcome Back</h3>
             <p style="color: #666; font-size: 0.85rem; margin-bottom: 20px;">Log in to verify your active plan and resume streaming cinema.</p>
@@ -955,6 +954,10 @@ window.handleFormRegistrationAndPayment = async function() {
             <input type="password" id="loginPass" placeholder="******" style="width: 100%; padding: 12px; margin-bottom: 25px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px; outline: none;">
             
             <button class="auth-action-btn" onclick="processSubscriberLogin()" style="width: 100%; padding: 14px; background: #ff9900; color: #000; border: none; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 1rem; text-transform: uppercase;">Unlock & Stream Cinema</button>
+            
+            <p style="color: #aaa; text-align: center; margin-top: 20px; font-size: 0.9rem;">
+                Need an account? <span onclick="switchAuthTab('register')" style="color: #e50914; cursor: pointer; font-weight: bold; text-decoration: underline;">Go back to registration</span>
+            </p>
         </div>
 
     </div>
