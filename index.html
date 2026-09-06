@@ -1136,7 +1136,7 @@ async function processRegistrationAndCheckout() {
         }
 
         currentSubscriberSession = regData.user;
-
+        sessionStorage.setItem('subscriberSessionActive', 'true');
         const checkoutResponse = await fetch('/api/process-momo', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
