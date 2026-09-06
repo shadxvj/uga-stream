@@ -1071,10 +1071,15 @@ async function loadMoviesDatabaseTrack() {
         if (actionTrack) actionTrack.innerHTML = '';
         if (comedyTrack) comedyTrack.innerHTML = '';
 
-        movies.forEach(movie => {
+               movies.forEach(movie => {
             const card = document.createElement('div');
             card.className = 'movie-card';
-            card.onclick = () => evaluateGatewayAccessPermission(movie.source);
+            
+            // 🔒 CRITICAL SECURITY FIX: Stop standard links and pass video data to your access guard
+            card.onclick = (e) => {
+                e.preventDefault();
+                evaluateGatewayAccessPermission(movie.source);
+            };
             
             card.innerHTML = `
                 <div class="poster-frame" style="background-image: url('${movie.image || ''}')">
@@ -1094,6 +1099,7 @@ async function loadMoviesDatabaseTrack() {
                 comedyTrack.appendChild(card);
             }
         });
+        
     } catch (err) {
         console.error("Failed to map catalogue tracks:", err);
     }
