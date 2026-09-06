@@ -102,38 +102,46 @@
     </main>
 
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const movieUrl = urlParams.get('video');
+       document.addEventListener("DOMContentLoaded", () => {
+    // 1. CRITICAL GUARD: Check if the user has an authenticated paid session
+    // This looks inside the temporary session storage memory pool
+    const activeSession = sessionStorage.getItem('subscriberSessionActive');
 
-            if (movieUrl) {
-                const video = document.getElementById('ugaStreamVideo');
-                const videoSource = document.getElementById('videoSource');
-                const downloadBtn = document.getElementById('directDownloadBtn');
-                
-                // Decode the absolute Cloudinary web pathway securely
-                const clearUrl = decodeURIComponent(movieUrl);
+    if (!activeSession) {
+        alert("🔒 Stream Access Restricted. Please log in or activate a mobile money pass to view this premium translated movie.");
+        // Instantly throw them back to the homepage registration popup gate
+        window.location.href = 'index.html?access=locked';
+        return;
+    }
 
-                // 1. Direct streaming source configuration
-                video.src = clearUrl;
-                videoSource.src = clearUrl;
-                video.load();
+    // 2. Clear out parameters and resolve movie link structures normally
+    const urlParams = new URLSearchParams(window.location.search);
+    const movieUrl = urlParams.get('video');
 
-                // 2. Cloudinary-specific dynamic forced file download hook configuration
-                if (downloadBtn) {
-                    if (clearUrl.includes('cloudinary.com')) {
-                        // Alters the cloud url to include the 'attachment' flag (fl_attachment) forcing instant download trigger rules
-                        const forcedDownloadUrl = clearUrl.replace('/upload/', '/upload/fl_attachment/');
-                        downloadBtn.href = forcedDownloadUrl;
-                    } else {
-                        // Fallback handling standard raw links directly
-                        downloadBtn.href = clearUrl;
-                    }
-                }
+    if (movieUrl) {
+        const video = document.getElementById('ugaStreamVideo');
+        const videoSource = document.getElementById('videoSource');
+        const downloadBtn = document.getElementById('directDownloadBtn');
+        
+        const clearUrl = decodeURIComponent(movieUrl);
+
+        video.src = clearUrl;
+        videoSource.src = clearUrl;
+        video.load();
+
+        if (downloadBtn) {
+            if (clearUrl.includes('cloudinary.com')) {
+                const forcedDownloadUrl = clearUrl.replace('/upload/', '/upload/fl_attachment/');
+                downloadBtn.href = forcedDownloadUrl;
             } else {
-                window.location.href = 'index.html';
+                downloadBtn.href = clearUrl;
             }
-        });
+        }
+    } else {
+        window.location.href = 'index.html';
+    }
+});
+
     </script>
 </body>
 </html>
