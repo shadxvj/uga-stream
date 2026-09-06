@@ -1173,6 +1173,13 @@ function closePlayerModal() {
         player.src = '';
     }
 }
+window.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('access') === 'locked') {
+        openAuthModal();
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+});
 
     </script>
     
