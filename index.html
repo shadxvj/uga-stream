@@ -853,81 +853,191 @@ window.handleFormRegistrationAndPayment = async function() {
 <!-- ==========================================================================
      CLEAN, ULTRA-COMPACT SUBSCRIPTION & LOGIN GATEWAYS
      ========================================================================== -->
-<div id="subscriptionModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
-    
-    <div style="background: #141414; padding: 22px; border-radius: 10px; max-width: 360px; width: 100%; border: 1px solid #282828; position: relative; box-shadow: 0 15px 35px rgba(0,0,0,0.8); margin: auto;">
+    <!-- ----------------------------------------------------------------------- -->
+    <!-- UNIFIED NATIVE AUTHENTICATION & SUBSCRIPTION TIER GATEWAY CARD          -->
+    <!-- ----------------------------------------------------------------------- -->
+    <div id="subscriptionModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 5000; align-items: center; justify-content: center; padding: 20px;">
         
-        <!-- Close Window Icon — Fixed Trigger -->
-        <span onclick="closeAuthModal()" style="position: absolute; top: 12px; right: 18px; color: #777; font-size: 1.4rem; cursor: pointer; font-weight: bold; z-index: 10000;" onmouseover="this.style.color='#e50914'" onmouseout="this.style.color='#777'">&times;</span>
+        <div style="background: #141414; padding: 35px; border-radius: 8px; max-width: 420px; width: 100%; border: 1px solid #282828; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.7);">
+            
+            <!-- Window Exit Trigger Button -->
+            <span onclick="closeAuthModal()" style="position: absolute; top: 15px; right: 20px; color: #777; font-size: 1.6rem; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#777'">&times;</span>
+            
+            <!-- Dynamic Navigation Tab Controllers -->
+            <div style="display: flex; background: #222; border-radius: 6px; padding: 4px; margin-bottom: 24px;">
+                <button id="tabLoginBtn" onclick="switchAuthTab('login')" style="flex: 1; padding: 10px; background: #e50914; color: #fff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: all 0.2s;">Sign In</button>
+                <button id="tabRegisterBtn" onclick="switchAuthTab('register')" style="flex: 1; padding: 10px; background: transparent; color: #aaa; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: all 0.2s;">Sign Up</button>
+            </div>
 
-        <!-- A. COMPACT SIGNUP PANEL VIEW -->
-        <div id="registerFormPanel">
-            <h3 style="margin-bottom: 4px; color: #fff; font-size: 1.25rem; font-weight: 700;">Create Account</h3>
-            <p style="color: #666; font-size: 0.8rem; margin-bottom: 14px;">Unlock premium VJ-dubbed streams</p>
+            <!-- VIEW BLOCK A: UNIFIED SIGN-IN CREDENTIALS MANAGER -->
+            <div id="loginFormPanel" style="display: block;">
+                <h3 style="margin-bottom: 6px; color: #fff; font-size: 1.4rem; font-weight: 700;">Welcome Back</h3>
+                <p style="color: #666; font-size: 0.85rem; margin-bottom: 20px;">Enter your phone number to access streams.</p>
+                
+                <form id="subscriberLoginForm" onsubmit="event.preventDefault(); processSubscriberLogin();">
+                    <div style="margin-bottom: 14px;">
+                        <label style="display: block; color: #bbb; font-size: 0.8rem; margin-bottom: 6px; font-weight: 600;">Mobile Money Phone Number</label>
+                        <input type="tel" id="loginPhone" placeholder="e.g. 0772123456" required style="width: 100%; padding: 12px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px; outline: none; font-size: 0.95rem;">
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; color: #bbb; font-size: 0.8rem; margin-bottom: 6px; font-weight: 600;">Secure Password</label>
+                        <input type="password" id="loginPass" placeholder="••••••••" required style="width: 100%; padding: 12px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px; outline: none; font-size: 0.95rem;">
+                    </div>
+                    <button type="submit" style="width: 100%; padding: 14px; background: #e50914; color: #fff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 1rem; transition: background 0.2s;">Verify Access Gateway</button>
+                </form>
+            </div>
+
+            <!-- VIEW BLOCK B: UNIFIED REGISTRATION & MM SUBSCRIPTION SELECTOR -->
+            <div id="registerFormPanel" style="display: none;">
+                <h3 style="margin-bottom: 6px; color: #fff; font-size: 1.4rem; font-weight: 700;">Join UGA Stream</h3>
+                <p style="color: #666; font-size: 0.85rem; margin-bottom: 20px;">Register and pay instantly with MTN or Airtel Money.</p>
+                
+                <form id="subscriberRegisterForm" onsubmit="event.preventDefault(); processSubscriberRegistration();">
+                    <div style="margin-bottom: 12px;">
+                        <input type="text" id="regUsername" placeholder="Profile Name (e.g. Ivan_K)" required style="width: 100%; padding: 11px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px; outline: none; font-size: 0.9rem;">
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <input type="tel" id="regPhone" placeholder="Mobile Money Number (MTN/Airtel)" required style="width: 100%; padding: 11px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px; outline: none; font-size: 0.9rem;">
+                    </div>
+                    <div style="margin-bottom: 14px;">
+                        <input type="password" id="regPass" placeholder="Choose Secure Password" required style="width: 100%; padding: 11px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px; outline: none; font-size: 0.9rem;">
+                    </div>
+                    
+                    <!-- Premium Cinema Access Subscription Tiers Selector -->
+                    <div style="margin-bottom: 22px;">
+                        <label style="display: block; color: #bbb; font-size: 0.8rem; margin-bottom: 8px; font-weight: 600;">Select Premium Stream Package</label>
+                        <select id="regPlan" style="width: 100%; padding: 12px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px; outline: none; font-size: 0.9rem; cursor: pointer; font-weight: 600;">
+                            <option value="DAILY" data-amount="1000">🇺🇬 Daily Unlimited Tier — UGX 1,000 / day</option>
+                            <option value="WEEKLY" data-amount="4500">🇺🇬 Weekly Premium Tier — UGX 4,500 / week</option>
+                            <option value="MONTHLY" data-amount="15000">🇺🇬 Monthly Cinematic Tier — UGX 15,000 / month</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" style="width: 100%; padding: 14px; background: #e50914; color: #fff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 1rem; transition: background 0.2s;">Initialize Payment Gateway</button>
+                </form>
+            </div>
             
-            <form id="registerForm">
-                <div style="margin-bottom: 10px;">
-                    <label style="display: block; font-size: 0.7rem; color: #aaa; margin-bottom: 4px; font-weight: 600;">USERNAME</label>
-                    <input type="text" id="regUser" style="width: 100%; background: #222; border: 1px solid #444; padding: 8px; border-radius: 4px; color: #fff; outline: none; font-size: 0.85rem;" placeholder="Username" required>
-                </div>
-                <div style="margin-bottom: 10px;">
-                    <label style="display: block; font-size: 0.7rem; color: #aaa; margin-bottom: 4px; font-weight: 600;">PHONE NUMBER</label>
-                    <input type="tel" id="regPhone" style="width: 100%; background: #222; border: 1px solid #444; padding: 8px; border-radius: 4px; color: #fff; outline: none; font-size: 0.85rem;" placeholder="e.g. 0772123456" required>
-                </div>
-                <div style="margin-bottom: 10px;">
-                    <label style="display: block; font-size: 0.7rem; color: #aaa; margin-bottom: 4px; font-weight: 600;">PASSWORD</label>
-                    <input type="password" id="regPass" style="width: 100%; background: #222; border: 1px solid #444; padding: 8px; border-radius: 4px; color: #fff; outline: none; font-size: 0.85rem;" placeholder="•••••" required>
-                </div>
-                <div style="margin-bottom: 16px;">
-                    <label style="display: block; font-size: 0.7rem; color: #aaa; margin-bottom: 4px; font-weight: 600;">ACCESS PLAN TIER</label>
-                    <select id="regPlan" style="width: 100%; background: #222; border: 1px solid #444; padding: 8px; border-radius: 4px; color: #fff; outline: none; font-size: 0.85rem; font-weight: bold;">
-                        <option value="DAILY">DAILY PASS — 2,000 UGX</option>
-                        <option value="WEEKLY">WEEKLY PASS — 5,000 UGX</option>
-                        <option value="MONTHLY">MONTHLY PREMIUM — 20,000 UGX</option>
-                        <option value="ANNUAL">ANNUAL MEGA PASS — 200,000 UGX</option>
-                    </select>
-                </div>
-                <button type="submit" style="width: 100%; background: #e50914; color: #fff; border: none; padding: 10px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">Sign Up & Pay Securely</button>
-            </form>
-            
-            <p style="text-align: center; color: #888; margin-top: 12px; font-size: 0.8rem;">
-                Already have an account? <a href="javascript:void(0)" onclick="switchAuthView('login')" style="color: #e50914; font-weight: bold; text-decoration: none;">Login here</a>
-            </p>
         </div>
-
-        <!-- B. COMPACT RETURNING SUBSCRIBER LOGIN PANEL VIEW -->
-        <div id="loginFormPanel" style="display: none;">
-            <h3 style="margin-bottom: 4px; color: #fff; font-size: 1.25rem; font-weight: 700;">Subscriber Login</h3>
-            <p style="color: #666; font-size: 0.8rem; margin-bottom: 16px;">Access your active translated theater pass</p>
-            
-            <form id="loginForm">
-                <div style="margin-bottom: 12px;">
-                    <label style="display: block; font-size: 0.7rem; color: #aaa; margin-bottom: 5px; font-weight: 600;">REGISTERED PHONE NUMBER</label>
-                    <input type="tel" id="loginPhone" style="width: 100%; background: #222; border: 1px solid #444; padding: 8px; border-radius: 4px; color: #fff; outline: none; font-size: 0.85rem;" placeholder="e.g. 0772123456" required>
-                </div>
-                <div style="margin-bottom: 18px;">
-                    <label style="display: block; font-size: 0.7rem; color: #aaa; margin-bottom: 5px; font-weight: 600;">PASSWORD</label>
-                    <input type="password" id="loginPass" style="width: 100%; background: #222; border: 1px solid #444; padding: 8px; border-radius: 4px; color: #fff; outline: none; font-size: 0.85rem;" placeholder="••••••" required>
-                </div>
-                <button type="submit" style="width: 100%; background: #e50914; color: #fff; border: none; padding: 10px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">Verify & Enter Stream</button>
-            </form>
-            
-            <p style="text-align: center; color: #888; margin-top: 14px; font-size: 0.8rem;">
-                New subscriber? <a href="javascript:void(0)" onclick="switchAuthView('register')" style="color: #e50914; font-weight: bold; text-decoration: none;">Create an account</a>
-            </p>
-        </div>
-
     </div>
-</div>
 
+    <script>
+        let currentSubscriberSession = null; 
 
-      
-        
-<script>
-  let currentSubscriberSession = null;
+        // Dynamic Tab Switching Configuration Engine
+        function switchAuthTab(targetTab) { 
+            const regPanel = document.getElementById('registerFormPanel'); 
+            const loginPanel = document.getElementById('loginFormPanel'); 
+            const regTabBtn = document.getElementById('tabRegisterBtn'); 
+            const loginTabBtn = document.getElementById('tabLoginBtn'); 
+            
+            if (targetTab === 'register') { 
+                if (regPanel) regPanel.style.display = 'block'; 
+                if (loginPanel) loginPanel.style.display = 'none'; 
+                if (regTabBtn) { regTabBtn.style.background = '#e50914'; regTabBtn.style.color = '#fff'; } 
+                if (loginTabBtn) { loginTabBtn.style.background = 'transparent'; loginTabBtn.style.color = '#aaa'; } 
+            } else { 
+                if (regPanel) regPanel.style.display = 'none'; 
+                if (loginPanel) loginPanel.style.display = 'block'; 
+                if (regTabBtn) { regTabBtn.style.background = 'transparent'; regTabBtn.style.color = '#aaa'; } 
+                if (loginTabBtn) { loginTabBtn.style.background = '#e50914'; loginTabBtn.style.color = '#fff'; } 
+            } 
+        } 
 
-// Clean Tab Switching View Controller
-function switchAuthTab(targetTab) {
+        function openAuthModal() { 
+            const modal = document.getElementById('subscriptionModal'); 
+            if (modal) modal.style.display = 'flex';
+        } 
+
+        function closeAuthModal() { 
+            const modal = document.getElementById('subscriptionModal'); 
+            if (modal) modal.style.display = 'none';
+        }
+
+        // Hook Up Navbar Dropdown Buttons
+        document.addEventListener("DOMContentLoaded", () => {
+            // Find dropdown options dynamically
+            const dropdownItems = document.querySelectorAll('.profile-dropdown-card a');
+            dropdownItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openAuthModal();
+                    if(item.textContent.toLowerCase().includes('sign') || item.textContent.toLowerCase().includes('up')) {
+                        switchAuthTab('register');
+                    } else {
+                        switchAuthTab('login');
+                    }
+                });
+            });
+        });
+
+        // 1. Process Existing Subscriber Sign-In Requests
+        async function processSubscriberLogin() {
+            const phone = document.getElementById('loginPhone').value.trim();
+            const password = document.getElementById('loginPass').value;
+
+            try {
+                const response = await fetch('/api/login-user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone, password })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    currentSubscriberSession = data.user;
+                    alert(`✅ Access Verified! Welcome back, ${data.user.username}.`);
+                    closeAuthModal();
+                } else {
+                    alert(`❌ Login Failed: ${data.message}`);
+                }
+            } catch (err) {
+                alert("⚠️ System communication breakdown connecting to authentication gateway.");
+            }
+        }
+
+        // 2. Process Registration & Connect to Mobile Money Payment Route
+              async function processSubscriberRegistration() {
+            const username = document.getElementById('regUsername').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const password = document.getElementById('regPass').value;
+            const selectEl = document.getElementById('regPlan');
+            const plan = selectEl.value;
+            const amount = selectEl.options[selectEl.selectedIndex].getAttribute('data-amount');
+
+            try {
+                // Step A: Register the profile tracking data records block
+                const regResponse = await fetch('/api/register-user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, phone, password, plan })
+                });
+                const regData = await regResponse.json();
+
+                if (!regResponse.ok || !regData.success) {
+                    return alert(`❌ Registration Blocked: ${regData.message}`);
+                }
+
+                // Step B: Direct handshake link call to initiate Mobile Money payload transaction route
+                alert(`⏳ Account profiles saved! Loading secure Mobile Money portal for UGX ${parseInt(amount).toLocaleString()}...`);
+                
+                const payResponse = await fetch('/api/process-momo', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone, amount, plan, username })
+                });
+                const payData = await payResponse.json();
+
+                if (payData.success && payData.redirectUrl) {
+                    // Route user to target live secure Mobile Money network prompt page
+                    window.location.href = payData.redirectUrl;
+                } else {
+                    alert(`❌ Payment Gateway Offline: ${payData.message || 'Verification initialization error.'}`);
+                }
+            } catch (err) {
+                console.error(err);
+                alert("⚠️ Connection timeout error during mobile money checkouts.");
+            }
+        }
+
     const regPanel = document.getElementById('registerFormPanel');
     const loginPanel = document.getElementById('loginFormPanel');
     const regTabBtn = document.getElementById('tabRegisterBtn');
@@ -1259,9 +1369,8 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
         console.error(err);
         alert("Network communication timeout error routing to server API gateways.");
     }
-});
-
+            }
+        }
     </script>
-    
 </body>
 </html>
