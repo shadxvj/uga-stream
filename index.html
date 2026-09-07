@@ -504,34 +504,7 @@ function switchCard(type) {
             });
         }
 
-        // Handle user registration pipeline operations 
-        document.getElementById('userSignUpForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('regUsername').value;
-            const phone = document.getElementById('regPhone').value;
-            const plan = document.getElementById('regPlan').value;
-            const password = document.getElementById('regPassword').value;
 
-            if (password.length < 6) {
-                alert("⚠️ Security Restriction: Your password choice must be exactly 6 characters or longer!");
-                return;
-            }
-
-            const response = await fetch('/api/signup', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, phone, plan, password })
-            });
-
-            const result = await response.json();
-            if (response.ok || result.success) {
-                alert(`🎉 Account created! Welcome ${username}. Please login now.`);
-                switchAuthModals('signUpModal', 'loginModal');
-            } else {
-                alert("❌ Signup Denied: " + (result.message || "Number already registered."));
-            }
-        });
 
         // Handle application entrance authorization logic checks
         document.getElementById('userLoginForm').addEventListener('submit', async function(e) {
