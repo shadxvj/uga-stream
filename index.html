@@ -853,12 +853,12 @@ window.handleFormRegistrationAndPayment = async function() {
 <!-- ==========================================================================
      CLEAN, ULTRA-COMPACT SUBSCRIPTION & LOGIN GATEWAYS
      ========================================================================== -->
-<div id="subscriptionModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px;">
+<div id="subscriptionModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
     
     <div style="background: #141414; padding: 22px; border-radius: 10px; max-width: 360px; width: 100%; border: 1px solid #282828; position: relative; box-shadow: 0 15px 35px rgba(0,0,0,0.8); margin: auto;">
         
-        <!-- Close Window Icon -->
-        <span onclick="closeAuthModal()" style="position: absolute; top: 12px; right: 18px; color: #777; font-size: 1.4rem; cursor: pointer;">&times;</span>
+        <!-- Close Window Icon — Fixed Trigger -->
+        <span onclick="closeAuthModal()" style="position: absolute; top: 12px; right: 18px; color: #777; font-size: 1.4rem; cursor: pointer; font-weight: bold; z-index: 10000;" onmouseover="this.style.color='#e50914'" onmouseout="this.style.color='#777'">&times;</span>
 
         <!-- A. COMPACT SIGNUP PANEL VIEW -->
         <div id="registerFormPanel">
@@ -876,7 +876,7 @@ window.handleFormRegistrationAndPayment = async function() {
                 </div>
                 <div style="margin-bottom: 10px;">
                     <label style="display: block; font-size: 0.7rem; color: #aaa; margin-bottom: 4px; font-weight: 600;">PASSWORD</label>
-                    <input type="password" id="regPass" style="width: 100%; background: #222; border: 1px solid #444; padding: 8px; border-radius: 4px; color: #fff; outline: none; font-size: 0.85rem;" placeholder="••••••" required>
+                    <input type="password" id="regPass" style="width: 100%; background: #222; border: 1px solid #444; padding: 8px; border-radius: 4px; color: #fff; outline: none; font-size: 0.85rem;" placeholder="•••••" required>
                 </div>
                 <div style="margin-bottom: 16px;">
                     <label style="display: block; font-size: 0.7rem; color: #aaa; margin-bottom: 4px; font-weight: 600;">ACCESS PLAN TIER</label>
