@@ -856,64 +856,66 @@ window.handleFormRegistrationAndPayment = async function() {
     <!-- ----------------------------------------------------------------------- -->
     <!-- UNIFIED NATIVE AUTHENTICATION & SUBSCRIPTION TIER GATEWAY CARD          -->
     <!-- ----------------------------------------------------------------------- -->
-    <div id="subscriptionModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 5000; align-items: center; justify-content: center; padding: 20px;">
+    <!-- ----------------------------------------------------------------------- -->
+    <!-- COMPACT UNIFIED AUTHENTICATION & SUBSCRIPTION TIER GATEWAY CARD         -->
+    <!-- ----------------------------------------------------------------------- -->
+    <div id="subscriptionModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 5000; align-items: center; justify-content: center; padding: 15px;">
         
-        <div style="background: #141414; padding: 35px; border-radius: 8px; max-width: 420px; width: 100%; border: 1px solid #282828; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.7);">
+        <div style="background: #141414; padding: 22px; border-radius: 8px; max-width: 380px; width: 100%; border: 1px solid #282828; position: relative; box-shadow: 0 15px 35px rgba(0,0,0,0.6); max-height: 90vh; overflow-y: auto;">
             
-            <!-- Window Exit Trigger Button -->
-            <span onclick="closeAuthModal()" style="position: absolute; top: 15px; right: 20px; color: #777; font-size: 1.6rem; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#777'">&times;</span>
+            <!-- Compact Exit Trigger -->
+            <span onclick="closeAuthModal()" style="position: absolute; top: 10px; right: 15px; color: #777; font-size: 1.4rem; cursor: pointer;">&times;</span>
             
-            <!-- Dynamic Navigation Tab Controllers -->
-            <div style="display: flex; background: #222; border-radius: 6px; padding: 4px; margin-bottom: 24px;">
-                <button id="tabLoginBtn" onclick="switchAuthTab('login')" style="flex: 1; padding: 10px; background: #e50914; color: #fff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: all 0.2s;">Sign In</button>
-                <button id="tabRegisterBtn" onclick="switchAuthTab('register')" style="flex: 1; padding: 10px; background: transparent; color: #aaa; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: all 0.2s;">Sign Up</button>
+            <!-- Segmented Top Tab Controls for Dynamic Switching -->
+            <div style="display: flex; background: #222; border-radius: 4px; padding: 3px; margin-bottom: 16px;">
+                <button id="tabRegisterBtn" onclick="switchAuthTab('register')" style="flex: 1; padding: 8px; background: #e50914; color: #fff; border: none; border-radius: 3px; font-weight: bold; font-size: 0.85rem; cursor: pointer; transition: all 0.2s;">Sign Up</button>
+                <button id="tabLoginBtn" onclick="switchAuthTab('login')" style="flex: 1; padding: 8px; background: transparent; color: #aaa; border: none; border-radius: 3px; font-weight: bold; font-size: 0.85rem; cursor: pointer; transition: all 0.2s;">Sign In</button>
             </div>
 
-            <!-- VIEW BLOCK A: UNIFIED SIGN-IN CREDENTIALS MANAGER -->
-            <div id="loginFormPanel" style="display: block;">
-                <h3 style="margin-bottom: 6px; color: #fff; font-size: 1.4rem; font-weight: 700;">Welcome Back</h3>
-                <p style="color: #666; font-size: 0.85rem; margin-bottom: 20px;">Enter your phone number to access streams.</p>
-                
-                <form id="subscriberLoginForm" onsubmit="event.preventDefault(); processSubscriberLogin();">
-                    <div style="margin-bottom: 14px;">
-                        <label style="display: block; color: #bbb; font-size: 0.8rem; margin-bottom: 6px; font-weight: 600;">Mobile Money Phone Number</label>
-                        <input type="tel" id="loginPhone" placeholder="e.g. 0772123456" required style="width: 100%; padding: 12px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px; outline: none; font-size: 0.95rem;">
-                    </div>
-                    <div style="margin-bottom: 20px;">
-                        <label style="display: block; color: #bbb; font-size: 0.8rem; margin-bottom: 6px; font-weight: 600;">Secure Password</label>
-                        <input type="password" id="loginPass" placeholder="••••••••" required style="width: 100%; padding: 12px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px; outline: none; font-size: 0.95rem;">
-                    </div>
-                    <button type="submit" style="width: 100%; padding: 14px; background: #e50914; color: #fff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 1rem; transition: background 0.2s;">Verify Access Gateway</button>
-                </form>
-            </div>
-
-            <!-- VIEW BLOCK B: UNIFIED REGISTRATION & MM SUBSCRIPTION SELECTOR -->
-            <div id="registerFormPanel" style="display: none;">
-                <h3 style="margin-bottom: 6px; color: #fff; font-size: 1.4rem; font-weight: 700;">Join UGA Stream</h3>
-                <p style="color: #666; font-size: 0.85rem; margin-bottom: 20px;">Register and pay instantly with MTN or Airtel Money.</p>
+            <!-- VIEW BLOCK A: SLIM REGISTRATION & MM SUBSCRIPTION SELECTOR -->
+            <div id="registerFormPanel" style="display: block;">
+                <h3 style="margin-bottom: 2px; color: #fff; font-size: 1.15rem; font-weight: 700;">Join UGA Stream</h3>
+                <p style="color: #666; font-size: 0.75rem; margin-bottom: 12px;">Register and pay instantly via MTN or Airtel Money.</p>
                 
                 <form id="subscriberRegisterForm" onsubmit="event.preventDefault(); processSubscriberRegistration();">
-                    <div style="margin-bottom: 12px;">
-                        <input type="text" id="regUsername" placeholder="Profile Name (e.g. Ivan_K)" required style="width: 100%; padding: 11px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px; outline: none; font-size: 0.9rem;">
+                    <div style="margin-bottom: 8px;">
+                        <input type="text" id="regUsername" placeholder="Username (e.g., Ivan_K)" required style="width: 100%; padding: 10px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px; font-size: 0.85rem; outline: none;">
                     </div>
-                    <div style="margin-bottom: 12px;">
-                        <input type="tel" id="regPhone" placeholder="Mobile Money Number (MTN/Airtel)" required style="width: 100%; padding: 11px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px; outline: none; font-size: 0.9rem;">
+                    <div style="margin-bottom: 8px;">
+                        <input type="tel" id="regPhone" placeholder="Mobile Money Number (07...)" required style="width: 100%; padding: 10px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px; font-size: 0.85rem; outline: none;">
                     </div>
-                    <div style="margin-bottom: 14px;">
-                        <input type="password" id="regPass" placeholder="Choose Secure Password" required style="width: 100%; padding: 11px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px; outline: none; font-size: 0.9rem;">
+                    <div style="margin-bottom: 10px;">
+                        <input type="password" id="regPass" placeholder="Choose Secure Password" required style="width: 100%; padding: 10px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px; font-size: 0.85rem; outline: none;">
                     </div>
                     
-                    <!-- Premium Cinema Access Subscription Tiers Selector -->
-                    <div style="margin-bottom: 22px;">
-                        <label style="display: block; color: #bbb; font-size: 0.8rem; margin-bottom: 8px; font-weight: 600;">Select Premium Stream Package</label>
-                        <select id="regPlan" style="width: 100%; padding: 12px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px; outline: none; font-size: 0.9rem; cursor: pointer; font-weight: 600;">
-                            <option value="DAILY" data-amount="1000">🇺🇬 Daily Unlimited Tier — UGX 1,000 / day</option>
-                            <option value="WEEKLY" data-amount="4500">🇺🇬 Weekly Premium Tier — UGX 4,500 / week</option>
-                            <option value="MONTHLY" data-amount="15000">🇺🇬 Monthly Cinematic Tier — UGX 15,000 / month</option>
+                    <!-- Space-Saving Premium Dropdown Tier Selector -->
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; color: #aaa; font-size: 0.75rem; margin-bottom: 4px; font-weight: 600;">Choose Stream Access Tier</label>
+                        <select id="regPlan" style="width: 100%; padding: 10px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px; font-size: 0.85rem; outline: none; cursor: pointer; font-weight: bold;">
+                            <option value="DAILY" data-amount="2000">🇺🇬 Daily Pass — 2,000 UGX / day</option>
+                            <option value="WEEKLY" data-amount="5000">🇺🇬 Weekly Pass — 5,000 UGX / week</option>
+                            <option value="MONTHLY" data-amount="20000">🇺🇬 Monthly Premium — 20,000 UGX / mo</option>
+                            <option value="ANNUAL" data-amount="200000">🇺🇬 Annual Mega Pass — 200,000 UGX / yr</option>
                         </select>
                     </div>
 
-                    <button type="submit" style="width: 100%; padding: 14px; background: #e50914; color: #fff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 1rem; transition: background 0.2s;">Initialize Payment Gateway</button>
+                    <button type="submit" style="width: 100%; padding: 12px; background: #e50914; color: #fff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.9rem;">Sign Up & Pay Securely</button>
+                </form>
+            </div>
+
+            <!-- VIEW BLOCK B: SLIM SIGN-IN CREDENTIALS MANAGER FOR REGISTERED USERS -->
+            <div id="loginFormPanel" style="display: none;">
+                <h3 style="margin-bottom: 2px; color: #fff; font-size: 1.15rem; font-weight: 700;">Welcome Back</h3>
+                <p style="color: #666; font-size: 0.75rem; margin-bottom: 12px;">Sign in to access your active translated cinema pass.</p>
+                
+                <form id="subscriberLoginForm" onsubmit="event.preventDefault(); processSubscriberLogin();">
+                    <div style="margin-bottom: 8px;">
+                        <input type="tel" id="loginPhone" placeholder="Registered Phone Number" required style="width: 100%; padding: 10px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px; font-size: 0.85rem; outline: none;">
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <input type="password" id="loginPass" placeholder="Enter Account Password" required style="width: 100%; padding: 10px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px; font-size: 0.85rem; outline: none;">
+                    </div>
+                    <button type="submit" style="width: 100%; padding: 12px; background: #e50914; color: #fff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.9rem;">Verify Pass & Sign In</button>
                 </form>
             </div>
             
