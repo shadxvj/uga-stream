@@ -770,11 +770,14 @@ window.handleFormRegistrationAndPayment = async function() {
      <!-- ----------------------------------------------------------------------- -->
     <!-- COMPACT UNIFIED AUTHENTICATION & SUBSCRIPTION TIER GATEWAY CARD         -->
     <!-- ----------------------------------------------------------------------- -->
+       <!-- ----------------------------------------------------------------------- -->
+    <!-- COMPACT UNIFIED CARD: SIGN UP FIRST, SIGN IN SECOND WITH PRICING PLAN   -->
+    <!-- ----------------------------------------------------------------------- -->
     <div id="subscriptionModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 5000; align-items: center; justify-content: center; padding: 15px;">
         
         <div style="background: #141414; padding: 25px; border-radius: 8px; max-width: 380px; width: 100%; border: 1px solid #282828; position: relative; box-shadow: 0 15px 35px rgba(0,0,0,0.6); max-height: 90vh; overflow-y: auto;">
             
-            <!-- Compact Window Exit Trigger -->
+            <!-- Close Button -->
             <span onclick="closeAuthModal()" style="position: absolute; top: 10px; right: 15px; color: #777; font-size: 1.4rem; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#777'">&times;</span>
             
             <!-- Segmented Top Tab Controls (Sign Up is Active Red First) -->
@@ -783,14 +786,14 @@ window.handleFormRegistrationAndPayment = async function() {
                 <button id="tabLoginBtn" onclick="switchAuthTab('login')" style="flex: 1; padding: 9px; background: transparent; color: #aaa; border: none; border-radius: 3px; font-weight: bold; font-size: 0.85rem; cursor: pointer; transition: all 0.2s;">Sign In</button>
             </div>
 
-            <!-- VIEW BLOCK A: SLIM REGISTRATION & MOBILE MONEY ACCESS SELECTOR (Visible First) -->
+            <!-- VIEW BLOCK A: SIGN UP & MOBILE MONEY SELECTOR (Visible First) -->
             <div id="registerFormPanel" style="display: block;">
                 <h3 style="margin-bottom: 2px; color: #fff; font-size: 1.2rem; font-weight: 700;">Join UGA Stream</h3>
                 <p style="color: #666; font-size: 0.75rem; margin-bottom: 14px;">Register and pay instantly via MTN or Airtel Money.</p>
                 
                 <form id="subscriberRegisterForm" onsubmit="event.preventDefault(); processSubscriberRegistration();">
                     <div style="margin-bottom: 8px;">
-                        <input type="text" id="regUsername" placeholder="Profile Name (e.g., Ivan_K)" required style="width: 100%; padding: 11px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px; font-size: 0.85rem; outline: none;">
+                        <input type="text" id="regUsername" placeholder="Username (e.g., Ivan_K)" required style="width: 100%; padding: 11px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px; font-size: 0.85rem; outline: none;">
                     </div>
                     <div style="margin-bottom: 8px;">
                         <input type="tel" id="regPhone" placeholder="Mobile Money Number (07...)" required style="width: 100%; padding: 11px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px; font-size: 0.85rem; outline: none;">
@@ -809,11 +812,11 @@ window.handleFormRegistrationAndPayment = async function() {
                         </select>
                     </div>
 
-                    <button type="submit" style="width: 100%; padding: 13px; background: #e50914; color: #fff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.9rem; transition: background 0.2s;">Initialize Payment Gateway</button>
+                    <button type="submit" style="width: 100%; padding: 13px; background: #e50914; color: #fff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.9rem;">Initialize Payment Gateway</button>
                 </form>
             </div>
 
-            <!-- VIEW BLOCK B: SLIM SIGN-IN CREDENTIALS MANAGER FOR SUBSCRIBERS (Hidden First) -->
+            <!-- VIEW BLOCK B: SIGN IN FOR REGISTERED SUBSCRIBERS (Hidden First) -->
             <div id="loginFormPanel" style="display: none;">
                 <h3 style="margin-bottom: 2px; color: #fff; font-size: 1.2rem; font-weight: 700;">Welcome Back</h3>
                 <p style="color: #666; font-size: 0.75rem; margin-bottom: 14px;">Sign in to access your active translated cinema pass.</p>
@@ -825,13 +828,13 @@ window.handleFormRegistrationAndPayment = async function() {
                     <div style="margin-bottom: 18px;">
                         <input type="password" id="loginPass" placeholder="Enter Account Password" required style="width: 100%; padding: 11px; background: #222; border: 1px solid #333; color: #fff; border-radius: 4px; font-size: 0.85rem; outline: none;">
                     </div>
-                    <button type="submit" style="width: 100%; padding: 13px; background: #e50914; color: #fff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.9rem; transition: background 0.2s;">Verify Pass & Sign In</button>
+                    <button type="submit" style="width: 100%; padding: 13px; background: #e50914; color: #fff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.9rem;">Verify Pass & Sign In</button>
                 </form>
             </div>
             
         </div>
     </div>
-
+    
             <!-- VIEW BLOCK B: SLIM SIGN-IN CREDENTIALS MANAGER FOR REGISTERED USERS -->
             <div id="loginFormPanel" style="display: none;">
                 <h3 style="margin-bottom: 2px; color: #fff; font-size: 1.15rem; font-weight: 700;">Welcome Back</h3>
