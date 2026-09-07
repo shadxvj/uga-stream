@@ -1245,6 +1245,69 @@ window.addEventListener('DOMContentLoaded', () => {
         window.history.replaceState({}, document.title, window.location.pathname);
     }
 });
+    // =========================================================================
+// REGISTER & AUTOMATIC PESAPAL GATEWAY ROUTER
+// =========================================================================
+document.getElementById('registerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const username = document.getElementById('regUser').value.trim();
+    const phone = document.getElementById('regPhone').value.trim();
+    const password = document.getElementById('regPass').value;
+    const plan = document.getElementById('regPlan').value;
+
+    // Determine the corresponding pricing amounts to pass down to Pesapal V3
+    let amount = 2000; // Default DAILY
+    if (plan === 'WEEKLY') amount = 5000;
+    if (plan === 'MONTHLY') amount = 20000;
+    if (plan === 'ANNUAL') amount = 200000;
+
+    try {
+        alert("⏳ Creating your Uga Stream account profile...");
+        
+        // 1. Fire Account Creation to Server Database
+        const regResponse = await fetch('/api/register-user', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, phone, password, plan })
+        });
+        const regData = await regResponse.json();
+
+        if (!regData.success) {
+            alert("❌ Registration Blocked: " + regData.message);
+            return;
+        }
+
+        // Save session locally so the browser remembers this user state context
+        localStorage.setItem('ugaStreamUser', JSON.stringify({ username, phone, plan }));
+
+        // 2. Account clear! Instantly fire generation payload to your Pesapal API checkout endpoint
+        alert("🎉 Profile established! Connecting to secure Pesapal MoMo Gateway...");
+        
+        const payResponse = await fetch('/api/process-momo', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username: username,
+                phone: phone,
+                plan: plan,
+                amount: amount
+            })
+        });
+        const payData = await payResponse.json();
+
+        if (payData.success && payData.redirect_url) {
+            // Forward user directly to live secure MTN/Airtel mobile money portal
+            window.location.href = payData.redirect_url;
+        } else {
+            alert("❌ Checkout Route Error: " + (payData.message || "Failed to retrieve gateway token properties. Check Render logs."));
+        }
+
+    } catch (err) {
+        console.error(err);
+        alert("Network communication timeout error routing to server API gateways.");
+    }
+});
 
     </script>
     
