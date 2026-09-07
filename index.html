@@ -506,28 +506,7 @@ function switchCard(type) {
 
 
 
-        // Handle application entrance authorization logic checks
-        document.getElementById('userLoginForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const phone = document.getElementById('logPhone').value;
-            const password = document.getElementById('logPassword').value;
-
-            const response = await fetch('/api/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phone, password })
-            });
-
-            const result = await response.json();
-            if (response.ok && result.success) {
-                alert(`👋 Authentication Verified! Welcome back, ${result.user.username}!`);
-                localStorage.setItem("userProfile", JSON.stringify(result.user));
-                window.location.reload();
-            } else {
-                alert("❌ Sign In Rejected: Invalid phone number configuration or password key mismatch.");
-            }
-           });
+    
 </script>
 
         <!-- ==========================================
