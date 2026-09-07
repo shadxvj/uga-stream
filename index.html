@@ -394,11 +394,12 @@
         }
 
         // 2. Central Live Catalog Sync Engine for Multiple Rows
+         // Fetch movies from server database and inject into matching UI shelf categories
         function fetchLiveApplicationCatalog() {
             fetch('/api/movies')
                 .then(response => response.json())
                 .then(movies => {
-                    // Match category strings directly to your HTML section container structures
+                    // Match category text markers directly to your HTML section container tags
                     const categoryTracks = {
                         'trending': document.querySelector('#trending .movie-grid-track'),
                         'action': document.querySelector('#action .movie-grid-track'),
@@ -408,15 +409,26 @@
                         'animation': document.querySelector('#animation .movie-grid-track')
                     };
 
-                    // Wipe clear empty notification blocks from all rows
+                    // Wipe clear empty state blocks or notifications from all categories
                     Object.values(categoryTracks).forEach(track => {
                         if (track) track.innerHTML = '';
                     });
 
-                    if (movies.length === 0) return;
+                    if (movies.length === 0) {
+                        console.log("Movie database array is currently empty.");
+                        return;
+                    }
 
                     movies.forEach(movie => {
-                        const movieCategory = (movie.category || 'trending').toLowerCase().trim();
+                        // Normalize incoming category text string to lowercase to prevent matching bugs
+                        let movieCategory = (movie.category || 'trending').toLowerCase().trim();
+                        
+                        // Smart check: If your upload passes 'tv series' or 'series', map it to 'series'
+                        if (movieCategory.includes('series')) {
+                            movieCategory = 'series';
+                        }
+
+                        // Pick target layout destination lane, fallback to trending if unmapped
                         const targetTrack = categoryTracks[movieCategory] || categoryTracks['trending'];
 
                         if (targetTrack) {
