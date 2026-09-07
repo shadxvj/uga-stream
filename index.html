@@ -394,39 +394,53 @@
         }
 
         // 2. Central Live Catalog Sync Engine for Multiple Rows
-        async function fetchLiveApplicationCatalog() {
-            try {
-                const response = await fetch('/api/movies');
-                const uploadedMovies = await response.json();
+        function fetchLiveApplicationCatalog() {
+            fetch('/api/movies')
+                .then(response => response.json())
+                .then(movies => {
+                    // Match category strings directly to your HTML section container structures
+                    const categoryTracks = {
+                        'trending': document.querySelector('#trending .movie-grid-track'),
+                        'action': document.querySelector('#action .movie-grid-track'),
+                        'comedy': document.querySelector('#comedy .movie-grid-track'),
+                        'drama': document.querySelector('#drama .movie-grid-track'),
+                        'series': document.querySelector('#series .movie-grid-track'),
+                        'animation': document.querySelector('#animation .movie-grid-track')
+                    };
 
-                const categories = ['trending', 'action', 'comedy', 'drama', 'series', 'animation'];
+                    // Wipe clear empty notification blocks from all rows
+                    Object.values(categoryTracks).forEach(track => {
+                        if (track) track.innerHTML = '';
+                    });
 
-                categories.forEach(cat => {
-                    const gridTrack = document.getElementById(cat + 'Grid');
-                    if (!gridTrack) return;
+                    if (movies.length === 0) return;
 
-                    const categoryMovies = uploadedMovies.filter(movie => movie.category === cat);
+                    movies.forEach(movie => {
+                        const movieCategory = (movie.category || 'trending').toLowerCase().trim();
+                        const targetTrack = categoryTracks[movieCategory] || categoryTracks['trending'];
 
-                    if (categoryMovies.length === 0) {
-                        gridTrack.innerHTML = `<p style="color: #555; font-style: italic; font-size: 0.9rem; padding: 10px 0;">No videos uploaded in this category yet.</p>`;
-                        return;
-                    }
+                        if (targetTrack) {
+                            const card = document.createElement('div');
+                            card.className = 'movie-card';
+                            card.innerHTML = `
+                                <div class="poster-frame" style="background-image: url('${movie.image || movie.posterUrl}'); background-size: cover; background-position: center;">
+                                    <i class="fa-solid fa-circle-play"></i>
+                                </div>
+                                <div style="padding: 12px;">
+                                    <h4 style="color: #fff; margin: 0 0 5px 0; font-size: 0.95rem;">${movie.title}</h4>
+                                    <span style="color: #e50914; font-size: 0.8rem; font-weight: bold;">${movie.vj}</span>
+                                </div>
+                            `;
 
-                    gridTrack.innerHTML = categoryMovies.map(movie => `
-                        <div class="movie-card" onclick="window.location.href='watch.html?video=${encodeURIComponent(movie.source)}'">
-                            <div class="poster-frame" style="background-image: url('${movie.image}');">
-                                <i class="fa-solid fa-circle-play"></i>
-                            </div>
-                            <div style="padding: 12px;">
-                                <h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; color: #fff; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">${movie.title}</h4>
-                                <p style="font-size: 0.8rem; color: #e50914; font-weight: bold; margin: 0;">${movie.vj}</p>
-                            </div>
-                        </div>
-                    `).join('');
-                });
-            } catch (error) {
-                console.error("Critical dashboard catalog sync error:", error);
-            }
+                            card.addEventListener('click', () => {
+                                window.location.href = `/watch.html?source=${encodeURIComponent(movie.source || movie.videoUrl)}`;
+                            });
+
+                            targetTrack.appendChild(card);
+                        }
+                    });
+                })
+                .catch(error => console.error("Dynamic sync catalog transmission error:", error));
         }
 
         function openAuthModal() { 
