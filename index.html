@@ -429,63 +429,15 @@
             }
         }
 
-     document.addEventListener("DOMContentLoaded", () => {
-    // 1. Initialize your movie catalog fetch
-    fetchLiveApplicationCatalog();
+        function openAuthModal() { 
+            const modal = document.getElementById('subscriptionModal'); 
+            if (modal) modal.style.display = 'flex';
+        } 
 
-    // 2. Setup your Login Profile Button popup listeners
-    const profileMenuBtn = document.getElementById('profileMenuBtn');
-    const authOverlay = document.getElementById('authOverlay');
-
-   // Change line 441 - 444 to this:
-if (profileMenuBtn) {
-    profileMenuBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        openAuthModal('signup'); // <-- CHANGED HERE from 'login' to 'signup'
-    });
-}
-
-    if (authOverlay) {
-        authOverlay.addEventListener('click', (e) => {
-            if (e.target === authOverlay) {
-                closeAuthModal();
-            }
-        });
-    }
-});
-
-// 3. Helper functions to manage show/hide states cleanly
-function openAuthModal(view = 'login') {
-    const overlay = document.getElementById('authOverlay');
-    if (overlay) {
-        overlay.style.display = 'flex';
-        document.body.style.overflow = 'hidden'; // Stop background scrolling
-        switchCard(view);
-    }
-}
-
-function closeAuthModal() {
-    const overlay = document.getElementById('authOverlay');
-    if (overlay) {
-        overlay.style.display = 'none';
-        document.body.style.overflow = 'auto'; // Restore dashboard scrolling
-    }
-}
-
-function switchCard(type) {
-    const loginCard = document.getElementById('loginCard');
-    const signupCard = document.getElementById('signupCard');
-    
-    if (!loginCard || !signupCard) return;
-
-    if (type === 'login') {
-        loginCard.style.display = 'block';
-        signupCard.style.display = 'none';
-    } else {
-        loginCard.style.display = 'none';
-        signupCard.style.display = 'block';
-    }
-}
+        function closeAuthModal() { 
+            const modal = document.getElementById('subscriptionModal'); 
+            if (modal) modal.style.display = 'none';
+        }
 
         // Intercept profile menu links dynamically to display forms smoothly
         const loginLink = document.querySelector('a[href="#login"]');
