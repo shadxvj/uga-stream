@@ -899,69 +899,68 @@ window.handleFormRegistrationAndPayment = async function() {
 
 
 <!-- ==========================================================================
-     CINEMATIC SUBSCRIPTION & CHECKOUT WORKFLOW MODAL SYSTEM
+     CLEAN, ULTRA-COMPACT SUBSCRIPTION & LOGIN GATEWAYS
      ========================================================================== -->
-<div id="subscriptionModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+<div id="subscriptionModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px;">
     
-    <!-- COMBINED REGISTER & LOGIN CONTAINER CARD -->
-    <div id="authModalBox" style="background: #141414; padding: 25px; border-radius: 10px; max-width: 380px; width: 100%; border: 1px solid #282828; position: relative; margin: auto; box-shadow: 0 15px 35px rgba(0,0,0,0.8);">
+    <div style="background: #141414; padding: 22px; border-radius: 10px; max-width: 360px; width: 100%; border: 1px solid #282828; position: relative; box-shadow: 0 15px 35px rgba(0,0,0,0.8); margin: auto;">
         
-        <!-- Close Button cross icon -->
-        <span onclick="closeAuthModal()" style="position: absolute; top: 15px; right: 20px; color: #777; font-size: 1.5rem; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#e50914'" onmouseout="this.style.color='#777'">&times;</span>
+        <!-- Close Window Icon -->
+        <span onclick="closeAuthModal()" style="position: absolute; top: 12px; right: 18px; color: #777; font-size: 1.4rem; cursor: pointer;">&times;</span>
 
-        <!-- A. REGISTRATION FORM MODE PANEL -->
+        <!-- A. COMPACT SIGNUP PANEL VIEW -->
         <div id="registerFormPanel">
-            <h3 style="margin-bottom: 4px; color: #fff; font-size: 1.3rem; font-weight: 700;">Create Stream Account</h3>
-            <p style="color: #666; font-size: 0.8rem; margin-bottom: 18px;">Watch trailers and cinema dubbed streams</p>
+            <h3 style="margin-bottom: 4px; color: #fff; font-size: 1.25rem; font-weight: 700;">Create Account</h3>
+            <p style="color: #666; font-size: 0.8rem; margin-bottom: 14px;">Unlock premium VJ-dubbed streams</p>
             
             <form id="registerForm">
-                <div style="margin-bottom: 12px;">
-                    <label style="display: block; font-size: 0.75rem; color: #aaa; margin-bottom: 5px; font-weight: 600;">USERNAME</label>
-                    <input type="text" id="regUser" style="width: 100%; background: #222; border: 1px solid #444; padding: 9px; border-radius: 4px; color: #fff; outline: none; font-size: 0.85rem;" placeholder="e.g., KILOLO" required>
+                <div style="margin-bottom: 10px;">
+                    <label style="display: block; font-size: 0.7rem; color: #aaa; margin-bottom: 4px; font-weight: 600;">USERNAME</label>
+                    <input type="text" id="regUser" style="width: 100%; background: #222; border: 1px solid #444; padding: 8px; border-radius: 4px; color: #fff; outline: none; font-size: 0.85rem;" placeholder="Username" required>
                 </div>
-                <div style="margin-bottom: 12px;">
-                    <label style="display: block; font-size: 0.75rem; color: #aaa; margin-bottom: 5px; font-weight: 600;">PHONE NUMBER</label>
-                    <input type="tel" id="regPhone" style="width: 100%; background: #222; border: 1px solid #444; padding: 9px; border-radius: 4px; color: #fff; outline: none; font-size: 0.85rem;" placeholder="e.g., 0772123456" required>
+                <div style="margin-bottom: 10px;">
+                    <label style="display: block; font-size: 0.7rem; color: #aaa; margin-bottom: 4px; font-weight: 600;">PHONE NUMBER</label>
+                    <input type="tel" id="regPhone" style="width: 100%; background: #222; border: 1px solid #444; padding: 8px; border-radius: 4px; color: #fff; outline: none; font-size: 0.85rem;" placeholder="e.g. 0772123456" required>
                 </div>
-                <div style="margin-bottom: 14px;">
-                    <label style="display: block; font-size: 0.75rem; color: #aaa; margin-bottom: 5px; font-weight: 600;">PASSWORD</label>
-                    <input type="password" id="regPass" style="width: 100%; background: #222; border: 1px solid #444; padding: 9px; border-radius: 4px; color: #fff; outline: none; font-size: 0.85rem;" placeholder="••••••" required>
+                <div style="margin-bottom: 10px;">
+                    <label style="display: block; font-size: 0.7rem; color: #aaa; margin-bottom: 4px; font-weight: 600;">PASSWORD</label>
+                    <input type="password" id="regPass" style="width: 100%; background: #222; border: 1px solid #444; padding: 8px; border-radius: 4px; color: #fff; outline: none; font-size: 0.85rem;" placeholder="••••••" required>
                 </div>
-                <div style="margin-bottom: 18px;">
-                    <label style="display: block; font-size: 0.75rem; color: #aaa; margin-bottom: 5px; font-weight: 600;">SELECT PREMIUM ACCESS PLAN</label>
-                    <select id="regPlan" style="width: 100%; background: #222; border: 1px solid #444; padding: 9px; border-radius: 4px; color: #fff; outline: none; font-size: 0.85rem; font-weight: bold;">
+                <div style="margin-bottom: 16px;">
+                    <label style="display: block; font-size: 0.7rem; color: #aaa; margin-bottom: 4px; font-weight: 600;">ACCESS PLAN TIER</label>
+                    <select id="regPlan" style="width: 100%; background: #222; border: 1px solid #444; padding: 8px; border-radius: 4px; color: #fff; outline: none; font-size: 0.85rem; font-weight: bold;">
                         <option value="DAILY">DAILY PASS — 2,000 UGX</option>
                         <option value="WEEKLY">WEEKLY PASS — 5,000 UGX</option>
                         <option value="MONTHLY">MONTHLY PREMIUM — 20,000 UGX</option>
                         <option value="ANNUAL">ANNUAL MEGA PASS — 200,000 UGX</option>
                     </select>
                 </div>
-                <button type="submit" style="width: 100%; background: #e50914; color: #fff; border: none; padding: 11px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 0.9rem; transition: background 0.2s;">Sign Up & Pay Securely</button>
+                <button type="submit" style="width: 100%; background: #e50914; color: #fff; border: none; padding: 10px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">Sign Up & Pay Securely</button>
             </form>
             
-            <p style="text-align: center; color: #888; margin-top: 15px; font-size: 0.8rem;">
+            <p style="text-align: center; color: #888; margin-top: 12px; font-size: 0.8rem;">
                 Already have an account? <a href="javascript:void(0)" onclick="switchAuthView('login')" style="color: #e50914; font-weight: bold; text-decoration: none;">Login here</a>
             </p>
         </div>
 
-        <!-- B. RETURNING USER LOGIN MODE PANEL (HIDDEN BY DEFAULT) -->
+        <!-- B. COMPACT RETURNING SUBSCRIBER LOGIN PANEL VIEW -->
         <div id="loginFormPanel" style="display: none;">
-            <h3 style="margin-bottom: 4px; color: #fff; font-size: 1.3rem; font-weight: 700;">Subscriber Login</h3>
-            <p style="color: #666; font-size: 0.8rem; margin-bottom: 18px;">Access your active translated movie tier</p>
+            <h3 style="margin-bottom: 4px; color: #fff; font-size: 1.25rem; font-weight: 700;">Subscriber Login</h3>
+            <p style="color: #666; font-size: 0.8rem; margin-bottom: 16px;">Access your active translated theater pass</p>
             
             <form id="loginForm">
                 <div style="margin-bottom: 12px;">
-                    <label style="display: block; font-size: 0.75rem; color: #aaa; margin-bottom: 5px; font-weight: 600;">REGISTERED PHONE NUMBER</label>
-                    <input type="tel" id="loginPhone" style="width: 100%; background: #222; border: 1px solid #444; padding: 9px; border-radius: 4px; color: #fff; outline: none; font-size: 0.85rem;" placeholder="e.g., 0772123456" required>
+                    <label style="display: block; font-size: 0.7rem; color: #aaa; margin-bottom: 5px; font-weight: 600;">REGISTERED PHONE NUMBER</label>
+                    <input type="tel" id="loginPhone" style="width: 100%; background: #222; border: 1px solid #444; padding: 8px; border-radius: 4px; color: #fff; outline: none; font-size: 0.85rem;" placeholder="e.g. 0772123456" required>
                 </div>
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; font-size: 0.75rem; color: #aaa; margin-bottom: 5px; font-weight: 600;">PASSWORD</label>
-                    <input type="password" id="loginPass" style="width: 100%; background: #222; border: 1px solid #444; padding: 9px; border-radius: 4px; color: #fff; outline: none; font-size: 0.85rem;" placeholder="••••••" required>
+                <div style="margin-bottom: 18px;">
+                    <label style="display: block; font-size: 0.7rem; color: #aaa; margin-bottom: 5px; font-weight: 600;">PASSWORD</label>
+                    <input type="password" id="loginPass" style="width: 100%; background: #222; border: 1px solid #444; padding: 8px; border-radius: 4px; color: #fff; outline: none; font-size: 0.85rem;" placeholder="••••••" required>
                 </div>
-                <button type="submit" style="width: 100%; background: #e50914; color: #fff; border: none; padding: 11px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 0.9rem;">Verify & Enter Stream</button>
+                <button type="submit" style="width: 100%; background: #e50914; color: #fff; border: none; padding: 10px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">Verify & Enter Stream</button>
             </form>
             
-            <p style="text-align: center; color: #888; margin-top: 15px; font-size: 0.8rem;">
+            <p style="text-align: center; color: #888; margin-top: 14px; font-size: 0.8rem;">
                 New subscriber? <a href="javascript:void(0)" onclick="switchAuthView('register')" style="color: #e50914; font-weight: bold; text-decoration: none;">Create an account</a>
             </p>
         </div>
