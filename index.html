@@ -393,67 +393,60 @@
             document.addEventListener('click', () => profileDropdown.classList.remove('show'));
         }
 
-        // 2. Central Live Catalog Sync Engine for Multiple Rows
-         // Fetch movies from server database and inject into matching UI shelf categories
-        function fetchLiveApplicationCatalog() {
-            fetch('/api/movies')
-                .then(response => response.json())
-                .then(movies => {
-                    // Match category text markers directly to your HTML section container tags
-                    const categoryTracks = {
-                        'trending': document.querySelector('#trending .movie-grid-track'),
-                        'action': document.querySelector('#action .movie-grid-track'),
-                        'comedy': document.querySelector('#comedy .movie-grid-track'),
-                        'drama': document.querySelector('#drama .movie-grid-track'),
-                        'series': document.querySelector('#series .movie-grid-track'),
-                        'animation': document.querySelector('#animation .movie-grid-track')
-                    };
+// 2. Central Live Catalog Sync Engine for Multiple Rows
+// Fetch movies from server database and inject into matching UI shelf categories
+function fetchLiveApplicationCatalog() {
+    fetch('/api/movies')
+        .then(response => response.json())
+        .then(movies => {
+            // Find all our category display tracks
+            const categoryTracks = {
+                'trending': document.querySelector('#trending .movie-grid-track'),
+                'action': document.querySelector('#action .movie-grid-track'),
+                'comedy': document.querySelector('#comedy .movie-grid-track'),
+                'drama': document.querySelector('#drama .movie-grid-track'),
+                'series': document.querySelector('#series .movie-grid-track'),
+                'animation': document.querySelector('#animation .movie-grid-track')
+            };
 
-                    // Wipe clear empty state blocks or notifications from all categories
-                    Object.values(categoryTracks).forEach(track => {
-                        if (track) track.innerHTML = '';
-                    });
+            // 1. Wipe all rows clean and put the default "No videos" message first
+            Object.keys(categoryTracks).forEach(cat => {
+                if (categoryTracks[cat]) {
+                    categoryTracks[cat].innerHTML = `<p style="color: #666; font-size: 0.9rem;">No videos uploaded in this category yet.</p>`;
+                }
+            });
 
-                    if (movies.length === 0) {
-                        console.log("Movie database array is currently empty.");
-                        return;
+            // 2. If there are movies, distribute them into their proper categories
+            if (movies && movies.length > 0) {
+                movies.forEach(movie => {
+                    // Match movie category (make it lowercase to prevent spelling mismatch issues)
+                    const movieCategory = String(movie.category || movie.categoryName || 'trending').toLowerCase().trim();
+                    const track = categoryTracks[movieCategory];
+
+                    if (track) {
+                        // If this is the first movie going into this track, clear out the "No videos" message
+                        if (track.querySelector('p')) {
+                            track.innerHTML = '';
+                        }
+
+                        const movieCard = document.createElement('div');
+                        movieCard.className = 'movie-card';
+                        movieCard.innerHTML = `
+                            <div class="poster-frame" style="background-image: url('${movie.image || movie.posterUrl}'); background-size: cover;">
+                                <i class="fa-solid fa-circle-play"></i>
+                            </div>
+                            <div style="padding: 12px;">
+                                <h4 style="color: #fff; margin: 0 0 5px 0; font-size: 0.9rem;">${movie.title}</h4>
+                                <span style="color: #e50914; font-size: 0.8rem; font-weight: bold;">${movie.vj}</span>
+                            </div>
+                        `;
+                        track.appendChild(movieCard);
                     }
-
-                    movies.forEach(movie => {
-                        // Normalize incoming category text string to lowercase to prevent matching bugs
-                        let movieCategory = (movie.category || 'trending').toLowerCase().trim();
-                        
-                        // Smart check: If your upload passes 'tv series' or 'series', map it to 'series'
-                        if (movieCategory.includes('series')) {
-                            movieCategory = 'series';
-                        }
-
-                        // Pick target layout destination lane, fallback to trending if unmapped
-                        const targetTrack = categoryTracks[movieCategory] || categoryTracks['trending'];
-
-                        if (targetTrack) {
-                            const card = document.createElement('div');
-                            card.className = 'movie-card';
-                            card.innerHTML = `
-                                <div class="poster-frame" style="background-image: url('${movie.image || movie.posterUrl}'); background-size: cover; background-position: center;">
-                                    <i class="fa-solid fa-circle-play"></i>
-                                </div>
-                                <div style="padding: 12px;">
-                                    <h4 style="color: #fff; margin: 0 0 5px 0; font-size: 0.95rem;">${movie.title}</h4>
-                                    <span style="color: #e50914; font-size: 0.8rem; font-weight: bold;">${movie.vj}</span>
-                                </div>
-                            `;
-
-                            card.addEventListener('click', () => {
-                                window.location.href = `/watch.html?source=${encodeURIComponent(movie.source || movie.videoUrl)}`;
-                            });
-
-                            targetTrack.appendChild(card);
-                        }
-                    });
-                })
-                .catch(error => console.error("Dynamic sync catalog transmission error:", error));
-        }
+                });
+            }
+        })
+        .catch(err => console.error("Error fetching application catalog:", err));
+}
 
         function openAuthModal() { 
             const modal = document.getElementById('subscriptionModal'); 
@@ -916,36 +909,7 @@ window.handleFormRegistrationAndPayment = async function() {
                 });
             }
         });
-        // Fetch movies from server database based on a specific category and inject into UI shelves
-function fetchLiveApplicationCatalog(categoryName = 'trending') {
-    fetch(`/api/movies?category=${categoryName}`)
-        .then(response => response.json())
-        .then(movies => {
-            const movieGrid = document.querySelector(`#${categoryName} .movie-grid-track`);
-            if (!movieGrid) return;
-
-            if (movies.length === 0) {
-                movieGrid.innerHTML = `<p style="color: #666; font-size: 0.9rem;">No videos uploaded in this category yet.</p>`;
-                return;
-            }
-
-            movieGrid.innerHTML = '';
-            movies.forEach(movie => {
-                const movieCard = document.createElement('div');
-                movieCard.className = 'movie-card';
-                movieCard.innerHTML = `
-                    <div class="poster-frame" style="background-image: url('${movie.image || movie.posterUrl}'); background-size: cover;">
-                        <i class="fa-solid fa-circle-play"></i>
-                    </div>
-                    <div style="padding: 12px;">
-                        <h4 style="color: #fff; margin: 0 0 5px 0; font-size: 0.9rem;">${movie.title}</h4>
-                        <span style="color: #e50914; font-size: 0.8rem; font-weight: bold;">${movie.vj}</span>
-                    </div>
-                `;
-                movieGrid.appendChild(movieCard);
-            });
-        });
-}
+   
 
 
         // 1. Process Existing Subscriber Sign-In Requests
