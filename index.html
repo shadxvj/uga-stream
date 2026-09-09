@@ -922,28 +922,41 @@ window.handleFormRegistrationAndPayment = async function() {
 
 
         // 1. Process Existing Subscriber Sign-In Requests
-        async function processSubscriberLogin() {
-            const phone = document.getElementById('loginPhone').value.trim();
-            const password = document.getElementById('loginPass').value;
+  async function processSubscriberLogin() {
+    const phone = document.getElementById('loginPhone').value.trim();
+    const password = document.getElementById('loginPass').value;
 
-            try {
-                const response = await fetch('/api/login-user', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ phone, password })
-                });
-                const data = await response.json();
-                if (data.success) {
-                    alert(`✅ Access Verified! Welcome back, ${data.user.username}.`);
-                    closeAuthModal();
-                    window.location.reload();
-                } else {
-                    alert(`❌ Login Failed: ${data.message}`);
-                }
-            } catch (err) {
-                alert("⚠️ System communication breakdown connecting to authentication gateway.");
-            }
+    // --- ADMIN BYPASS CREDENTIALS ---
+    if (phone === "0000" && password === "admin123") {
+        alert('🔓 Admin Bypass Activated! Welcome to UGA Stream.');
+        localStorage.setItem('uga_subscriber_session', 'true');
+        localStorage.setItem('uga_user_status', 'premium');
+        closeAuthModal();
+        window.location.reload();
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/login-user', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phone, password })
+        });
+        
+        const data = await response.json();
+        if (data.success) {
+            alert(`✅ Access Verified! Welcome back, ${data.user.username}.`);
+            localStorage.setItem('uga_subscriber_session', 'true');
+            closeAuthModal();
+            window.location.reload();
+        } else {
+            alert(`❌ Login Failed: ${data.message}`);
         }
+    } catch (err) {
+        console.error("Login handling error:", err);
+        alert("⚠️ System communication breakdown connecting to authentication gateway.");
+    }
+}
 
         // 2. Process Registration & Connect to Mobile Money Payment Route
         async function processSubscriberRegistration() {
