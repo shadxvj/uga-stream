@@ -916,41 +916,37 @@ window.handleFormRegistrationAndPayment = async function() {
                 });
             }
         });
+        // Fetch movies from server database based on a specific category and inject into UI shelves
+function fetchLiveApplicationCatalog(categoryName = 'trending') {
+    fetch(`/api/movies?category=${categoryName}`)
+        .then(response => response.json())
+        .then(movies => {
+            const movieGrid = document.querySelector(`#${categoryName} .movie-grid-track`);
+            if (!movieGrid) return;
 
-        // Fetch movies from server database and inject into UI shelves
-        function fetchLiveApplicationCatalog() {
-            fetch('/api/movies')
-                .then(response => response.json())
-                .then(movies => {
-                    const trendingGrid = document.querySelector('#trending .movie-grid-track') || document.querySelector('.movie-grid-track');
-                    if (!trendingGrid) return;
+            if (movies.length === 0) {
+                movieGrid.innerHTML = `<p style="color: #666; font-size: 0.9rem;">No videos uploaded in this category yet.</p>`;
+                return;
+            }
 
-                    if (movies.length === 0) {
-                        trendingGrid.innerHTML = '<p style="color: #666; font-size: 0.9rem;">No videos uploaded in this category yet.</p>';
-                        return;
-                    }
+            movieGrid.innerHTML = '';
+            movies.forEach(movie => {
+                const movieCard = document.createElement('div');
+                movieCard.className = 'movie-card';
+                movieCard.innerHTML = `
+                    <div class="poster-frame" style="background-image: url('${movie.image || movie.posterUrl}'); background-size: cover;">
+                        <i class="fa-solid fa-circle-play"></i>
+                    </div>
+                    <div style="padding: 12px;">
+                        <h4 style="color: #fff; margin: 0 0 5px 0; font-size: 0.9rem;">${movie.title}</h4>
+                        <span style="color: #e50914; font-size: 0.8rem; font-weight: bold;">${movie.vj}</span>
+                    </div>
+                `;
+                movieGrid.appendChild(movieCard);
+            });
+        });
+}
 
-                    trendingGrid.innerHTML = '';
-                    movies.forEach(movie => {
-                        const movieCard = document.createElement('div');
-                        movieCard.className = 'movie-card';
-                        movieCard.innerHTML = `
-                            <div class="poster-frame" style="background-image: url('${movie.image || movie.posterUrl}'); background-size: cover; background-position: center;">
-                                <i class="fa-solid fa-circle-play"></i>
-                            </div>
-                            <div style="padding: 12px;">
-                                <h4 style="color: #fff; margin: 0 0 5px 0; font-size: 0.95rem;">${movie.title}</h4>
-                                <span style="color: #e50914; font-size: 0.8rem; font-weight: bold;">${movie.vj}</span>
-                            </div>
-                        `;
-                        movieCard.addEventListener('click', () => {
-                            window.location.href = `/watch.html?source=${encodeURIComponent(movie.source || movie.videoUrl)}`;
-                        });
-                        trendingGrid.appendChild(movieCard);
-                    });
-                })
-                .catch(error => console.error("Database fetch error:", error));
-        }
 
         // 1. Process Existing Subscriber Sign-In Requests
         async function processSubscriberLogin() {
