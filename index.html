@@ -928,6 +928,8 @@ window.handleFormRegistrationAndPayment = async function() {
                     if (movies.length === 0) {
                         trendingGrid.innerHTML = '<p style="color: #666; font-size: 0.9rem;">No videos uploaded in this category yet.</p>';
                         return;
+                    }
+                
                          const actionGrid = document.querySelector('#action .movie-grid-track') || document.querySelector('.movie-grid-track');
                     if (!actionGrid) return;
 
