@@ -952,19 +952,23 @@ window.handleFormRegistrationAndPayment = async function() {
             const password = document.getElementById('regPass').value;
             const selectEl = document.getElementById('regPlan');
             const plan = selectEl.value;
-            const amount = selectEl.options[selectEl.selectedIndex].getAttribute('data-amount');
+                // Safely extract the payment amount from the dropdown attributes
+        const selectedOption = selectEl.options[selectEl.selectedIndex];
+        const amount = selectedOption ? selectedOption.getAttribute('data-amount') : '2000';
 
-            try {
-                const regResponse = await fetch('/api/register-user', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, phone, password, plan })
-                });
-                const regData = await regResponse.json();
+        try {
+            const regResponse = await fetch('/api/register-user', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, phone, password, plan: plan })
+            });
+            const regData = await regResponse.json();
 
-                if (!regResponse.ok || !regData.success) {
-                    return alert(`❌ Registration Blocked: ${regData.message}`);
-                }
+            // FIX: Check if the response is NOT okay or success is FALSE
+            if (!regResponse.ok || regData.success === false) {
+                return alert(`❌ Registration Blocked: ${regData.message || 'Invalid details'}`);
+            }
+
 
                 alert(`⏳ Account profiles saved! Loading secure Mobile Money portal for UGX ${parseInt(amount).toLocaleString()}...`);
                 
