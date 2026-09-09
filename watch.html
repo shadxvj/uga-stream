@@ -103,20 +103,21 @@
 
     <script>
        document.addEventListener("DOMContentLoaded", () => {
-    // 1. CRITICAL GUARD: Check if the user has an authenticated paid session
-    // This looks inside the temporary session storage memory pool
-    const activeSession = sessionStorage.getItem('subscriberSessionActive');
+    // 1. CRITICAL GUARD: Check if the user has an authenticated session or admin status
+    const activeSession = sessionStorage.getItem('subscriberSessionActive') || localStorage.getItem('uga_subscriber_session') === 'true';
+    const isAdminBypass = localStorage.getItem('uga_user_status') === 'premium';
 
-    if (!activeSession) {
+    if (!activeSession && !isAdminBypass) {
         alert("🔒 Stream Access Restricted. Please log in or activate a mobile money pass to view this premium translated movie.");
-        // Instantly throw them back to the homepage registration popup gate
         window.location.href = 'index.html?access=locked';
         return;
     }
 
     // 2. Clear out parameters and resolve movie link structures normally
     const urlParams = new URLSearchParams(window.location.search);
-    const movieUrl = urlParams.get('video');
+    // Updated parameter reader to capture the 'source' key passed by your home cards
+    const movieUrl = urlParams.get('source') || urlParams.get('video');
+
 
     if (movieUrl) {
         const video = document.getElementById('ugaStreamVideo');
