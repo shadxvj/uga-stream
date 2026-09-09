@@ -395,6 +395,8 @@
 
 // 2. Central Live Catalog Sync Engine for Multiple Rows
 // Fetch movies from server database and inject into matching UI shelf categories
+// 2. Central Live Catalog Sync Engine for Multiple Rows
+// Fetch movies from server database and inject into matching UI shelf categories
 function fetchLiveApplicationCatalog() {
     fetch('/api/movies')
         .then(response => response.json())
@@ -440,6 +442,13 @@ function fetchLiveApplicationCatalog() {
                                 <span style="color: #e50914; font-size: 0.8rem; font-weight: bold;">${movie.vj}</span>
                             </div>
                         `;
+
+                        // --- GATEWAY PASS CLICK HANDLER ---
+                        // This makes the card clickable and sends the movie data to watch.html
+                        movieCard.addEventListener('click', () => {
+                            window.location.href = `./watch.html?source=${encodeURIComponent(movie.source || movie.videoUrl || '')}`;
+                        });
+
                         track.appendChild(movieCard);
                     }
                 });
