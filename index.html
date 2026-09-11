@@ -683,9 +683,7 @@ window.handleFormRegistrationAndPayment = async function() {
     const phoneInput = document.getElementById('signupPhone')?.value.trim();
     const passwordInput = document.getElementById('signupPassword')?.value;
 
-    if (!usernameInput || !phoneInput || !passwordInput) {
-        return alert("Please fill out your Username, Phone Number, and Password completely before signing up!");
-    }
+   
 
     try {
         alert("Registering profile and initializing checkout... Please click OK.");
