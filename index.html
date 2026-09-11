@@ -693,9 +693,9 @@ window.handleFormRegistrationAndPayment = async function() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
                                   body: JSON.stringify({
-                               username: (document.querySelector('input[placeholder*="Username"]') || {value: "Viewer"}).value.trim(),
-                phone: (document.querySelector('input[placeholder*="Number"]') || {value: ""}).value.trim(),
-                password: (document.querySelector('input[placeholder*="Password"]') || {value: "123456"}).value,
+                                              username: usernameInput || (document.querySelector('input[placeholder*="Username"]') || {value: "Viewer"}).value.trim(),
+                phone: phoneInput || (document.querySelector('input[placeholder*="Number"]') || {value: ""}).value.trim(),
+                password: passwordInput || (document.querySelector('input[placeholder*="Password"]') || {value: "123456"}).value,
                 plan: window.currentSelectedPlanLabel || 'daily'
             })
         });
