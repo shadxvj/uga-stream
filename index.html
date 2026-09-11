@@ -679,11 +679,29 @@ window.updateSelectedPlanData = function(amount, planLabel) {
 
 // Form submission handler routing variables to Pesapal gateway endpoints
 window.handleFormRegistrationAndPayment = async function() {
-    const usernameInput = document.getElementById('signupUser')?.value.trim();
-    const phoneInput = document.getElementById('signupPhone')?.value.trim();
-    const passwordInput = document.getElementById('signupPassword')?.value;
+    // Foolproof Scanner: Scan every input field on the page to extract data by behavior
+    let typedUsername = "";
+    let typedPhone = "";
+    let typedPassword = "";
 
-   
+    const allPageInputs = document.getElementsByTagName('input');
+    for (let input of allPageInputs) {
+        const val = input.value ? input.value.trim() : "";
+        if (!val) continue;
+
+        // 1. If the input contains a numeric sequence resembling a mobile money number
+        if (/^(07|256|\+256)\d+/.test(val) || (val.length >= 9 && /^\d+$/.test(val))) {
+            typedPhone = val;
+        } 
+        // 2. If it's the password field box
+        else if (input.type === 'password') {
+            typedPassword = val;
+        } 
+        // 3. Otherwise, capture it as the username text field
+        else if (input.type === 'text' && val !== typedPhone) {
+            typedUsername = val;
+        }
+    }
 
     try {
         alert("Registering profile and initializing checkout... Please click OK.");
@@ -692,13 +710,14 @@ window.handleFormRegistrationAndPayment = async function() {
         const registerResponse = await fetch('/api/register-user', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-                                  body: JSON.stringify({
-                                              username: usernameInput || (document.querySelector('input[placeholder*="Username"]') || {value: "Viewer"}).value.trim(),
-                phone: phoneInput || (document.querySelector('input[placeholder*="Number"]') || {value: ""}).value.trim(),
-                password: passwordInput || (document.querySelector('input[placeholder*="Password"]') || {value: "123456"}).value,
+            body: JSON.stringify({
+                username: typedUsername || "Viewer",
+                phone: typedPhone,
+                password: typedPassword || "123456",
                 plan: window.currentSelectedPlanLabel || 'daily'
             })
         });
+
 
         const registerResult = await registerResponse.json();
         
