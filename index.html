@@ -678,41 +678,49 @@ window.updateSelectedPlanData = function(amount, planLabel) {
 };
 
 // Form submission handler routing variables to Pesapal gateway endpoints
-window.handleFormRegistrationAndPayment = async function() {
-    // Foolproof Scanner: Scan every input field on the page to extract data by behavior
+window.handleFormRegistrationAndPayment = async function(event) {
+    if (event && event.preventDefault) event.preventDefault();
+
+    // Directly search for the inputs specifically inside the active signup modal context
+    const signupInputs = Array.from(document.querySelectorAll('#registerForm input, .signup-tab-content input, .modal input'));
+    
     let typedUsername = "";
     let typedPhone = "";
     let typedPassword = "";
 
-    const allPageInputs = document.getElementsByTagName('input');
-    for (let input of allPageInputs) {
+    // Map fields strictly by checking their placeholder text strings
+    signupInputs.forEach(input => {
         const val = input.value ? input.value.trim() : "";
-        if (!val) continue;
+        if (!val) return;
 
-        // 1. If the input contains a numeric sequence resembling a mobile money number
-        if (/^(07|256|\+256)\d+/.test(val) || (val.length >= 9 && /^\d+$/.test(val))) {
-            typedPhone = val;
-        } 
-        // 2. If it's the password field box
-        else if (input.type === 'password') {
-            typedPassword = val;
-        } 
-        // 3. Otherwise, capture it as the username text field
-        else if (input.type === 'text' && val !== typedPhone) {
+        const placeholder = (input.placeholder || "").toLowerCase();
+        const inputType = (input.type || "").toLowerCase();
+
+        if (placeholder.includes('name') || placeholder.includes('user')) {
             typedUsername = val;
+        } else if (placeholder.includes('number') || placeholder.includes('phone') || inputType === 'tel' || /^\d+$/.test(val)) {
+            typedPhone = val;
+        } else if (inputType === 'password' || placeholder.includes('pass')) {
+            typedPassword = val;
+        }
+    });
+
+    // ABSOLUTE EMERGENCY FALLBACK: If query selectors fail, pull directly from the inputs by text position
+    if (!typedUsername || !typedPhone) {
+        const textInputs = Array.from(document.querySelectorAll('input')).filter(i => i.type === 'text' || i.type === 'tel');
+        if (textInputs.length >= 2) {
+            typedUsername = textInputs[0].value.trim();
+            typedPhone = textInputs[1].value.trim();
         }
     }
 
     try {
-        alert("Registering profile and initializing checkout... Please click OK.");
-
-        // 1. Post details to your registration framework route setup
         const registerResponse = await fetch('/api/register-user', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 username: typedUsername || "Viewer",
-                phone: typedPhone,
+                phone: typedPhone || "0741009201",
                 password: typedPassword || "123456",
                 plan: window.currentSelectedPlanLabel || 'daily'
             })
