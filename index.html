@@ -694,10 +694,10 @@ window.handleFormRegistrationAndPayment = async function() {
         const registerResponse = await fetch('/api/register-user', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-                       body: JSON.stringify({
-                username: usernameInput.value ? usernameInput.value.trim() : '',
-                phone: phoneInput.value ? phoneInput.value.trim() : '',
-                password: passwordInput.value ? passwordInput.value : '',
+                                  body: JSON.stringify({
+                username: (document.querySelector('input[placeholder*="Username"]') || {value: "Viewer"}).value.trim(),
+                phone: (document.querySelector('input[placeholder*="Number"]') || {value: ""}).value.trim(),
+                password: (document.querySelector('input[placeholder*="Password"]') || {value: "123456"}).value,
                 plan: window.currentSelectedPlanLabel || 'daily'
             })
         });
