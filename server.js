@@ -63,10 +63,17 @@ app.post('/api/register-user', (req, res) => {
                const { username, phone, plan, password } = req.body;
 
         // FORCE SAFE FALLBACKS - This prevents empty inputs from crashing the checkout flow
-        const finalUsername = (username || "Viewer").trim();
-        const finalPhone = (phone && phone.trim()) ? phone.trim() : "0741009201"; 
-        const finalPassword = password || "123456";
+               const { username, phone, plan, password } = req.body;
 
+        // Clean up incoming user data structures cleanly
+        const finalUsername = String(username || "").trim();
+        const finalPhone = String(phone || "").trim();
+        const finalPassword = String(password || "");
+
+        // If data is completely missing from an empty form click, stop here gracefully
+        if (!finalPhone || !finalUsername) {
+            return res.status(400).json({ success: false, message: "Username and a valid phone number are required." });
+        }
 
         const userExists = usersDatabase.some(u => u.username.toLowerCase() === username.toLowerCase());
         if (userExists) {
