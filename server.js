@@ -232,15 +232,15 @@ app.post('/api/process-momo', async (req, res) => {
 
         const orderPayload = {
             id: merchantReference,
-            amount: parseFloat(amount),
+            amount: parseFloat(cleanamount),
             currency: "UGX",
             description: `Payment for UgaStream ${plan} Plan`,
             callback_url: `${LIVE_APP_URL}/index.html?payment=complete`,
             notification_id: cachedIpnId,
             billing_address: {
                 email_address: "payment@ugastream.com",
-                phone_number: phone.trim(),
-                first_name: username,
+                phone_number: finalPhone,
+                first_name: finalusername,
                 last_name: "Subscriber",
                 country_code: "UG"
             }
