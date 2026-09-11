@@ -62,9 +62,6 @@ app.post('/api/register-user', (req, res) => {
     try {
                const { username, phone, plan, password } = req.body;
 
-        // FORCE SAFE FALLBACKS - This prevents empty inputs from crashing the checkout flow
-               const { username, phone, plan, password } = req.body;
-
         // Clean up incoming user data structures cleanly
         const finalUsername = String(username || "").trim();
         const finalPhone = String(phone || "").trim();
@@ -75,12 +72,14 @@ app.post('/api/register-user', (req, res) => {
             return res.status(400).json({ success: false, message: "Username and a valid phone number are required." });
         }
 
-        const userExists = usersDatabase.some(u => u.username.toLowerCase() === username.toLowerCase());
+        // Validate duplicates using our clean variables to prevent empty string matches
+        const userExists = usersDatabase.some(u => u.username && u.username.toLowerCase() === finalUsername.toLowerCase());
         if (userExists) {
             return res.status(400).json({ success: false, message: "Username is already taken." });
         }
 
-        const phoneExists = usersDatabase.some(u => u.phone === phone.trim());
+        const phoneExists = usersDatabase.some(u => u.phone && u.phone.trim() === finalPhone);
+
         if (phoneExists) {
             return res.status(400).json({ success: false, message: "This phone number is already registered!" });
         }
