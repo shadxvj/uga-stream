@@ -694,11 +694,11 @@ window.handleFormRegistrationAndPayment = async function() {
         const registerResponse = await fetch('/api/register-user', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                username: usernameInput, 
-                phone: phoneInput, 
-                password: passwordInput,
-                plan: window.currentSelectedPlanLabel 
+                       body: JSON.stringify({
+                username: usernameInput.value ? usernameInput.value.trim() : '',
+                phone: phoneInput.value ? phoneInput.value.trim() : '',
+                password: passwordInput.value ? passwordInput.value : '',
+                plan: window.currentSelectedPlanLabel || 'daily'
             })
         });
 
