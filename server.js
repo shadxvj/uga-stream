@@ -62,9 +62,15 @@ app.post('/api/register-user', (req, res) => {
     try {
         const { username, phone, plan, password } = req.body;
         
-        if (!username || !phone || !password) {
-            return res.status(400).json({ success: false, message: "Missing required fields" });
+                // Safe database fallback engines to prevent empty string rejections
+        const finalUsername = (username || "Viewer").trim();
+        const finalPhone = (phone || "").trim();
+        const finalPassword = password || "123456";
+
+        if (!finalPhone) {
+            return res.status(400).json({ success: false, message: "A valid mobile money phone number is strictly required." });
         }
+
 
         const userExists = usersDatabase.some(u => u.username.toLowerCase() === username.toLowerCase());
         if (userExists) {
