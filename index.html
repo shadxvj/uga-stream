@@ -900,6 +900,43 @@ window.handleFormRegistrationAndPayment = async function() {
         document.addEventListener("DOMContentLoaded", () => {
             // Load custom movie items array instantly
             fetchLiveApplicationCatalog();
+                    // --- DYNAMIC USER AUTOMATION & LOGOUT INTERFACE ENGINE ---
+        const dropdownMenu = document.querySelector('.dropdown-menu');
+        if (dropdownMenu) {
+            const isLogged = localStorage.getItem('uga_subscriber_session') === 'true';
+            const isAdmin = localStorage.getItem('uga_user_status') === 'premium';
+
+            const heading = dropdownMenu.querySelector('h4');
+            if (heading && isLogged) {
+                heading.textContent = isAdmin ? "Hello, Admin 🔓" : "Hello, Subscriber ✅";
+            }
+
+            if (isLogged) {
+                const loginLink = document.getElementById('loginBtn') || dropdownMenu.querySelector('a[href*="login"]');
+                const signUpLink = document.getElementById('signUpBtn') || dropdownMenu.querySelector('a[href*="sign"]');
+                if (loginLink) loginLink.style.display = 'none';
+                if (signUpLink) signUpLink.style.display = 'none';
+
+                const logoutBtn = document.createElement('a');
+                logoutBtn.id = 'dynamicLogoutBtn';
+                logoutBtn.href = '#';
+                logoutBtn.textContent = 'Log Out';
+                logoutBtn.style.cssText = 'display: block; color: #e50914; font-weight: bold; border-top: 1px solid #333; margin-top: 8px; padding-top: 8px; text-decoration: none;';
+
+                logoutBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    localStorage.removeItem('uga_subscriber_session');
+                    localStorage.removeItem('uga_user_status');
+                    sessionStorage.removeItem('subscriberSessionActive');
+                    
+                    alert('🔒 Logged out successfully. Premium access is now locked.');
+                    window.location.reload();
+                });
+
+                dropdownMenu.appendChild(logoutBtn);
+            }
+        }
+
 
             // Hook Up Navbar Dropdown Buttons
             const loginLink = document.getElementById('openLoginBtn');
