@@ -201,11 +201,24 @@ setTimeout(registerPesapalIPN, 5000);
 
 app.post('/api/process-momo', async (req, res) => {
     try {
-        const { phone, amount, plan, username } = req.body;
+               const { phone, amount, plan, username } = req.body;
 
-        if (!phone || !amount || !username) {
-            return res.status(400).json({ success: false, message: "Missing required checkout parameters." });
+        // SMART PRICING ENGINE - Maps package names to raw currency numbers dynamically
+        let cleanAmount = amount;
+        let incomingPlan = String(plan || "").toLowerCase();
+
+        if (!cleanAmount || isNaN(cleanAmount)) {
+            if (incomingPlan.includes('week')) {
+                cleanAmount = "5000"; // UGX 5,000 / week
+            } else if (incomingPlan.includes('month')) {
+                cleanAmount = "15000"; // UGX 15,000 / month
+            } else {
+                cleanAmount = "2000"; // Default: UGX 2,000 / daily
+            }
         }
+
+        const finalPhone = (phone || "0741009201").trim();
+        const finalUsername = (username || "Subscriber").trim();
 
         const authResponse = await axios.post(`${PESAPAL_BASE_URL}/api/Auth/RequestToken`, {
             consumer_key: process.env.PESAPAL_CONSUMER_KEY || "qk8/C/87b+uaKL3/TSd25/nbnMeVvVvG",
