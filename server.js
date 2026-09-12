@@ -11,10 +11,7 @@ const PORT = process.env.PORT || 5000;
 // Dynamic application link from Render environment variables
 const LIVE_APP_URL = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
 
-// Automatically switch routing bases depending on your Render keys
-const PESAPAL_BASE_URL = (process.env.PESAPAL_CONSUMER_KEY && process.env.PESAPAL_CONSUMER_KEY.includes('qk8/'))
-    ? 'https://pesapal.com'
-    : 'https://pesapal.com';
+const PESAPAL_BASE_URL = process.env.PESAPAL_BASE_URL || 'https://pesapal.com';
 
 console.log(`ℹ️ [PESAPAL MODE DETECTED]: Using base endpoint: ${PESAPAL_BASE_URL}`);
 
