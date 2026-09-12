@@ -1056,7 +1056,7 @@ window.handleFormRegistrationAndPayment = async function(event) {
 
                 alert(`⏳ Account profiles saved! Loading secure Mobile Money portal for UGX ${parseInt(amount).toLocaleString()}...`);
                 
-                const payResponse = await fetch('/api/pay', {
+                        const payResponse = await fetch('/api/process-momo', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ phone, amount, plan, username })
