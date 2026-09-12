@@ -184,24 +184,13 @@ async function registerPesapalIPN() {
             console.log("=========================================================================");
             console.log(`📌 YOUR SANDBOX IPN ID IS: ${cachedIpnId}`);
             console.log("=========================================================================");
+        } else {
+            console.log("❌ [PESAPAL AUTO-SETUP]: Unexpected response format:", ipnResponse.data);
         }
 
     } catch (error) {
         console.error("❌ [IPN REGISTRATION ERROR]:", error.response ? error.response.data : error.message);
     }
-}
-
-setTimeout(registerPesapalIPN, 5000);
-
-            cachedIpnId = ipnResponse.data.ipn_id;
-            console.log("=========================================================================");
-            console.log("🎉 [SUCCESS] PESAPAL IPN REGISTERED SUCCESSFULLY!");
-            console.log(`📌 YOUR LIVE IPN ID IS: ${cachedIpnId}`);
-            console.log("=========================================================================");
-        } else {
-            console.log("❌ [PESAPAL AUTO-SETUP]: Unexpected response format:", ipnResponse.data);
-        }
-
 }
 
 setTimeout(registerPesapalIPN, 5000);
