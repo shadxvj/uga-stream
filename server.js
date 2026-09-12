@@ -156,10 +156,12 @@ async function registerPesapalIPN() {
     try {
         console.log("⏳ [PESAPAL SETUP]: Authenticating to register IPN...");
         
-                       const authResponse = await axios.post(`${PESAPAL_BASE_URL}/api/Auth/RequestToken`, {
+        const authResponse = await axios.post(`${PESAPAL_BASE_URL}/api/Auth/RequestToken`, {
             consumer_key: "qk8/C/87b+uaKL3/TSd25/nbnMeVvVvG",
             consumer_secret: "gP96S9qn9A7U97+O4m9cEw=="
         }, {
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
+        });
 
         const accessToken = authResponse.data.token;
         console.log("⏳ [PESAPAL SETUP]: Registering Webhook Route URL...");
@@ -178,6 +180,19 @@ async function registerPesapalIPN() {
         });
 
         if (ipnResponse.data && ipnResponse.data.ipn_id) {
+            cachedIpnId = ipnResponse.data.ipn_id;
+            console.log("=========================================================================");
+            console.log(`📌 YOUR SANDBOX IPN ID IS: ${cachedIpnId}`);
+            console.log("=========================================================================");
+        }
+
+    } catch (error) {
+        console.error("❌ [IPN REGISTRATION ERROR]:", error.response ? error.response.data : error.message);
+    }
+}
+
+setTimeout(registerPesapalIPN, 5000);
+
             cachedIpnId = ipnResponse.data.ipn_id;
             console.log("=========================================================================");
             console.log("🎉 [SUCCESS] PESAPAL IPN REGISTERED SUCCESSFULLY!");
