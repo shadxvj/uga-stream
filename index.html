@@ -681,36 +681,41 @@ window.updateSelectedPlanData = function(amount, planLabel) {
 window.handleFormRegistrationAndPayment = async function(event) {
     if (event && event.preventDefault) event.preventDefault();
 
-    // Directly search for the inputs specifically inside the active signup modal context
-    const signupInputs = Array.from(document.querySelectorAll('#registerForm input, .signup-tab-content input, .modal input'));
+    // Grab every single input element currently loaded on your web page
+    const inputs = document.getElementsByTagName('input');
     
     let typedUsername = "";
     let typedPhone = "";
     let typedPassword = "";
 
-    // Map fields strictly by checking their placeholder text strings
-    signupInputs.forEach(input => {
-        const val = input.value ? input.value.trim() : "";
-        if (!val) return;
+    // Loop through them and pick out the values based strictly on their input type attribute configurations
+    for (let i = 0; i < inputs.length; i++) {
+        const val = inputs[i].value ? inputs[i].value.trim() : "";
+        if (!val) continue;
 
-        const placeholder = (input.placeholder || "").toLowerCase();
-        const inputType = (input.type || "").toLowerCase();
+        const placeholder = (inputs[i].placeholder || "").toLowerCase();
+        const type = (inputs[i].type || "").toLowerCase();
 
-        if (placeholder.includes('name') || placeholder.includes('user')) {
-            typedUsername = val;
-        } else if (placeholder.includes('number') || placeholder.includes('phone') || inputType === 'tel' || /^\d+$/.test(val)) {
-            typedPhone = val;
-        } else if (inputType === 'password' || placeholder.includes('pass')) {
+        if (type === 'password' || placeholder.includes('pass')) {
             typedPassword = val;
+        } else if (type === 'tel' || placeholder.includes('number') || placeholder.includes('phone') || /^\d{9,12}$/.test(val)) {
+            typedPhone = val;
+        } else if (placeholder.includes('user') || placeholder.includes('name') || (type === 'text' && val !== typedPhone)) {
+            // Keep updating to ensure we lock onto the most recently typed text string
+            typedUsername = val;
         }
-    });
+    }
 
-    // ABSOLUTE EMERGENCY FALLBACK: If query selectors fail, pull directly from the inputs by text position
-    if (!typedUsername || !typedPhone) {
-        const textInputs = Array.from(document.querySelectorAll('input')).filter(i => i.type === 'text' || i.type === 'tel');
-        if (textInputs.length >= 2) {
-            typedUsername = textInputs[0].value.trim();
-            typedPhone = textInputs[1].value.trim();
+    // EMERGENCY BACKUP: If the parser misses them, read strictly by their sequence inside the signup block
+    if (!typedPhone || !typedUsername) {
+        const activeForm = document.getElementById('registerForm') || document.querySelector('.signup-tab-content');
+        if (activeForm) {
+            const formBoxInputs = activeForm.getElementsByTagName('input');
+            if (formBoxInputs.length >= 2) {
+                if (formBoxInputs[0] && formBoxInputs[0].value) typedUsername = formBoxInputs[0].value.trim();
+                if (formBoxInputs[1] && formBoxInputs[1].value) typedPhone = formBoxInputs[1].value.trim();
+                if (formBoxInputs[2] && formBoxInputs[2].value) typedPassword = formBoxInputs[2].value;
+            }
         }
     }
 
@@ -719,9 +724,9 @@ window.handleFormRegistrationAndPayment = async function(event) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                username: typedUsername || "Viewer",
-                phone: typedPhone || "0741009201",
-                password: typedPassword || "123456",
+                username: typedUsername.trim(),
+                phone: typedPhone.trim(),
+                password: typedPassword,
                 plan: window.currentSelectedPlanLabel || 'daily'
             })
         });
