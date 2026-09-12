@@ -156,12 +156,10 @@ async function registerPesapalIPN() {
     try {
         console.log("⏳ [PESAPAL SETUP]: Authenticating to register IPN...");
         
-        const authResponse = await axios.post(`${PESAPAL_BASE_URL}/api/Auth/RequestToken`, {
-            consumer_key: process.env.PESAPAL_CONSUMER_KEY || "qk8/C/87b+uaKL3/TSd25/nbnMeVvVvG",
-            consumer_secret: process.env.PESAPAL_CONSUMER_SECRET || "YOUR_ACTUAL_SECRET_HERE"
+                const authResponse = await axios.post(`${PESAPAL_BASE_URL}/api/Auth/RequestToken`, {
+            consumer_key: "qk8/C/87b+uaKL3/TSd25/nbnMeVvVvG",
+            consumer_secret: "gP96S9qn9A7U97+O4m9cEw== "
         }, {
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
-        });
 
         const accessToken = authResponse.data.token;
         console.log("⏳ [PESAPAL SETUP]: Registering Webhook Route URL...");
