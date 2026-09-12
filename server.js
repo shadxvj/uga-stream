@@ -28,11 +28,7 @@ app.get('/api/health', (req, res) => {
 });
 
 let moviesDatabase = [];
-let usersDatabase = [
-    { id: 1, username: "Ivan_K", phone: "0772123456", plan: "MONTHLY", password: "Password123" },
-    { id: 2, username: "Mary_Namubiru", phone: "0701987654", plan: "WEEKLY", password: "LugandaFan99" },
-    { id: 3, username: "VJ_Meddy_Fan", phone: "0750434712", plan: "DAILY", password: "UgaStreamPass" }
-];
+let usersDatabase = [];
 
 // API Endpoint to authenticate existing subscribers
 app.post('/api/login-user', (req, res) => {
@@ -51,6 +47,32 @@ app.post('/api/login-user', (req, res) => {
         });
     } catch (error) {
         return res.status(500).json({ success: false, message: "Server login error." });
+    }
+});
+
+// API Endpoint to process and save new user registrations (ZERO RESTRICTIONS)
+app.post('/api/register-user', (req, res) => {
+    try {
+        const { username, phone, plan, password } = req.body;
+
+        // Auto-generate random credentials for EVERY click to guarantee it never hits a duplicate block
+        const finalUsername = (username && username.trim()) ? username.trim() : "User_" + Math.floor(1000 + Math.random() * 9000);
+        const finalPhone = (phone && phone.trim()) ? phone.trim() : "07" + Math.floor(10000000 + Math.random() * 90000000);
+        const finalPassword = password || "123456";
+
+        const newUser = {
+            id: usersDatabase.length + 1,
+            username: finalUsername,
+            phone: finalPhone,
+            plan: plan || "DAILY", 
+            password: finalPassword
+        };
+
+        // Always accept the user profile dynamically
+        usersDatabase.push(newUser);
+        return res.status(200).json({ success: true, user: newUser });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "Server Error" });
     }
 });
 
