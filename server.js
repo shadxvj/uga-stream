@@ -156,9 +156,9 @@ async function registerPesapalIPN() {
     try {
         console.log("⏳ [PESAPAL SETUP]: Authenticating to register IPN...");
         
-                const authResponse = await axios.post(`${PESAPAL_BASE_URL}/api/Auth/RequestToken`, {
+                       const authResponse = await axios.post(`${PESAPAL_BASE_URL}/api/Auth/RequestToken`, {
             consumer_key: "qk8/C/87b+uaKL3/TSd25/nbnMeVvVvG",
-            consumer_secret: "gP96S9qn9A7U97+O4m9cEw== "
+            consumer_secret: "gP96S9qn9A7U97+O4m9cEw=="
         }, {
 
         const accessToken = authResponse.data.token;
