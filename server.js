@@ -202,9 +202,6 @@ setTimeout(registerPesapalIPN, 5000);
             console.log("❌ [PESAPAL AUTO-SETUP]: Unexpected response format:", ipnResponse.data);
         }
 
-    } catch (error) {
-        console.error("❌ [IPN REGISTRATION ERROR]:", error.response ? error.response.data : error.message);
-    }
 }
 
 setTimeout(registerPesapalIPN, 5000);
@@ -212,6 +209,7 @@ setTimeout(registerPesapalIPN, 5000);
 // =========================================================================
 // PESAPAL PAYMENTS ENDPOINTS
 // =========================================================================
+
 
 app.post('/api/process-momo', async (req, res) => {
     try {
