@@ -980,15 +980,26 @@ window.handleFormRegistrationAndPayment = async function(event) {
             if (registerLink) registerLink.addEventListener('click', (e) => { e.preventDefault(); openAuthModal(); switchAuthTab('register'); });
 
             // Hook up the big red "Watch Now" hero banner button
+                        // Hook up the big red "Watch Now" hero banner button
             const watchNowBtn = document.querySelector('.hero-content .play-btn, .hero-content button, .download-btn');
             if (watchNowBtn) {
                 watchNowBtn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    openAuthModal();
-                    switchAuthTab('register'); 
+                    
+                    alert("🔗 Opening secure Mobile Money portal. Please fill in your Airtel or MTN details on the next screen.");
+                    
+                    // 🚨 PASTE YOUR FLUTTERWAVE NO-CODE LINK BETWEEN THE QUOTES BELOW:
+                    const basePaymentLink = "https://flutterwave.com";
+                    
+                    // Automatically track your Render live domain address as the landing page
+                    const dynamicRedirectPath = encodeURIComponent(window.location.origin + window.location.pathname + "?access=unlocked");
+                    
+                    // Instantly push the user's window tab over to the payment flow page
+                    window.location.href = `${basePaymentLink}?redirect_url=${dynamicRedirectPath}`;
                 });
             }
         });
+
    
 
 
