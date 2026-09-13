@@ -931,7 +931,16 @@ window.handleFormRegistrationAndPayment = async function(event) {
         document.addEventListener("DOMContentLoaded", () => {
             // Load custom movie items array instantly
             fetchLiveApplicationCatalog();
-              // --- DYNAMIC USER AUTOMATION & LOGOUT INTERFACE ENGINE ---
+                   // --- REAL-TIME AUTOMATION SUBSCRIPTION TRACKER ---
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('access') === 'unlocked') {
+            localStorage.setItem('uga_subscriber_session', 'true');
+            localStorage.setItem('uga_user_status', 'premium');
+            alert("🎉 Payment Confirmed! Premium access has been activated.");
+            // Clears the ?access=unlocked from the browser tab bar to keep it neat
+            window.history.replaceState({}, document.title, window.location.pathname);
+          
+            // --- DYNAMIC USER AUTOMATION & LOGOUT INTERFACE ENGINE ---
         const dropdownMenu = document.getElementById('profileDropdown');
         if (dropdownMenu) {
             const isLogged = localStorage.getItem('uga_subscriber_session') === 'true';
