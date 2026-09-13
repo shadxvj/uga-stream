@@ -991,23 +991,27 @@ window.handleFormRegistrationAndPayment = async function(event) {
             // Hook up the big red "Watch Now" hero banner button
                         // Hook up the big red "Watch Now" hero banner button
           // Hook up the big red "Watch Now" hero banner button
-const watchNowBtn = document.querySelector('.hero-content .play-btn, .hero-content button, .download-btn');
-if (watchNowBtn) {
-    watchNowBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        
-        alert("🔗 Opening secure Mobile Money portal. Please enter your Airtel or MTN details on the next screen.");
-        
-        // 🚨 PASTE YOUR NEW PAYSTACK PAYMENT PAGE LINK RIGHT HERE:
-        const basePaymentLink = "PASTE_YOUR_PAYSTACK_LINK_HERE";
-        
-        // Tracks your live Render application link automatically as the target landing pad
-        const dynamicRedirectPath = encodeURIComponent(window.location.origin + window.location.pathname + "?access=unlocked");
-        
-        // Redirects the active window over to the provider portal screen layout seamlessly
-        window.location.href = `${basePaymentLink}?redirect_url=${dynamicRedirectPath}`;
-    });
-}
+            // Hook up the big red "Watch Now" hero banner button wired directly to Selar
+            const watchNowBtn = document.querySelector('.hero-content .play-btn, .hero-content button, .download-btn');
+            if (watchNowBtn) {
+                watchNowBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    const isLogged = localStorage.getItem('uga_subscriber_session') === 'true';
+                    const isPremium = localStorage.getItem('uga_user_status') === 'premium';
+
+                    // If they are already logged in and active, skip the billing link completely
+                    if (isLogged && isPremium) {
+                        alert("✨ Premium subscription active! Enjoy your translated cinema.");
+                        return;
+                    }
+
+                    alert("📡 Opening secure Mobile Money portal. Authorize the PIN prompt on your phone screen to instantly unlock UGA STREAM!");
+                    
+                    // 🚨 PASTE YOUR MAIN SELAR DIGITAL PRODUCT WEB URL BETWEEN THE QUOTES BELOW:
+                    window.location.href = "https://selar.co"; 
+                });
+            }
 
    
 
