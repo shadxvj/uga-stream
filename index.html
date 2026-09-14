@@ -982,6 +982,7 @@ window.handleFormRegistrationAndPayment = async function(event) {
                     alert("📡 Opening secure Mobile Money portal. Authorize the PIN prompt on your phone screen to instantly unlock UGA STREAM!");
                     
                     // 🚨 ROUTING DIRECTLY TO YOUR NEW MULTI-PLAN LIVE PAYMENT STORE PAGE
+                            // 🚨 PASTE YOUR EXACT LIVE SELAR LINK RIGHT HERE:
                     window.location.href = "https://selar.co"; 
                 });
             }
@@ -997,11 +998,8 @@ window.handleFormRegistrationAndPayment = async function(event) {
                 localStorage.setItem('uga_subscriber_session', 'true');
                 localStorage.setItem('uga_user_status', 'premium');
                 window.location.reload();
+                return;
             }
-        }
-
-        return;
-    }
 
     try {
         const response = await fetch('/api/login-user', {
