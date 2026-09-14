@@ -412,12 +412,16 @@ function fetchLiveApplicationCatalog() {
                 'animation': document.querySelector('#animation .movie-grid-track')
             };
 
-            // 1. Wipe all rows clean and put the default "No videos" message first
-            Object.keys(categoryTracks).forEach(cat => {
-                if (categoryTracks[cat]) {
-                    categoryTracks[cat].innerHTML = `<p style="color: #666; font-size: 0.9rem;">No videos uploaded in this category yet.</p>`;
-                }
-            });
+                          // 1. Wipe all rows clean and put a beautiful, visible placeholder message
+                Object.keys(categoryTracks).forEach(cat => {
+                    if (categoryTracks[cat]) {
+                        categoryTracks[cat].innerHTML = `
+                            <div style="grid-column: 1 / -1; padding: 30px 10px; color: #b3b3b3; font-size: 0.95rem; font-style: italic; letter-spacing: 0.3px;">
+                                🎬 No premium videos uploaded in this category yet...
+                            </div>
+                        `;
+                    }
+                });
 
             // 2. If there are movies, distribute them into their proper categories
             if (movies && movies.length > 0) {
