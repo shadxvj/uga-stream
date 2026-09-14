@@ -894,22 +894,41 @@ window.handleFormRegistrationAndPayment = async function(event) {
             } 
         } 
 
+    <!-- ==========================================================================
+         APPLICATION SCRIPT ENGINE (FIXED & LOGGED TO ADMIN PANELS ✅)
+         ========================================================================== -->
+    <script>
         function openAuthModal() { 
-            const modal = document.getElementById('subscriptionModal'); 
-            if (modal) modal.style.display = 'flex';
-        } 
-
+            const modal = document.getElementById('subscriptionModal');
+            if (modal) modal.style.display = 'flex'; 
+        }
+        
         function closeAuthModal() { 
-            const modal = document.getElementById('subscriptionModal'); 
+            const modal = document.getElementById('subscriptionModal');
             if (modal) modal.style.display = 'none'; 
         }
+        
+        function switchAuthTab(targetTab) {
+            const regPanel = document.getElementById('registerFormPanel');
+            const loginPanel = document.getElementById('loginFormPanel');
+            const regTabBtn = document.getElementById('tabRegisterBtn');
+            const loginTabBtn = document.getElementById('tabLoginBtn');
+            if (targetTab === 'register') {
+                if (regPanel) regPanel.style.display = 'block'; 
+                if (loginPanel) loginPanel.style.display = 'none';
+                if (regTabBtn) { regTabBtn.style.background = '#e50914'; regTabBtn.style.color = '#fff'; }
+                if (loginTabBtn) { loginTabBtn.style.background = 'transparent'; loginTabBtn.style.color = '#aaa'; }
+            } else {
+                if (regPanel) regPanel.style.display = 'none'; 
+                if (loginPanel) loginPanel.style.display = 'block';
+                if (regTabBtn) { regTabBtn.style.background = 'transparent'; regTabBtn.style.color = '#aaa'; }
+                if (loginTabBtn) { loginTabBtn.style.background = '#e50914'; loginTabBtn.style.color = '#fff'; }
+            }
+        }
 
-        // Main App Event Initializer Hook
         document.addEventListener("DOMContentLoaded", () => {
-            // Load custom movie items array instantly
             fetchLiveApplicationCatalog();
 
-            // --- REAL-TIME AUTOMATION SUBSCRIPTION TRACKER (FIXED BRACKET ✅) ---
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('access') === 'unlocked') {
                 localStorage.setItem('uga_subscriber_session', 'true');
@@ -917,210 +936,130 @@ window.handleFormRegistrationAndPayment = async function(event) {
                 alert("🎉 Payment Confirmed! Premium access has been activated.");
                 window.history.replaceState({}, document.title, window.location.pathname);
             }
-          
-            // --- DYNAMIC USER AUTOMATION & LOGOUT INTERFACE ENGINE ---
-            const dropdownMenu = document.getElementById('profileDropdown');
-            if (dropdownMenu) {
-                const isLogged = localStorage.getItem('uga_subscriber_session') === 'true';
-                const isAdmin = localStorage.getItem('uga_user_status') === 'premium';
 
-                const heading = document.getElementById('dropdownUserTitle');
-                if (heading && isLogged) {
-                    heading.textContent = isAdmin ? "Hello, Admin 🔓" : "Hello, Subscriber ✅";
-                }
-
-                if (isLogged) {
-                    const loginLink = document.getElementById('openLoginBtn');
-                    const signUpLink = document.getElementById('openRegisterBtn');
-                    if (loginLink) loginLink.style.display = 'none';
-                    if (signUpLink) signUpLink.style.display = 'none';
-
-                    if (!document.getElementById('dynamicLogoutBtn')) {
-                        const logoutBtn = document.createElement('a');
-                        logoutBtn.id = "dynamicLogoutBtn";
-                        logoutBtn.href = '#';
-                        logoutBtn.textContent = 'Log Out';
-                        logoutBtn.style.cssText = 'display: block; color: #e50914; font-weight: bold; border-top: 1px solid #333; margin-top: 8px; padding-top: 8px; text-decoration: none; padding: 5px 10px; cursor: pointer;';
-
-                        logoutBtn.addEventListener('click', (e) => {
-                            e.preventDefault();
-                            localStorage.removeItem('uga_subscriber_session');
-                            localStorage.removeItem('uga_user_status');
-                            sessionStorage.removeItem('subscriberSessionActive');
-                            
-                            alert('🔒 Logged out successfully. Premium access is now locked.');
-                            window.location.reload();
-                        });
-
-                        dropdownMenu.appendChild(logoutBtn);
+            const watchButtons = document.querySelectorAll('#mainHeroWatchBtn, .watch-now-btn');
+            watchButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (localStorage.getItem('uga_subscriber_session') === 'true') {
+                        alert("✨ Premium subscription active! Enjoy your translated cinema.");
+                    } else {
+                        openAuthModal();
                     }
-                }
+                });
+            });
+        });
+
+        // 🎬 INJECT POPULATED VIDEO CARDS OR RENDER FALLBACK NOTIFICATIONS
+        function fetchLiveApplicationCatalog() {
+            fetch('/api/movies')
+                .then(response => response.json())
+                .then(movies => {
+                    const categoryTracks = {
+                        'trending': document.querySelector('#trending .movie-grid-track'),
+                        'action': document.querySelector('#action .movie-grid-track'),
+                        'comedy': document.querySelector('#comedy .movie-grid-track'),
+                        'drama': document.querySelector('#drama .movie-grid-track'),
+                        'series': document.querySelector('#series .movie-grid-track'),
+                        'animation': document.querySelector('#animation .movie-grid-track')
+                    };
+
+                    Object.keys(categoryTracks).forEach(cat => {
+                        if (categoryTracks[cat]) {
+                            categoryTracks[cat].innerHTML = `
+                                <div style="grid-column: 1 / -1; padding: 30px 10px; color: #b3b3b3; font-size: 0.95rem; font-style: italic;">
+                                    🎬 No premium videos uploaded in this category yet...
+                                </div>
+                            `;
+                        }
+                    });
+
+                    if (movies && movies.length > 0) {
+                        movies.forEach(movie => {
+                            const movieCategory = String(movie.category || 'trending').toLowerCase().trim();
+                            const track = categoryTracks[movieCategory];
+                            if (track) {
+                                if (track.innerHTML.includes("No premium videos uploaded")) {
+                                    track.innerHTML = '';
+                                }
+                                const card = document.createElement('div');
+                                card.className = 'movie-card';
+                                card.innerHTML = `
+                                    <div class="poster-frame" style="background-image: url('${movie.image}');"><i class="fas fa-play"></i></div>
+                                    <div style="padding: 10px;">
+                                        <h5 style="color: #fff; margin: 0 0 5px 0;">${movie.title}</h5>
+                                        <p style="color: #666; font-size: 0.75rem; margin: 0;">VJ ${movie.vj || 'Unknown'}</p>
+                                    </div>
+                                `;
+                                track.appendChild(card);
+                            }
+                        });
+                    }
+                })
+                .catch(err => console.error("Error loading application catalog routes:", err));
+        }
+
+        // 👤 SAVE REGISTRATION DATA IN BACKEND LOGS FIRST THEN REDIRECT TO SELAR
+        async function processSubscriberRegistration() {
+            const username = document.getElementById('regUsername').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const password = document.getElementById('regPass').value;
+            const plan = document.getElementById('regPlan').value;
+
+            if (!username || !phone || !password) {
+                return alert("⚠️ Please fill in all required form fields first.");
             }
 
-            // Hook Up Navbar Dropdown Buttons
-            const loginLink = document.getElementById('openLoginBtn');
-            const registerLink = document.getElementById('openRegisterBtn');
-            
-            if (loginLink) loginLink.addEventListener('click', (e) => { e.preventDefault(); openAuthModal(); switchAuthTab('login'); });
-            if (registerLink) registerLink.addEventListener('click', (e) => { e.preventDefault(); openAuthModal(); switchAuthTab('register'); });
-
-            // Hook up the big red "Watch Now" hero banner button wired directly to Selar (LINK FIXED 🔗)
-            const watchNowBtn = document.querySelector('.hero-content .play-btn, .hero-content button, .download-btn');
-            if (watchNowBtn) {
-                watchNowBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    
-                    const isLogged = localStorage.getItem('uga_subscriber_session') === 'true';
-                    const isPremium = localStorage.getItem('uga_user_status') === 'premium';
-
-                    if (isLogged && isPremium) {
-                        alert("✨ Premium subscription active! Enjoy your translated cinema.");
-                        return;
-                    }
-
-                    alert("📡 Opening secure Mobile Money portal. Authorize the PIN prompt on your phone screen to instantly unlock UGA STREAM!");
-                    
-                    // 🚨 ROUTING DIRECTLY TO YOUR NEW MULTI-PLAN LIVE PAYMENT STORE PAGE
-                            // 🚨 PASTE YOUR EXACT LIVE SELAR LINK RIGHT HERE:
-                                   // 🚨 ROUTING DIRECTLY TO YOUR NEW MULTI-PLAN LIVE PAYMENT STORE PAGE
-                    window.location.href = "https://selar.com/385391kjj8";
-            });
-        }
-    });
-
-    // 1. Process Existing Subscriber Sign-In Requests
-    async function processSubscriberLogin() {
-        const phone = document.getElementById('loginPhone').value.trim();
-        const password = document.getElementById('loginPass').value;
-
-        if (phone === "0000" && password === "admin123") {
-            alert('🔓 Admin Bypass Activated! Welcome to UGA Stream.');
-            localStorage.setItem('uga_subscriber_session', 'true');
-            localStorage.setItem('uga_user_status', 'premium');
-            window.location.reload();
-            return;
-        }
-
-    try {
-        const response = await fetch('/api/login-user', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ phone, password })
-        });
-        
-        const data = await response.json();
-        if (data.success) {
-            alert(`✅ Access Verified! Welcome back, ${data.user.username}.`);
-            localStorage.setItem('uga_subscriber_session', 'true');
-            closeAuthModal();
-            window.location.reload();
-        } else {
-            alert(`❌ Login Failed: ${data.message}`);
-        }
-    } catch (err) {
-        console.error("Login handling error:", err);
-        alert("⚠️ System communication breakdown connecting to authentication gateway.");
-    }
-}
-
-        // 2. Process Registration & Connect to Mobile Money Payment Route
-   async function processSubscriberRegistration() {
-    const username = document.getElementById('regUsername').value.trim();
-    const phone = document.getElementById('regPhone').value.trim();
-    const password = document.getElementById('regPass').value;
-    const selectEl = document.getElementById('regPlan');
-    const plan = selectEl ? selectEl.value : "DAILY";
-
-    if (!username || !phone || !password) {
-        return alert("⚠️ Please fill in all fields (Name, Phone, and Password) before initiating payment.");
-    }
-
-    try {
-        console.log("📡 Transmitting user data to Render backend...");
-        
-        // This saves their credentials to your Admin Dashboard live user list first!
-        const regResponse = await fetch('/api/register-user', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, phone, password, plan })
-        });
-
-        const regData = await regResponse.json();
-
-        if (!regResponse.ok || regData.success === false) {
-            return alert(`❌ Registration Blocked: ${regData.message || 'Invalid details'}`);
-        }
-
-        localStorage.setItem('uga_subscriber_session', 'true');
-        localStorage.setItem('uga_user_phone', phone);
-
-        alert("🔐 Profile successfully registered in Admin Dashboard! Opening secure Mobile Money portal next...");
-
-        // 🚨 REDIRECTS USER INSTANTLY TO YOUR LIVE MULTI-PLAN SELAR CHECKOUT INTERFACE!
-        window.location.href = "https://selar.co";
-
-    } catch (error) {
-        console.error("❌ Communication drop with backend engine:", error);
-        window.location.href = "https://selar.co";
-    }
-}
-
-// =========================================================================
-// EMPTY MOVIE SHELF FALLBACK MESSAGE LOOPS (RESTORED 🎬)
-// =========================================================================
-function initializeEmptyCategoryPlaceholders() {
-    // Looks for your category rows and tracks them by your exact header IDs
-    const categories = ['trending', 'action', 'comedy', 'drama', 'series', 'animation'];
-    
-    categories.forEach(cat => {
-        const container = document.getElementById(`${cat}Track`) || document.querySelector(`.${cat}-grid`) || document.querySelector('.movie-grid-track');
-        
-        // If the row track exists and has zero movie cards loaded inside it right now:
-        if (container && container.children.length === 0) {
-            container.innerHTML = `
-                <div style="grid-column: 1 / -1; padding: 30px 10px; color: #b3b3b3; font-size: 0.95rem; font-style: italic;">
-                    🎬 No premium videos uploaded in this category yet...
-                </div>
-            `;
-        }
-    });
-}
-
-// Make sure placeholders check automatically when the application draws on screen
-document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(initializeEmptyCategoryPlaceholders, 1000);
-});
-
-        // Keep their session info stored on their phone locally so they stay logged in
-        localStorage.setItem('uga_subscriber_session', 'true');
-        localStorage.setItem('uga_user_phone', phone);
-
-        alert("🔐 Profile successfully registered in Admin Dashboard! Opening secure Mobile Money portal next...");
-
-        // 🚨 2. REDIRECTS STRAIGHT TO YOUR LIVE MULTI-PLAN CHANNELS CODES ONCE RECORDED IN YOUR DATABASE
-        window.location.href = "https://selar.co";
-
-
-
-                alert(`⏳ Account profiles saved! Loading secure Mobile Money portal for UGX ${parseInt(amount).toLocaleString()}...`);
-                
-                        const payResponse = await fetch('/api/process-momo', {
+            try {
+                const response = await fetch('/api/register-user', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ phone, amount, plan, username })
+                    body: JSON.stringify({ username, phone, password, plan })
                 });
-                const payData = await payResponse.json();
-
-                if (payData.success && payData.redirectUrl) {
-                    window.location.href = payData.redirectUrl;
+                const data = await response.json();
+                
+                if (response.ok && data.success !== false) {
+                    localStorage.setItem('uga_subscriber_session', 'true');
+                    localStorage.setItem('uga_user_phone', phone);
+                    alert("🔐 Profile successfully registered in Admin Dashboard! Redirecting to secure payment screen next...");
+                    window.location.href = "https://selar.co";
                 } else {
-                    alert(`❌ Payment Gateway Offline: ${payData.message || 'Verification initialization error.'}`);
+                    alert("❌ Registration issue: " + (data.message || "Invalid account details configuration."));
                 }
-                       } catch (err) {
-                console.error(err);
-                alert("⚠️ Connection timeout error during mobile money checkouts.");
+            } catch (err) {
+                console.warn("Backend logging delayed, proceeding to payment gateway tracking parameters.");
+                window.location.href = "https://selar.co";
             }
-    
+        }
+
+        // 🔐 AUTHENTICATE RETURNING PREMIUM PLAN PASS USERS
+        async function processSubscriberLogin() {
+            const phone = document.getElementById('loginPhone').value.trim();
+            const password = document.getElementById('loginPass').value;
+            
+            if (!phone || !password) {
+                return alert("⚠️ Please provide your phone and password.");
+            }
+
+            try {
+                const response = await fetch('/api/login-user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone, password })
+                });
+                const data = await response.json();
+                if (response.ok && data.success) {
+                    localStorage.setItem('uga_subscriber_session', 'true');
+                    alert("🔓 Login successful! Premium streaming access unlocked.");
+                    window.location.reload();
+                } else {
+                    alert("❌ Account authentication failed: Check entries.");
+                }
+            } catch (err) {
+                alert("Error connecting to authorization host node.");
+            }
+        }
     </script>
 </body>
 </html>
+
