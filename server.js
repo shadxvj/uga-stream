@@ -327,17 +327,41 @@ app.get('/api/pesapal-ipn', async (req, res) => {
 });
 
 // =========================================================================
-// SECURE AUTOMATED SELAR WEBHOOK CONTROLLER
+// ADMIN MOVIE UPLOAD ROUTE (RESTORED 🎬)
+// =========================================================================
+app.post('/api/admin/upload', (req, res) => {
+    try {
+        const { title, category, videoUrl, imageUrl, description } = req.body;
+        
+        console.log(`🎬 [NEW MOVIE UPLOAD]: Adding ${title} to ${category}`);
+        
+        // This pushes your newly uploaded video straight into your platform list
+        moviesDatabase.push({
+            id: moviesDatabase.length + 1,
+            title,
+            category,
+            videoUrl,
+            imageUrl,
+            description,
+            uploadedAt: new Date()
+        });
+
+        return res.status(200).json({ success: true, message: "Movie published successfully!" });
+    } catch (error) {
+        console.error("❌ [UPLOAD ERROR]:", error.message);
+        return res.status(500).send("Failed to save movie.");
+    }
+});
+
+// =========================================================================
+// SECURE AUTOMATED SELAR WEBHOOK CONTROLLER (PAYMENT FLOW 💰)
 // =========================================================================
 app.post('/api/selar-webhook', (req, res) => {
     try {
         const payload = req.body;
-        
         console.log("🔔 [WEBHOOK INCOMING]: Received payment alert from Selar.");
 
-        // Verify the payment state sent by the provider dashboard rules
         if (payload && payload.status === "SUCCESS") {
-            // Extract the user details directly from the checkout form data
             const customerPhone = String(payload.customer.phone || "").trim();
             const customerName = payload.customer.name || "Premium Viewer";
 
@@ -345,7 +369,6 @@ app.post('/api/selar-webhook', (req, res) => {
                 return res.status(400).send("Phone data missing in payload.");
             }
 
-            // Standardize phone format to match your local array records
             let formattedPhone = customerPhone.replace(/\s+/g, '');
             if (formattedPhone.startsWith("0")) {
                 formattedPhone = "256" + formattedPhone.substring(1);
@@ -353,32 +376,28 @@ app.post('/api/selar-webhook', (req, res) => {
 
             console.log(`✅ [PAYMENT VERIFIED]: Activating premium access for line: ${formattedPhone}`);
 
-            // Search if the subscriber already exists in your system array
             const userIndex = usersDatabase.findIndex(u => u.phone === formattedPhone);
             
             if (userIndex !== -1) {
-                // If they have an existing account, instantly upgrade it
                 usersDatabase[userIndex].status = "premium";
             } else {
-                // Otherwise, automatically create a fresh premium profile for them
                 usersDatabase.push({
                     id: usersDatabase.length + 1,
                     username: customerName,
                     phone: formattedPhone,
-                    password: "DefaultPassword123", // They can log in immediately
+                    password: "DefaultPassword123", 
                     status: "premium"
                 });
             }
         }
-
-        // Always return a clean 200 OK status to acknowledge the event receipt
         return res.status(200).send("Webhook handled safely.");
-        
     } catch (error) {
         console.error("❌ [SELAR WEBHOOK PROCESSING ERROR]:", error.message);
         return res.status(500).send("Internal processing drop.");
     }
 });
+
+// INITIALIZE EXPRESS SERVER ENGINE
 app.listen(PORT, () => {
     console.log(`🚀 UgaStream backend live on port ${PORT}`);
 });
