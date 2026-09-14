@@ -404,24 +404,24 @@ function fetchLiveApplicationCatalog() {
         .then(movies => {
             // Find all our category display tracks
             const categoryTracks = {
-                'trending': document.querySelector('#trending .movie-grid-track'),
-                'action': document.querySelector('#action .movie-grid-track'),
-                'comedy': document.querySelector('#comedy .movie-grid-track'),
-                'drama': document.querySelector('#drama .movie-grid-track'),
-                'series': document.querySelector('#series .movie-grid-track'),
-                'animation': document.querySelector('#animation .movie-grid-track')
+                'trending': document.querySelector('#trending .movie-grid-track') || document.querySelector('.trending-grid'),
+                'action': document.querySelector('#action .movie-grid-track') || document.querySelector('.action-grid'),
+                'comedy': document.querySelector('#comedy .movie-grid-track') || document.querySelector('.comedy-grid'),
+                'drama': document.querySelector('#drama .movie-grid-track') || document.querySelector('.drama-grid'),
+                'series': document.querySelector('#series .movie-grid-track') || document.querySelector('.series-grid'),
+                'animation': document.querySelector('#animation .movie-grid-track') || document.querySelector('.animation-grid')
             };
 
-                          // 1. Wipe all rows clean and put a beautiful, visible placeholder message
-                Object.keys(categoryTracks).forEach(cat => {
-                    if (categoryTracks[cat]) {
-                                categoryTracks[cat].innerHTML = `
-            <div style="grid-column: 1 / -1; padding: 30px 10px; color: #b3b3b3; font-size: 0.95rem; font-style: italic;">
-                🎬 No premium videos uploaded in this category yet...
-            </div>
-        `;
-                    }
-                });
+            // 1. Wipe all rows clean and put a beautiful, visible placeholder message
+            Object.keys(categoryTracks).forEach(cat => {
+                if (categoryTracks[cat]) {
+                    categoryTracks[cat].innerHTML = `
+                        <div style="grid-column: 1 / -1; padding: 30px 10px; color: #b3b3b3; font-size: 0.95rem; font-style: italic;">
+                            🎬 No premium videos uploaded in this category yet...
+                        </div>
+                    `;
+                }
+            });
 
             // 2. If there are movies, distribute them into their proper categories
             if (movies && movies.length > 0) {
