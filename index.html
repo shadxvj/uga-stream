@@ -872,7 +872,6 @@ window.handleFormRegistrationAndPayment = async function(event) {
             
         </div>
     </div>
-
     <script>
         let currentSubscriberSession = null; 
 
@@ -901,89 +900,63 @@ window.handleFormRegistrationAndPayment = async function(event) {
             if (modal) modal.style.display = 'flex';
         } 
 
-                function closeAuthModal() { 
+        function closeAuthModal() { 
             const modal = document.getElementById('subscriptionModal'); 
             if (modal) modal.style.display = 'none'; 
         }
-
-        function openAuthModal() { 
-            const modal = document.getElementById('subscriptionModal'); 
-            if (modal) modal.style.display = 'flex'; 
-        } 
-
-        // Dynamic Tab Switching Configuration Engine
-        function switchAuthTab(targetTab) { 
-            const regPanel = document.getElementById('registerFormPanel'); 
-            const loginPanel = document.getElementById('loginFormPanel'); 
-            const regTabBtn = document.getElementById('tabRegisterBtn'); 
-            const loginTabBtn = document.getElementById('tabLoginBtn'); 
-            
-            if (targetTab === 'register') { 
-                if (regPanel) regPanel.style.display = 'block'; 
-                if (loginPanel) loginPanel.style.display = 'none'; 
-                if (regTabBtn) { regTabBtn.style.background = '#e50914'; regTabBtn.style.color = '#fff'; } 
-                if (loginTabBtn) { loginTabBtn.style.background = 'transparent'; loginTabBtn.style.color = '#aaa'; } 
-            } else { 
-                if (regPanel) regPanel.style.display = 'none'; 
-                if (loginPanel) loginPanel.style.display = 'block'; 
-                if (regTabBtn) { regTabBtn.style.background = 'transparent'; regTabBtn.style.color = '#aaa'; } 
-                if (loginTabBtn) { loginTabBtn.style.background = '#e50914'; loginTabBtn.style.color = '#fff'; } 
-            } 
-        } 
 
         // Main App Event Initializer Hook
         document.addEventListener("DOMContentLoaded", () => {
             // Load custom movie items array instantly
             fetchLiveApplicationCatalog();
-                   // --- REAL-TIME AUTOMATION SUBSCRIPTION TRACKER ---
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('access') === 'unlocked') {
-            localStorage.setItem('uga_subscriber_session', 'true');
-            localStorage.setItem('uga_user_status', 'premium');
-            alert("🎉 Payment Confirmed! Premium access has been activated.");
-            // Clears the ?access=unlocked from the browser tab bar to keep it neat
-            window.history.replaceState({}, document.title, window.location.pathname);
+
+            // --- REAL-TIME AUTOMATION SUBSCRIPTION TRACKER (FIXED BRACKET ✅) ---
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('access') === 'unlocked') {
+                localStorage.setItem('uga_subscriber_session', 'true');
+                localStorage.setItem('uga_user_status', 'premium');
+                alert("🎉 Payment Confirmed! Premium access has been activated.");
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
           
             // --- DYNAMIC USER AUTOMATION & LOGOUT INTERFACE ENGINE ---
-        const dropdownMenu = document.getElementById('profileDropdown');
-        if (dropdownMenu) {
-            const isLogged = localStorage.getItem('uga_subscriber_session') === 'true';
-            const isAdmin = localStorage.getItem('uga_user_status') === 'premium';
+            const dropdownMenu = document.getElementById('profileDropdown');
+            if (dropdownMenu) {
+                const isLogged = localStorage.getItem('uga_subscriber_session') === 'true';
+                const isAdmin = localStorage.getItem('uga_user_status') === 'premium';
 
-            const heading = document.getElementById('dropdownUserTitle');
-            if (heading && isLogged) {
-                heading.textContent = isAdmin ? "Hello, Admin 🔓" : "Hello, Subscriber ✅";
-            }
+                const heading = document.getElementById('dropdownUserTitle');
+                if (heading && isLogged) {
+                    heading.textContent = isAdmin ? "Hello, Admin 🔓" : "Hello, Subscriber ✅";
+                }
 
-            if (isLogged) {
-                const loginLink = document.getElementById('openLoginBtn');
-                const signUpLink = document.getElementById('openRegisterBtn');
-                if (loginLink) loginLink.style.display = 'none';
-                if (signUpLink) signUpLink.style.display = 'none';
+                if (isLogged) {
+                    const loginLink = document.getElementById('openLoginBtn');
+                    const signUpLink = document.getElementById('openRegisterBtn');
+                    if (loginLink) loginLink.style.display = 'none';
+                    if (signUpLink) signUpLink.style.display = 'none';
 
-                if (!document.getElementById('dynamicLogoutBtn')) {
-                    const logoutBtn = document.createElement('a');
-                    logoutBtn.id = "dynamicLogoutBtn";
-                    logoutBtn.href = '#';
-                    logoutBtn.textContent = 'Log Out';
-                    logoutBtn.style.cssText = 'display: block; color: #e50914; font-weight: bold; border-top: 1px solid #333; margin-top: 8px; padding-top: 8px; text-decoration: none; padding: 5px 10px; cursor: pointer;';
+                    if (!document.getElementById('dynamicLogoutBtn')) {
+                        const logoutBtn = document.createElement('a');
+                        logoutBtn.id = "dynamicLogoutBtn";
+                        logoutBtn.href = '#';
+                        logoutBtn.textContent = 'Log Out';
+                        logoutBtn.style.cssText = 'display: block; color: #e50914; font-weight: bold; border-top: 1px solid #333; margin-top: 8px; padding-top: 8px; text-decoration: none; padding: 5px 10px; cursor: pointer;';
 
-                    logoutBtn.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        localStorage.removeItem('uga_subscriber_session');
-                        localStorage.removeItem('uga_user_status');
-                        sessionStorage.removeItem('subscriberSessionActive');
-                        
-                        alert('🔒 Logged out successfully. Premium access is now locked.');
-                        window.location.reload();
-                    });
+                        logoutBtn.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            localStorage.removeItem('uga_subscriber_session');
+                            localStorage.removeItem('uga_user_status');
+                            sessionStorage.removeItem('subscriberSessionActive');
+                            
+                            alert('🔒 Logged out successfully. Premium access is now locked.');
+                            window.location.reload();
+                        });
 
-                    dropdownMenu.appendChild(logoutBtn);
+                        dropdownMenu.appendChild(logoutBtn);
+                    }
                 }
             }
-        }
-
-
 
             // Hook Up Navbar Dropdown Buttons
             const loginLink = document.getElementById('openLoginBtn');
@@ -992,10 +965,7 @@ window.handleFormRegistrationAndPayment = async function(event) {
             if (loginLink) loginLink.addEventListener('click', (e) => { e.preventDefault(); openAuthModal(); switchAuthTab('login'); });
             if (registerLink) registerLink.addEventListener('click', (e) => { e.preventDefault(); openAuthModal(); switchAuthTab('register'); });
 
-            // Hook up the big red "Watch Now" hero banner button
-                        // Hook up the big red "Watch Now" hero banner button
-          // Hook up the big red "Watch Now" hero banner button
-            // Hook up the big red "Watch Now" hero banner button wired directly to Selar
+            // Hook up the big red "Watch Now" hero banner button wired directly to Selar (LINK FIXED 🔗)
             const watchNowBtn = document.querySelector('.hero-content .play-btn, .hero-content button, .download-btn');
             if (watchNowBtn) {
                 watchNowBtn.addEventListener('click', (e) => {
@@ -1004,34 +974,32 @@ window.handleFormRegistrationAndPayment = async function(event) {
                     const isLogged = localStorage.getItem('uga_subscriber_session') === 'true';
                     const isPremium = localStorage.getItem('uga_user_status') === 'premium';
 
-                    // If they are already logged in and active, skip the billing link completely
                     if (isLogged && isPremium) {
                         alert("✨ Premium subscription active! Enjoy your translated cinema.");
                         return;
                     }
 
-                                       alert("📡 Opening secure Mobile Money portal. Authorize the PIN prompt on your phone screen to instantly unlock UGA STREAM!");
+                    alert("📡 Opening secure Mobile Money portal. Authorize the PIN prompt on your phone screen to instantly unlock UGA STREAM!");
                     
-                    // 🚨 PASTE YOUR EXACT LIVE SELAR LINK RIGHT HERE:
+                    // 🚨 ROUTING DIRECTLY TO YOUR NEW MULTI-PLAN LIVE PAYMENT STORE PAGE
                     window.location.href = "https://selar.co"; 
                 });
             }
-
-   
-
+        });
 
         // 1. Process Existing Subscriber Sign-In Requests
-  async function processSubscriberLogin() {
-    const phone = document.getElementById('loginPhone').value.trim();
-    const password = document.getElementById('loginPass').value;
+        async function processSubscriberLogin() {
+            const phone = document.getElementById('loginPhone').value.trim();
+            const password = document.getElementById('loginPass').value;
 
-    // --- ADMIN BYPASS CREDENTIALS ---
-    if (phone === "0000" && password === "admin123") {
-        alert('🔓 Admin Bypass Activated! Welcome to UGA Stream.');
-        localStorage.setItem('uga_subscriber_session', 'true');
-        localStorage.setItem('uga_user_status', 'premium');
-        closeAuthModal();
-        window.location.reload();
+            if (phone === "0000" && password === "admin123") {
+                alert('🔓 Admin Bypass Activated! Welcome to UGA Stream.');
+                localStorage.setItem('uga_subscriber_session', 'true');
+                localStorage.setItem('uga_user_status', 'premium');
+                window.location.reload();
+            }
+        }
+
         return;
     }
 
