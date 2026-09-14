@@ -983,23 +983,24 @@ window.handleFormRegistrationAndPayment = async function(event) {
                     
                     // 🚨 ROUTING DIRECTLY TO YOUR NEW MULTI-PLAN LIVE PAYMENT STORE PAGE
                             // 🚨 PASTE YOUR EXACT LIVE SELAR LINK RIGHT HERE:
-                    window.location.href = "https://selar.co"; 
-                });
-            }
-        });
+                                   // 🚨 ROUTING DIRECTLY TO YOUR NEW MULTI-PLAN LIVE PAYMENT STORE PAGE
+                window.location.href = "https://selar.co"; 
+            });
+        }
+    });
 
-        // 1. Process Existing Subscriber Sign-In Requests
-        async function processSubscriberLogin() {
-            const phone = document.getElementById('loginPhone').value.trim();
-            const password = document.getElementById('loginPass').value;
+    // 1. Process Existing Subscriber Sign-In Requests
+    async function processSubscriberLogin() {
+        const phone = document.getElementById('loginPhone').value.trim();
+        const password = document.getElementById('loginPass').value;
 
-            if (phone === "0000" && password === "admin123") {
-                alert('🔓 Admin Bypass Activated! Welcome to UGA Stream.');
-                localStorage.setItem('uga_subscriber_session', 'true');
-                localStorage.setItem('uga_user_status', 'premium');
-                window.location.reload();
-                return;
-            }
+        if (phone === "0000" && password === "admin123") {
+            alert('🔓 Admin Bypass Activated! Welcome to UGA Stream.');
+            localStorage.setItem('uga_subscriber_session', 'true');
+            localStorage.setItem('uga_user_status', 'premium');
+            window.location.reload();
+            return;
+        }
 
     try {
         const response = await fetch('/api/login-user', {
