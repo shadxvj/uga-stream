@@ -432,9 +432,10 @@ function fetchLiveApplicationCatalog() {
 
                     if (track) {
                         // If this is the first movie going into this track, clear out the "No videos" message
-                        if (track.querySelector('p')) {
-                            track.innerHTML = '';
-                        }
+                                   // If this is the first movie going into this track, clear out the "No videos" message
+            if (track.innerHTML.includes("No premium videos uploaded")) {
+                track.innerHTML = '';
+            }
 
                         const movieCard = document.createElement('div');
                         movieCard.className = 'movie-card';
