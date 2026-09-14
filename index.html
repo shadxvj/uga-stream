@@ -412,12 +412,12 @@ function fetchLiveApplicationCatalog() {
                 'animation': document.querySelector('#animation .movie-grid-track') || document.querySelector('.animation-grid')
             };
 
-            // 1. Wipe all rows clean and put a beautiful, visible placeholder message
+                 // 1. Wipe all rows clean and put a beautiful, visible placeholder message
             Object.keys(categoryTracks).forEach(cat => {
                 if (categoryTracks[cat]) {
-                                       categoryTracks[cat].innerHTML = `
+                    categoryTracks[cat].innerHTML = `
                         <div style="grid-column: 1 / -1; padding: 30px 10px; color: #b3b3b3; font-size: 0.95rem; font-style: italic;">
-                            No premium videos uploaded in this category yet...
+                            🎬 No premium videos uploaded in this category yet...
                         </div>
                     `;
                 }
@@ -426,16 +426,14 @@ function fetchLiveApplicationCatalog() {
             // 2. If there are movies, distribute them into their proper categories
             if (movies && movies.length > 0) {
                 movies.forEach(movie => {
-                    // Match movie category (make it lowercase to prevent spelling mismatch issues)
-                    const movieCategory = String(movie.category || movie.categoryName || 'trending').toLowerCase().trim();
+                    const movieCategory = String(movie.category || 'trending').toLowerCase().trim();
                     const track = categoryTracks[movieCategory];
 
                     if (track) {
-                        // If this is the first movie going into this track, clear out the "No videos" message
-                                   // If this is the first movie going into this track, clear out the "No videos" message
-            if (track.innerHTML.includes("No premium videos uploaded")) {
-                track.innerHTML = '';
-            }
+                        // Clear out the placeholder if a real movie exists
+                        if (track.innerHTML.includes("No premium videos uploaded")) {
+                            track.innerHTML = '';
+                        }
 
                         const movieCard = document.createElement('div');
                         movieCard.className = 'movie-card';
