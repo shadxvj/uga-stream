@@ -402,36 +402,36 @@ function fetchLiveApplicationCatalog() {
     fetch('/api/movies')
         .then(response => response.json())
         .then(movies => {
-            // Find all our category display tracks
+            // Mapped exactly to match your id="trendingGrid", id="actionGrid" HTML tags!
             const categoryTracks = {
-                'trending': document.querySelector('#trending .movie-grid-track') || document.querySelector('.trending-grid'),
-                'action': document.querySelector('#action .movie-grid-track') || document.querySelector('.action-grid'),
-                'comedy': document.querySelector('#comedy .movie-grid-track') || document.querySelector('.comedy-grid'),
-                'drama': document.querySelector('#drama .movie-grid-track') || document.querySelector('.drama-grid'),
-                'series': document.querySelector('#series .movie-grid-track') || document.querySelector('.series-grid'),
-                'animation': document.querySelector('#animation .movie-grid-track') || document.querySelector('.animation-grid')
+                'trending': document.getElementById('trendingGrid'),
+                'action': document.getElementById('actionGrid'),
+                'comedy': document.getElementById('comedyGrid'),
+                'drama': document.getElementById('dramaGrid'),
+                'series': document.getElementById('seriesGrid'),
+                'animation': document.getElementById('animationGrid')
             };
 
-                 // 1. Wipe all rows clean and put a beautiful, visible placeholder message
+            // 1. Wipe all rows clean and put a beautiful, visible placeholder message using backticks
             Object.keys(categoryTracks).forEach(cat => {
                 if (categoryTracks[cat]) {
                     categoryTracks[cat].innerHTML = `
-                        <div style="grid-column: 1 / -1; padding: 30px 10px; color: #b3b3b3; font-size: 0.95rem; font-style: italic;">
+                        <div class="no-movies-placeholder" style="grid-column: 1 / -1; width: 100%; padding: 20px 0; color: #b3b3b3; font-size: 0.95rem; font-style: italic; display: block;">
                             🎬 No premium videos uploaded in this category yet...
                         </div>
                     `;
                 }
             });
 
-            // 2. If there are movies, distribute them into their proper categories
+            // 2. Loop through your uploaded database array elements
             if (movies && movies.length > 0) {
                 movies.forEach(movie => {
                     const movieCategory = String(movie.category || 'trending').toLowerCase().trim();
                     const track = categoryTracks[movieCategory];
-
+                    
                     if (track) {
-                        // Clear out the placeholder if a real movie exists
-                        if (track.innerHTML.includes("No premium videos uploaded")) {
+                        // Wipe out the fallback text container if a real movie card matches the tray
+                        if (track.querySelector('.no-movies-placeholder') || track.innerHTML.includes("No premium videos")) {
                             track.innerHTML = '';
                         }
 
