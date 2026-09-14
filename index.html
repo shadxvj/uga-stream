@@ -1026,28 +1026,46 @@ window.handleFormRegistrationAndPayment = async function(event) {
 }
 
         // 2. Process Registration & Connect to Mobile Money Payment Route
-        async function processSubscriberRegistration() {
-            const username = document.getElementById('regUsername').value.trim();
-            const phone = document.getElementById('regPhone').value.trim();
-            const password = document.getElementById('regPass').value;
-            const selectEl = document.getElementById('regPlan');
-            const plan = selectEl.value;
-                // Safely extract the payment amount from the dropdown attributes
-        const selectedOption = selectEl.options[selectEl.selectedIndex];
-        const amount = selectedOption ? selectedOption.getAttribute('data-amount') : '2000';
+      async function processSubscriberRegistration() {
+    const username = document.getElementById('regUsername').value.trim();
+    const phone = document.getElementById('regPhone').value.trim();
+    const password = document.getElementById('regPass').value;
+    const selectEl = document.getElementById('regPlan');
+    const plan = selectEl.value;
 
-        try {
-            const regResponse = await fetch('/api/register-user', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, phone, password, plan: plan })
-            });
-            const regData = await regResponse.json();
+    if (!username || !phone || !password) {
+        return alert("⚠️ Please fill in all fields (Name, Phone, and Password) before initiating payment.");
+    }
 
-            // FIX: Check if the response is NOT okay or success is FALSE
-            if (!regResponse.ok || regData.success === false) {
-                return alert(`❌ Registration Blocked: ${regData.message || 'Invalid details'}`);
-            }
+    try {
+        // 1. Sends the credentials silently to your Render server to save them in your Admin Panel first!
+        const regResponse = await fetch('/api/register-user', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, phone, password, plan })
+        });
+
+        const regData = await regResponse.json();
+
+        if (!regResponse.ok || regData.success === false) {
+            return alert(`❌ Registration Blocked: ${regData.message || 'Invalid details'}`);
+        }
+
+        // Keep their session info stored on their phone locally so they stay logged in
+        localStorage.setItem('uga_subscriber_session', 'true');
+        localStorage.setItem('uga_user_phone', phone);
+
+        alert("🔐 Profile successfully registered in Admin Dashboard! Opening secure Mobile Money portal next...");
+
+        // 🚨 2. REDIRECTS STRAIGHT TO YOUR LIVE MULTI-PLAN CHANNELS CODES ONCE RECORDED IN YOUR DATABASE
+        window.location.href = "https://selar.co";
+
+    } catch (error) {
+        console.error("❌ Communication drop with backend engine:", error);
+        // Fallback protection: Still let them pay even if your backend connection delays for a second
+        window.location.href = "https://selar.co";
+    }
+}
 
 
                 alert(`⏳ Account profiles saved! Loading secure Mobile Money portal for UGX ${parseInt(amount).toLocaleString()}...`);
