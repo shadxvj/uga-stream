@@ -402,7 +402,7 @@ function fetchLiveApplicationCatalog() {
     fetch('/api/movies')
         .then(response => response.json())
         .then(movies => {
-            // Mapped exactly to match your id="trendingGrid", id="actionGrid" HTML tags!
+            // ✅ MATCHES YOUR HTML: Grabs containers directly by their explicit layout IDs!
             const categoryTracks = {
                 'trending': document.getElementById('trendingGrid'),
                 'action': document.getElementById('actionGrid'),
@@ -412,7 +412,7 @@ function fetchLiveApplicationCatalog() {
                 'animation': document.getElementById('animationGrid')
             };
 
-            // 1. Wipe all rows clean and put a beautiful, visible placeholder message using backticks
+            // 1. Wipe all rows clean and injection placeholders using safe script backticks
             Object.keys(categoryTracks).forEach(cat => {
                 if (categoryTracks[cat]) {
                     categoryTracks[cat].innerHTML = `
@@ -423,14 +423,14 @@ function fetchLiveApplicationCatalog() {
                 }
             });
 
-            // 2. Loop through your uploaded database array elements and draw cards
+            // 2. Distribute database items to rows if they exist
             if (movies && movies.length > 0) {
                 movies.forEach(movie => {
                     const movieCategory = String(movie.category || 'trending').toLowerCase().trim();
                     const track = categoryTracks[movieCategory];
                     
                     if (track) {
-                        // Wipe out the fallback text container if a real movie card matches the tray
+                        // Clear the fallback notice box the moment a real movie card arrives
                         if (track.querySelector('.no-movies-placeholder') || track.innerHTML.includes("No premium videos")) {
                             track.innerHTML = '';
                         }
