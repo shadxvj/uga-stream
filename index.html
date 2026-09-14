@@ -1026,19 +1026,21 @@ window.handleFormRegistrationAndPayment = async function(event) {
 }
 
         // 2. Process Registration & Connect to Mobile Money Payment Route
-      async function processSubscriberRegistration() {
+   async function processSubscriberRegistration() {
     const username = document.getElementById('regUsername').value.trim();
     const phone = document.getElementById('regPhone').value.trim();
     const password = document.getElementById('regPass').value;
     const selectEl = document.getElementById('regPlan');
-    const plan = selectEl.value;
+    const plan = selectEl ? selectEl.value : "DAILY";
 
     if (!username || !phone || !password) {
         return alert("⚠️ Please fill in all fields (Name, Phone, and Password) before initiating payment.");
     }
 
     try {
-        // 1. Sends the credentials silently to your Render server to save them in your Admin Panel first!
+        console.log("📡 Transmitting user data to Render backend...");
+        
+        // This saves their credentials to your Admin Dashboard live user list first!
         const regResponse = await fetch('/api/register-user', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -1050,6 +1052,46 @@ window.handleFormRegistrationAndPayment = async function(event) {
         if (!regResponse.ok || regData.success === false) {
             return alert(`❌ Registration Blocked: ${regData.message || 'Invalid details'}`);
         }
+
+        localStorage.setItem('uga_subscriber_session', 'true');
+        localStorage.setItem('uga_user_phone', phone);
+
+        alert("🔐 Profile successfully registered in Admin Dashboard! Opening secure Mobile Money portal next...");
+
+        // 🚨 REDIRECTS USER INSTANTLY TO YOUR LIVE MULTI-PLAN SELAR CHECKOUT INTERFACE!
+        window.location.href = "https://selar.co";
+
+    } catch (error) {
+        console.error("❌ Communication drop with backend engine:", error);
+        window.location.href = "https://selar.co";
+    }
+}
+
+// =========================================================================
+// EMPTY MOVIE SHELF FALLBACK MESSAGE LOOPS (RESTORED 🎬)
+// =========================================================================
+function initializeEmptyCategoryPlaceholders() {
+    // Looks for your category rows and tracks them by your exact header IDs
+    const categories = ['trending', 'action', 'comedy', 'drama', 'series', 'animation'];
+    
+    categories.forEach(cat => {
+        const container = document.getElementById(`${cat}Track`) || document.querySelector(`.${cat}-grid`) || document.querySelector('.movie-grid-track');
+        
+        // If the row track exists and has zero movie cards loaded inside it right now:
+        if (container && container.children.length === 0) {
+            container.innerHTML = `
+                <div style="grid-column: 1 / -1; padding: 30px 10px; color: #b3b3b3; font-size: 0.95rem; font-style: italic;">
+                    🎬 No premium videos uploaded in this category yet...
+                </div>
+            `;
+        }
+    });
+}
+
+// Make sure placeholders check automatically when the application draws on screen
+document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(initializeEmptyCategoryPlaceholders, 1000);
+});
 
         // Keep their session info stored on their phone locally so they stay logged in
         localStorage.setItem('uga_subscriber_session', 'true');
