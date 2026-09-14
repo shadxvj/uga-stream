@@ -1100,11 +1100,6 @@ document.addEventListener("DOMContentLoaded", () => {
         // 🚨 2. REDIRECTS STRAIGHT TO YOUR LIVE MULTI-PLAN CHANNELS CODES ONCE RECORDED IN YOUR DATABASE
         window.location.href = "https://selar.co";
 
-    } catch (error) {
-        console.error("❌ Communication drop with backend engine:", error);
-        // Fallback protection: Still let them pay even if your backend connection delays for a second
-        window.location.href = "https://selar.co";
-    
 
 
                 alert(`⏳ Account profiles saved! Loading secure Mobile Money portal for UGX ${parseInt(amount).toLocaleString()}...`);
