@@ -415,9 +415,9 @@ function fetchLiveApplicationCatalog() {
             // 1. Wipe all rows clean and put a beautiful, visible placeholder message
             Object.keys(categoryTracks).forEach(cat => {
                 if (categoryTracks[cat]) {
-                    categoryTracks[cat].innerHTML = `
+                                       categoryTracks[cat].innerHTML = `
                         <div style="grid-column: 1 / -1; padding: 30px 10px; color: #b3b3b3; font-size: 0.95rem; font-style: italic;">
-                            🎬 No premium videos uploaded in this category yet...
+                            No premium videos uploaded in this category yet...
                         </div>
                     `;
                 }
