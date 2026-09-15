@@ -480,26 +480,25 @@
             if (modal) modal.style.display = 'none';
         }
 
-                // // Intercept account menu clicks dynamically to open your signup/login forms smoothly
+                      // // Intercept account menu clicks dynamically to open your signup/login forms smoothly
         const loginLinks = document.querySelectorAll('a[href="#login"], a[href*="login"]');
         const signupLinks = document.querySelectorAll('a[href="#signup"], a[href*="signup"], a[href*="signup" i]');
 
         loginLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
-                openAuthModal(); // Opens the modal frame instantly!
-                if (typeof toggleAuthModalTab === 'function') toggleAuthModalTab('signin');
+                // ✅ FIXED: Safely open your existing modal framework directly
+                openAuthModal(); 
             });
         });
 
         signupLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
-                openAuthModal(); // Opens the modal frame instantly!
-                if (typeof toggleAuthModalTab === 'function') toggleAuthModalTab('signup');
+                // ✅ FIXED: Safely open your existing modal framework directly
+                openAuthModal(); 
             });
         });
-
 
 
     
