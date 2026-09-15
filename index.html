@@ -1119,7 +1119,38 @@ window.handleFormRegistrationAndPayment = async function(event) {
                 window.location.href = "index.html";
             });
         }
+        // 🚀 ACC-MENU INTERFACE VISIBILITY CONTROLLER
+        function updateProfileDropdownVisibility() {
+            const activeSession = localStorage.getItem('uga_subscriber_session');
+            
+            // Grab our structural menu elements directly by their layout IDs
+            const loginLinkBtn = document.getElementById('openLoginBtn') || document.querySelector('a[href="#login"]');
+            const registerLinkBtn = document.getElementById('openRegisterBtn') || document.querySelector('a[href="#signup"]');
+            const logoutLinkBtn = document.getElementById('logoutBtn');
+            const welcomeTextTitle = document.getElementById('dropdownUserTitle') || document.querySelector('.dropdown-header');
 
+            if (activeSession === 'true') {
+                // USER IS SIGNED IN: Hide forms, expose exit routes
+                if (loginLinkBtn) loginLinkBtn.style.display = 'none';
+                if (registerLinkBtn) registerLinkBtn.style.display = 'none';
+                if (logoutLinkBtn) logoutLinkBtn.style.display = 'block';
+                
+                const userSessionData = localStorage.getItem('ugaStreamUserSession');
+                if (userSessionData && welcomeTextTitle) {
+                    const parsedUser = JSON.parse(userSessionData);
+                    welcomeTextTitle.textContent = `Hi, ${parsedUser.username || 'Subscriber'}`;
+                }
+            } else {
+                // USER IS A GUEST: Expose signup gates, collapse logouts
+                if (loginLinkBtn) loginLinkBtn.style.display = 'block';
+                if (registerLinkBtn) registerLinkBtn.style.display = 'block';
+                if (logoutLinkBtn) logoutLinkBtn.style.display = 'none';
+                if (welcomeTextTitle) welcomeTextTitle.textContent = 'Welcome to UGA Stream';
+            }
+        }
+
+        // Run this controller automatically the split-second the window finishes loading
+        window.addEventListener('DOMContentLoaded', updateProfileDropdownVisibility);
     </script>
 </body>
 </html>
