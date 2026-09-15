@@ -1,6 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>
+    // CROSS-DEVICE ACCESS GUARDIAN SHIELD
+    (function() {
+        const activeSessionToken = localStorage.getItem('uga_subscriber_session');
+        const userProfilePayload = localStorage.getItem('ugaStreamUserSession');
+
+        if (!activeSessionToken || activeSessionToken !== 'true' || !userProfilePayload) {
+            alert("🔒 Premium Protected Access! Please log into an active paid account to stream this movie title.");
+            // Send unauthenticated devices straight back to the login presentation view
+            window.location.href = "index.html?access=locked#login";
+        }
+    })();
+</script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UGA STREAM — Streaming Theater</title>
