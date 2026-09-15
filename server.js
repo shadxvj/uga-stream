@@ -53,14 +53,18 @@ app.post('/api/login-user', (req, res) => {
             return (dbUsername === searchInput || dbPhone === searchInput);
         });
 
-        // 1. Verify if account exists in the running database logs
-        if (!userAccount) {
-            return res.status(404).json({ success: false, message: "No account registered with these credentials." });
-        }
-
         // 2. Validate passcode matching parameters
         if (userAccount.password !== searchPassword) {
             return res.status(401).json({ success: false, message: "Incorrect password pass. Access denied." });
+        }
+        // 🚀 SECURITY CHECK: Verify if their subscription plan time has run out
+        const userExpired = new Date() > new Date(userAccount.expiresAt);
+        if (userExpired) {
+            console.log(`⚠️ [ACCESS DENIED]: ${userAccount.username}'s plan has expired.`);
+            return res.status(403).json({ 
+                success: false, 
+                message: "Your subscription plan tier has expired. Please purchase a new checkout plan link to unlock streaming." 
+            });
         }
 
         // 3. Return full user token profile to authorize the requesting device
@@ -86,9 +90,9 @@ app.post('/api/login-user', (req, res) => {
 // API Endpoint to process and save new user registrations
 app.post('/api/register-user', (req, res) => {
     try {
-               const { username, phone, plan, password } = req.body;
+        const { username, phone, plan, password } = req.body;
 
-        // IRONCLAD PROCESSING ENGINE: Auto-generates fallbacks if fields arrive empty
+        // // IRONCLAD PROCESSING ENGINE: Auto-generates fallbacks if fields arrive empty
         const rawUser = String(username || "").trim();
         const rawPhone = String(phone || "").trim();
 
@@ -103,17 +107,32 @@ app.post('/api/register-user', (req, res) => {
         }
 
         const phoneExists = usersDatabase.some(u => u.phone && u.phone.trim() === finalPhone);
-
         if (phoneExists) {
             return res.status(400).json({ success: false, message: "This phone number is already registered!" });
         }
 
+        // 🚀 TIMEOUT CALCULATOR: Assigns live expiration properties based on plan
+        const now = new Date();
+        let planDurationMs = 24 * 60 * 60 * 1000; // Default Daily: 24 Hours
+
+        const normalizedPlan = String(plan || "DAILY").toUpperCase().trim();
+        if (normalizedPlan === "WEEKLY") {
+            planDurationMs = 7 * 24 * 60 * 60 * 1000;
+        } else if (normalizedPlan === "MONTHLY") {
+            planDurationMs = 30 * 24 * 60 * 60 * 1000;
+        }
+
+        const expirationDate = new Date(now.getTime() + planDurationMs);
+
+        // Build the complete user entity with active timestamps
         const newUser = {
             id: usersDatabase.length + 1,
-            username: username,
-            phone: phone.trim(),
-            plan: plan || "DAILY", 
-            password: password
+            username: finalUsername,
+            phone: finalPhone,
+            plan: normalizedPlan, 
+            password: finalPassword,
+            subscribedAt: now.toISOString(),
+            expiresAt: expirationDate.toISOString()
         };
 
         usersDatabase.push(newUser);
@@ -415,6 +434,34 @@ app.post('/api/selar-webhook', (req, res) => {
     } catch (error) {
         console.error("❌ [SELAR WEBHOOK PROCESSING ERROR]:", error.message);
         return res.status(500).send("Internal processing drop.");
+    }
+});
+
+// =========================================================================
+// ADMIN LIVE DATABASE ANALYTICS ROUTE
+// =========================================================================
+app.get('/api/admin/users-metrics', (req, res) => {
+    try {
+        const now = new Date();
+        
+        // Map through active records and dynamically compute real-time expiration states
+        const processedUsers = usersDatabase.map(user => {
+            const expirationTime = new Date(user.expiresAt);
+            const isExpired = now > expirationTime;
+            
+            return {
+                username: user.username,
+                phone: user.phone,
+                plan: user.plan,
+                accessKey: user.password,
+                status: isExpired ? "EXPIRED" : "ACTIVE",
+                timeLeft: isExpired ? "Expired" : Math.round((expirationTime - now) / (1000 * 60 * 60)) + " Hours Left"
+            };
+        });
+
+        return res.json({ success: true, users: processedUsers });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "Metrics Engine Stalled" });
     }
 });
 
