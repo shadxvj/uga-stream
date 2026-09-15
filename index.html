@@ -1018,14 +1018,20 @@ window.handleFormRegistrationAndPayment = async function(event) {
 
           // 🚀 SAVE REGISTRATION DATA IN BACKEND LOGS FIRST THEN REDIRECT TO SELAR
        // 🚀 UPDATED INPUT LOOKUP (Matches standard form input fields)
+       // 🚀 AUTOMATED ELEMENT POSITION LOOKUP ENGINE
     async function processSubscriberRegistration() {
-        // Change these IDs inside the parentheses to match your HTML input tag IDs exactly!
-        const username = document.getElementById('username')?.value.trim() || document.getElementById('regUsername')?.value.trim();
-        const phone = document.getElementById('phone')?.value.trim() || document.getElementById('regPhone')?.value.trim();
-        const password = document.getElementById('password')?.value || document.getElementById('regPass')?.value;
-        const plan = document.getElementById('plan')?.value || document.getElementById('regPlan')?.value || 'DAILY';
+        // Automatically grabs your inputs by their type inside the modal container
+        const modalForm = document.getElementById('subscriptionModal') || document.body;
+        const textInputs = modalForm.querySelectorAll('input');
+        const selectPlanElement = modalForm.querySelector('select');
 
-        // Checks if anything is missing after trying both fallback ID sets
+        // Dynamically assigns values based on the order they appear inside your form container
+        const username = textInputs[0] ? textInputs[0].value.trim() : '';
+        const phone = textInputs[1] ? textInputs[1].value.trim() : '';
+        const password = textInputs[2] ? textInputs[2].value : '';
+        const plan = selectPlanElement ? selectPlanElement.value : 'DAILY';
+
+        // Bulletproof validation check
         if (!username || !phone || !password) {
             return alert("⚠️ Please fill out all required form fields first.");
         }
@@ -1040,8 +1046,6 @@ window.handleFormRegistrationAndPayment = async function(event) {
 
             const data = await response.json();
 
-            // ✅ BULLETPROOF LOGICAL FIX: Simple evaluation check
-                      // ✅ FIXED LOGICAL BLOCK STRUCTURE
             if (data.success === true) {
                 localStorage.setItem('uga_subscriber_session', 'true');
                 localStorage.setItem('uga_user_phone', phone);
@@ -1051,9 +1055,9 @@ window.handleFormRegistrationAndPayment = async function(event) {
                 window.location.href = "https://selar.co";
             } else {
                 alert("❌ Registration Refused! Please check your entry fields and try again.");
-            } // <-- THIS CLOSES THE ELSE BLOCK CORRECTLY
+            }
 
-        } catch (error) { // <-- NOW THE CATCH IS ALLOWED TO BE HERE!
+        } catch (error) {
             console.error("❌ Critical Authentication Pipeline Failure:", error);
             alert("⚠️ System Connection Interrupted. Unable to save credentials payload.");
         }
