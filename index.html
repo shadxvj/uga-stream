@@ -1102,6 +1102,24 @@ window.handleFormRegistrationAndPayment = async function(event) {
         alert("🚨 Error connecting to authorization host node.");
     }
 }
+                // 🚪 SECURE SYSTEM LOGOUT CONTROLLER
+        const logoutButton = document.getElementById('logoutBtn');
+        if (logoutButton) {
+            logoutButton.addEventListener('click', (e) => {
+                e.preventDefault(); 
+                
+                // 1. Completely clear access tokens from browser session memory cache
+                localStorage.removeItem('uga_subscriber_session');
+                localStorage.removeItem('uga_user_phone');
+                localStorage.removeItem('ugaStreamUserSession');
+                
+                alert("🔒 Logged out successfully! Device access token revoked.");
+                
+                // 2. Refresh instantly to lock protected playback screens
+                window.location.href = "index.html";
+            });
+        }
+
     </script>
 </body>
 </html>
