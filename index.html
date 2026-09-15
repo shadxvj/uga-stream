@@ -1051,7 +1051,8 @@ window.handleFormRegistrationAndPayment = async function(event) {
                 window.location.href = "https://selar.co"; 
             } else {
                 // If username or phone already exists, show the server's exact reason
-                alert(`❌ Registration Refused: ${data.message || 'Check your entry fields.
+                // ✅ REPLACE WITH THIS STANDARD, ACCESSIBLE STRING VALUE:
+alert("❌ Registration Refused! Please check your entry fields and try again.");
             
 
         } catch (error) {
