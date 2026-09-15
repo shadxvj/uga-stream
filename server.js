@@ -31,22 +31,54 @@ let moviesDatabase = [];
 let usersDatabase = [];
 
 // API Endpoint to authenticate existing subscribers
+// =========================================================================
+// CROSS-DEVICE MULTI-DEVICE ACCOUNT AUTHENTICATION PORTAL
+// =========================================================================
 app.post('/api/login-user', (req, res) => {
     try {
-        const { phone, password } = req.body;
-        if (!phone || !password) {
-            return res.status(400).json({ success: false, message: "Missing phone or password." });
+        const { username, phone, password } = req.body;
+
+        // Clean and prepare lookup inputs
+        const searchInput = String(username || phone || "").trim().toLowerCase();
+        const searchPassword = String(password || "").trim();
+
+        if (!searchInput || !searchPassword) {
+            return res.status(400).json({ success: false, message: "Missing login parameters." });
         }
-        const user = usersDatabase.find(u => u.phone === phone.trim() && u.password === password);
-        if (!user) {
-            return res.status(401).json({ success: false, message: "Invalid credentials." });
-        }
-        return res.status(200).json({ 
-            success: true, 
-            user: { username: user.username, phone: user.phone, plan: user.plan } 
+
+        // Search the active server registry array for a match
+        const userAccount = usersDatabase.find(user => {
+            const dbUsername = String(user.username || "").toLowerCase().trim();
+            const dbPhone = String(user.phone || "").trim();
+            return (dbUsername === searchInput || dbPhone === searchInput);
         });
+
+        // 1. Verify if account exists in the running database logs
+        if (!userAccount) {
+            return res.status(404).json({ success: false, message: "No account registered with these credentials." });
+        }
+
+        // 2. Validate passcode matching parameters
+        if (userAccount.password !== searchPassword) {
+            return res.status(401).json({ success: false, message: "Incorrect password pass. Access denied." });
+        }
+
+        // 3. Return full user token profile to authorize the requesting device
+        console.log(`🔑 [AUTH SUCCESS]: ${userAccount.username} logged in successfully from a new device.`);
+        return res.status(200).json({
+            success: true,
+            message: "Authentication cleared successfully.",
+            user: {
+                id: userAccount.id,
+                username: userAccount.username,
+                phone: userAccount.phone,
+                plan: userAccount.plan || "PREMIUM"
+            }
+        });
+
     } catch (error) {
-        return res.status(500).json({ success: false, message: "Server login error." });
+        console.error("❌ Login system fault:", error.message);
+        return res.status(500).json({ success: false, message: "Internal Authentication Processor Stalled." });
     }
 });
 
