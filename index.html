@@ -480,28 +480,25 @@
             if (modal) modal.style.display = 'none';
         }
 
-        // Intercept profile menu links dynamically to display forms smoothly
-       // Intercept account menu clicks dynamically to open your signup/login forms smoothly
-const loginLink = document.querySelector('a[href*="login"]');
-const signupLink = document.querySelector('a[href*="signup"]');
+                // // Intercept account menu clicks dynamically to open your signup/login forms smoothly
+        const loginLinks = document.querySelectorAll('a[href="#login"], a[href*="login"]');
+        const signupLinks = document.querySelectorAll('a[href="#signup"], a[href*="signup"], a[href*="signup" i]');
 
-if (loginLink) {
-    loginLink.addEventListener('click', (e) => {
-        e.preventDefault(); // Stops the page from jumping up
-        openAuthModal();    // 🎉 Opens the modal frame instantly!
-        // If your script has a toggle function to switch tabs to sign-in view, call it here:
-        if (typeof toggleAuthModalTab === 'function') toggleAuthModalTab('signin');
-    });
-}
+        loginLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                openAuthModal(); // Opens the modal frame instantly!
+                if (typeof toggleAuthModalTab === 'function') toggleAuthModalTab('signin');
+            });
+        });
 
-if (signupLink) {
-    signupLink.addEventListener('click', (e) => {
-        e.preventDefault(); // Stops the page from jumping up
-        openAuthModal();    // 🎉 Opens the modal frame instantly!
-        // If your script has a toggle function to switch tabs to sign-up view, call it here:
-        if (typeof toggleAuthModalTab === 'function') toggleAuthModalTab('signup');
-    });
-}
+        signupLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                openAuthModal(); // Opens the modal frame instantly!
+                if (typeof toggleAuthModalTab === 'function') toggleAuthModalTab('signup');
+            });
+        });
 
 
 
