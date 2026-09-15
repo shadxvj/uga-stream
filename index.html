@@ -1017,13 +1017,15 @@ window.handleFormRegistrationAndPayment = async function(event) {
         }
 
           // 🚀 SAVE REGISTRATION DATA IN BACKEND LOGS FIRST THEN REDIRECT TO SELAR
+       // 🚀 UPDATED INPUT LOOKUP (Matches standard form input fields)
     async function processSubscriberRegistration() {
-        // 1. Grab inputs from your precise markup variables
-        const username = document.getElementById('regUsername').value.trim();
-        const phone = document.getElementById('regPhone').value.trim();
-        const password = document.getElementById('regPass').value;
-        const plan = document.getElementById('regPlan').value;
+        // Change these IDs inside the parentheses to match your HTML input tag IDs exactly!
+        const username = document.getElementById('username')?.value.trim() || document.getElementById('regUsername')?.value.trim();
+        const phone = document.getElementById('phone')?.value.trim() || document.getElementById('regPhone')?.value.trim();
+        const password = document.getElementById('password')?.value || document.getElementById('regPass')?.value;
+        const plan = document.getElementById('plan')?.value || document.getElementById('regPlan')?.value || 'DAILY';
 
+        // Checks if anything is missing after trying both fallback ID sets
         if (!username || !phone || !password) {
             return alert("⚠️ Please fill out all required form fields first.");
         }
