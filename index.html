@@ -481,21 +481,27 @@
         }
 
         // Intercept profile menu links dynamically to display forms smoothly
-        const loginLink = document.querySelector('a[href="#login"]');
-        const signupLink = document.querySelector('a[href="#signup"]');
+       // Intercept account menu clicks dynamically to open your signup/login forms smoothly
+const loginLink = document.querySelector('a[href*="login"]');
+const signupLink = document.querySelector('a[href*="signup"]');
 
-        if (loginLink) {
-            loginLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                toggleAuthModal('loginModal', true);
-            });
-        }
-        if (signupLink) {
-            signupLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                toggleAuthModal('signUpModal', true);
-            });
-        }
+if (loginLink) {
+    loginLink.addEventListener('click', (e) => {
+        e.preventDefault(); // Stops the page from jumping up
+        openAuthModal();    // 🎉 Opens the modal frame instantly!
+        // If your script has a toggle function to switch tabs to sign-in view, call it here:
+        if (typeof toggleAuthModalTab === 'function') toggleAuthModalTab('signin');
+    });
+}
+
+if (signupLink) {
+    signupLink.addEventListener('click', (e) => {
+        e.preventDefault(); // Stops the page from jumping up
+        openAuthModal();    // 🎉 Opens the modal frame instantly!
+        // If your script has a toggle function to switch tabs to sign-up view, call it here:
+        if (typeof toggleAuthModalTab === 'function') toggleAuthModalTab('signup');
+    });
+}
 
 
 
