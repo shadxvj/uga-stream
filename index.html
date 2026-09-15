@@ -457,11 +457,12 @@ function fetchLiveApplicationCatalog() {
             }
         };
 
-        track.appendChild(card);
+             track.appendChild(card);
     });
 })
 .catch(err => console.error("Error loading application catalog routes:", err));
 }
+
         function openAuthModal() { 
             const modal = document.getElementById('subscriptionModal'); 
             if (modal) modal.style.display = 'flex';
