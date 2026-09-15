@@ -1065,32 +1065,43 @@ window.handleFormRegistrationAndPayment = async function(event) {
 
 
         // 🔐 AUTHENTICATE RETURNING PREMIUM PLAN PASS USERS
-        async function processSubscriberLogin() {
-            const phone = document.getElementById('loginPhone').value.trim();
-            const password = document.getElementById('loginPass').value;
-            
-            if (!phone || !password) {
-                return alert("⚠️ Please provide your phone and password.");
-            }
+    async function processSubscriberLogin() {
+    const phone = document.getElementById('loginPhone')?.value.trim();
+    const password = document.getElementById('loginPass')?.value;
 
-            try {
-                const response = await fetch('/api/login-user', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ phone, password })
-                });
-                const data = await response.json();
-                if (response.ok && data.success) {
-                    localStorage.setItem('uga_subscriber_session', 'true');
-                    alert("🔓 Login successful! Premium streaming access unlocked.");
-                    window.location.reload();
-                } else {
-                    alert("❌ Account authentication failed: Check entries.");
-                }
-            } catch (err) {
-                alert("Error connecting to authorization host node.");
-            }
+    if (!phone || !password) {
+        return alert("⚠️ Please provide your phone and password.");
+    }
+
+    try {
+        console.log("⏳ Sending cross-device auth request to Render server cluster...");
+        const response = await fetch('/api/login-user', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phone, password })
+        });
+
+        const data = await response.json();
+
+        if (data.success === true) {
+            // Save active authentication flags onto the new device's browser memory local storage
+            localStorage.setItem('uga_subscriber_session', 'true');
+            localStorage.setItem('uga_user_phone', data.user.phone);
+            localStorage.setItem('ugaStreamUserSession', JSON.stringify(data.user));
+
+            alert("🧑‍💻 Login successful! Premium streaming access unlocked.");
+            
+            // Redirect straight to reload main catalog layout display channels
+            window.location.href = "index.html"; 
+        } else {
+            alert(`❌ Access Refused: ${data.message || 'Verify your entry fields.'}`);
         }
+
+    } catch (err) {
+        console.error("❌ Remote login pipeline failure:", err);
+        alert("🚨 Error connecting to authorization host node.");
+    }
+}
     </script>
 </body>
 </html>
