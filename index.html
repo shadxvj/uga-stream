@@ -898,13 +898,16 @@ window.handleFormRegistrationAndPayment = async function(event) {
             if (modal) modal.style.display = 'flex'; 
         }
         
-        function closeAuthModal() { 
-            const modal = document.getElementById('subscriptionModal');
-            if (modal) modal.style.display = 'none'; 
-        }
-        
-        function switchAuthTab(targetTab) {
-            const regPanel = document.getElementById('registerFormPanel');
+            function closeAuthModal() {
+        const modal = document.getElementById('subscriptionModal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    // PASTE THE FIX HERE ON LINE 905:
+    const toggleAuthModal = () => openAuthModal();
+
+    function switchAuthTab(targetTab) {
+        const regPanel = document.getElementById('registerFormPanel');
             const loginPanel = document.getElementById('loginFormPanel');
             const regTabBtn = document.getElementById('tabRegisterBtn');
             const loginTabBtn = document.getElementById('tabLoginBtn');
