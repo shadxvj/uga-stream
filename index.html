@@ -394,73 +394,81 @@
             document.addEventListener('click', () => profileDropdown.classList.remove('show'));
         }
 
-// 2. Central Live Catalog Sync Engine for Multiple Rows
-// Fetch movies from server database and inject into matching UI shelf categories
-// 2. Central Live Catalog Sync Engine for Multiple Rows
-// Fetch movies from server database and inject into matching UI shelf categories
-function fetchLiveApplicationCatalog() {
-    fetch('/api/movies')
-        .then(response => response.json())
-        .then(movies => {
-            // ✅ MATCHES YOUR HTML: Grabs containers directly by their explicit layout IDs!
-            const categoryTracks = {
-                'trending': document.getElementById('trendingGrid'),
-                'action': document.getElementById('actionGrid'),
-                'comedy': document.getElementById('comedyGrid'),
-                'drama': document.getElementById('dramaGrid'),
-                'series': document.getElementById('seriesGrid'),
-                'animation': document.getElementById('animationGrid')
-            };
+        // 2. Central Live Catalog Sync Engine for Multiple Rows
+        // Fetch movies from server database and inject into matching UI shelf categories
+        function fetchLiveApplicationCatalog() {
+            fetch('/api/movies')
+                .then(response => response.json())
+                .then(movies => {
+                    // ✅ MATCHES YOUR HTML: Grabs containers directly by their explicit layout IDs!
+                    const categoryTracks = {
+                        'trending': document.getElementById('trendingGrid'),
+                        'action': document.getElementById('actionGrid'),
+                        'comedy': document.getElementById('comedyGrid'),
+                        'drama': document.getElementById('dramaGrid'),
+                        'series': document.getElementById('seriesGrid'),
+                        'animation': document.getElementById('animationGrid')
+                    };
 
-            // 1. Wipe all rows clean and injection placeholders using safe script backticks
-            Object.keys(categoryTracks).forEach(cat => {
-                if (categoryTracks[cat]) {
-                    categoryTracks[cat].innerHTML = `
-                        <div class="no-movies-placeholder" style="grid-column: 1 / -1; width: 100%; padding: 20px 0; color: #b3b3b3; font-size: 0.95rem; font-style: italic; display: block;">
-                            🎬 No premium videos uploaded in this category yet...
-                        </div>
-                    `;
-                }
-            });
-
-            // 2. Distribute database items to rows if they exist
-            if (movies && movies.length > 0) {
-                movies.forEach(movie => {
-                    const movieCategory = String(movie.category || 'trending').toLowerCase().trim();
-                    const track = categoryTracks[movieCategory];
-                    
-                    if (track) {
-                        // Clear the fallback notice box the moment a real movie card arrives
-                        if (track.querySelector('.no-movies-placeholder') || track.innerHTML.includes("No premium videos")) {
-                            track.innerHTML = '';
+                    // 1. Wipe all rows clean and inject placeholders using safe script backticks
+                    Object.keys(categoryTracks).forEach(cat => {
+                        if (categoryTracks[cat]) {
+                            categoryTracks[cat].innerHTML = `
+                                <div class="no-movies-placeholder" style="grid-column: 1 / -1; width: 100%; padding: 20px 0; color: #b3b3b3; font-size: 0.95rem; font-style: italic; display: block;">
+                                    🎬 No premium videos uploaded in this category yet...
+                                </div>
+                            `;
                         }
-        const card = document.createElement('div');
-        card.className = 'movie-card';
+                    });
 
-        // 1. Load the visual template layout structure FIRST
-        card.innerHTML = `
-            <div class="poster-frame" style="background-image: url('${movie.image}');">
-                <i class="fas fa-play"></i>
-            </div>
-            <div style="padding: 10px;">
-                <h5 style="color: #fff; margin: 0 0 5px 0;">${movie.title}</h5>
-                <p style="color: #666; font-size: 0.75rem; margin: 0;">VJ ${movie.vj || 'Unknown'}</p>
-            </div>
-        `;
+                    // 2. Distribute database items to rows if they exist
+                    if (movies && movies.length > 0) {
+                        movies.forEach(movie => {
+                            const movieCategory = String(movie.category || 'trending').toLowerCase().trim();
+                            const track = categoryTracks[movieCategory];
+                            
+                            if (track) {
+                                // Clear the fallback notice box the moment a real movie card arrives
+                                if (track.querySelector('.no-movies-placeholder') || track.innerHTML.includes("No premium videos")) {
+                                    track.innerHTML = '';
+                                }
 
-        // 2. Attach the click redirect handler AFTER innerHTML is done
-                                  card.onclick = () => {
-            if (movie.source) {
-                window.location.href = `watch.html?source=${encodeURIComponent(movie.source)}&title=${encodeURIComponent(movie.title)}`;
-            } else {
-                alert("This premium movie doesn't have a valid playback video source stream URL link yet.");
-            }
-        };
+                                const card = document.createElement('div');
+                                card.className = 'movie-card';
 
-             });
-})
-.catch(err => console.error("Error loading application catalog routes:", err));
-}
+                                // Load the visual template layout structure FIRST
+                                card.innerHTML = `
+                                    <div class="poster-frame" style="background-image: url('${movie.image}');">
+                                        <i class="fas fa-play"></i>
+                                    </div>
+                                    <div style="padding: 10px;">
+                                        <h5 style="color: #fff; margin: 0 0 5px 0;">${movie.title}</h5>
+                                        <p style="color: #666; font-size: 0.75rem; margin: 0;">VJ ${movie.vj || 'Unknown'}</p>
+                                    </div>
+                                `;
+
+                                // Attach the click redirect handler AFTER innerHTML is done
+                                card.onclick = () => {
+                                    if (movie.source) {
+                                        window.location.href = `watch.html?source=${encodeURIComponent(movie.source)}&title=${encodeURIComponent(movie.title)}`;
+                                    } else {
+                                        alert("This premium movie doesn't have a valid playback video source stream URL link yet.");
+                                    }
+                                };
+
+                                // ✅ FIXED: Inject the newly created card securely into your category track row!
+                                track.appendChild(card);
+                            } // <-- FIXED: Added missing closing bracket for 'if (track)'
+                        });
+                    }
+                })
+                .catch(err => console.error("❌ Error loading catalog metadata:", err));
+        }
+
+        // Run the catalog engine as soon as the window finishes loading
+        window.addEventListener('DOMContentLoaded', fetchLiveApplicationCatalog);
+    </script>
+
 
         function openAuthModal() { 
             const modal = document.getElementById('subscriptionModal'); 
