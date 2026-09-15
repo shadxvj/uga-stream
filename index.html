@@ -887,8 +887,7 @@ window.handleFormRegistrationAndPayment = async function(event) {
             } 
         } 
 
-    <script>
-        
+     <script>
         function openAuthModal() { 
             const modal = document.getElementById('subscriptionModal');
             if (modal) modal.style.display = 'flex'; 
@@ -946,32 +945,32 @@ window.handleFormRegistrationAndPayment = async function(event) {
             fetch('/api/movies')
                 .then(response => response.json())
                 .then(movies => {
-                 // ✅ THE RESET LOOP: Wipes tracks clean and inserts the fallback message if empty
-            const categoryTracks = {
-                'trending': document.getElementById('trendingGrid'),
-                'action': document.getElementById('actionGrid'),
-                'comedy': document.getElementById('comedyGrid'),
-                'drama': document.getElementById('dramaGrid'),
-                'series': document.getElementById('seriesGrid'),
-                'animation': document.getElementById('animationGrid')
-            };
+                    // ✅ THE RESET LOOP: Wipes tracks clean and inserts the fallback message if empty
+                    const categoryTracks = {
+                        'trending': document.getElementById('trendingGrid'),
+                        'action': document.getElementById('actionGrid'),
+                        'comedy': document.getElementById('comedyGrid'),
+                        'drama': document.getElementById('dramaGrid'),
+                        'series': document.getElementById('seriesGrid'),
+                        'animation': document.getElementById('animationGrid')
+                    };
 
-            Object.keys(categoryTracks).forEach(cat => {
-                if (categoryTracks[cat]) {
-                    categoryTracks[cat].innerHTML = `
-                        <div class="no-movies-placeholder" style="grid-column: 1 / -1; width: 100%; padding: 20px 0; color: #b3b3b3; font-size: 0.95rem; font-style: italic; display: block;">
-                            🎬 No premium videos uploaded in this category yet...
-                        </div>
-                    `;
-                }
-            });
+                    Object.keys(categoryTracks).forEach(cat => {
+                        if (categoryTracks[cat]) {
+                            categoryTracks[cat].innerHTML = `
+                                <div class="no-movies-placeholder" style="grid-column: 1 / -1; width: 100%; padding: 20px 0; color: #b3b3b3; font-size: 0.95rem; font-style: italic; display: block;">
+                                    🎬 No premium videos uploaded in this category yet...
+                                </div>
+                            `;
+                        }
+                    });
 
                     if (movies && movies.length > 0) {
                         movies.forEach(movie => {
                             const movieCategory = String(movie.category || 'trending').toLowerCase().trim();
                             const track = categoryTracks[movieCategory];
                             if (track) {
-                                if (track.innerHTML.includes("No premium videos uploaded")) {
+                                if (track.querySelector('.no-movies-placeholder') || track.innerHTML.includes("No premium videos")) {
                                     track.innerHTML = '';
                                 }
                                 const card = document.createElement('div');
@@ -1054,4 +1053,5 @@ window.handleFormRegistrationAndPayment = async function(event) {
     </script>
 </body>
 </html>
+
 
