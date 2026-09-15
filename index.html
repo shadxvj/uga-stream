@@ -946,24 +946,25 @@ window.handleFormRegistrationAndPayment = async function(event) {
             fetch('/api/movies')
                 .then(response => response.json())
                 .then(movies => {
-                    const categoryTracks = {
-                        'trending': document.querySelector('#trending .movie-grid-track'),
-                        'action': document.querySelector('#action .movie-grid-track'),
-                        'comedy': document.querySelector('#comedy .movie-grid-track'),
-                        'drama': document.querySelector('#drama .movie-grid-track'),
-                        'series': document.querySelector('#series .movie-grid-track'),
-                        'animation': document.querySelector('#animation .movie-grid-track')
-                    };
+                 // ✅ THE RESET LOOP: Wipes tracks clean and inserts the fallback message if empty
+            const categoryTracks = {
+                'trending': document.getElementById('trendingGrid'),
+                'action': document.getElementById('actionGrid'),
+                'comedy': document.getElementById('comedyGrid'),
+                'drama': document.getElementById('dramaGrid'),
+                'series': document.getElementById('seriesGrid'),
+                'animation': document.getElementById('animationGrid')
+            };
 
-                    Object.keys(categoryTracks).forEach(cat => {
-                        if (categoryTracks[cat]) {
-                            categoryTracks[cat].innerHTML = `
-                                <div style="grid-column: 1 / -1; padding: 30px 10px; color: #b3b3b3; font-size: 0.95rem; font-style: italic;">
-                                    🎬 No premium videos uploaded in this category yet...
-                                </div>
-                            `;
-                        }
-                    });
+            Object.keys(categoryTracks).forEach(cat => {
+                if (categoryTracks[cat]) {
+                    categoryTracks[cat].innerHTML = `
+                        <div class="no-movies-placeholder" style="grid-column: 1 / -1; width: 100%; padding: 20px 0; color: #b3b3b3; font-size: 0.95rem; font-style: italic; display: block;">
+                            🎬 No premium videos uploaded in this category yet...
+                        </div>
+                    `;
+                }
+            });
 
                     if (movies && movies.length > 0) {
                         movies.forEach(movie => {
