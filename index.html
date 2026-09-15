@@ -1039,25 +1039,21 @@ window.handleFormRegistrationAndPayment = async function(event) {
             const data = await response.json();
 
             // ✅ BULLETPROOF LOGICAL FIX: Simple evaluation check
+                      // ✅ FIXED LOGICAL BLOCK STRUCTURE
             if (data.success === true) {
-                // Store user session flags so they remain logged in
                 localStorage.setItem('uga_subscriber_session', 'true');
                 localStorage.setItem('uga_user_phone', phone);
                 localStorage.setItem('ugaStreamUserSession', JSON.stringify(data.user));
 
-                alert("📝 Profile successfully registered in Admin Dashboard! Redirecting to secure payment screen next...");
-                
-                // 💳 FORWARDS TO SELAR PORTAL INSTANTLY
-                window.location.href = "https://selar.co"; 
+                alert("Profile successfully registered in Admin Dashboard! Redirecting to secure payment screen next...");
+                window.location.href = "https://selar.co";
             } else {
-                // If username or phone already exists, show the server's exact reason
-                // ✅ REPLACE WITH THIS STANDARD, ACCESSIBLE STRING VALUE:
-alert("❌ Registration Refused! Please check your entry fields and try again.");
-            
+                alert("❌ Registration Refused! Please check your entry fields and try again.");
+            } // <-- THIS CLOSES THE ELSE BLOCK CORRECTLY
 
-        } catch (error) {
+        } catch (error) { // <-- NOW THE CATCH IS ALLOWED TO BE HERE!
             console.error("❌ Critical Authentication Pipeline Failure:", error);
-            alert("🚨 System Connection Interrupted. Unable to save credentials payload.");
+            alert("⚠️ System Connection Interrupted. Unable to save credentials payload.");
         }
     }
 
