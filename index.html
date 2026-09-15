@@ -1014,38 +1014,50 @@ window.handleFormRegistrationAndPayment = async function(event) {
                 .catch(err => console.error("Error loading application catalog routes:", err));
         }
 
-        // 👤 SAVE REGISTRATION DATA IN BACKEND LOGS FIRST THEN REDIRECT TO SELAR
-        async function processSubscriberRegistration() {
-            const username = document.getElementById('regUsername').value.trim();
-            const phone = document.getElementById('regPhone').value.trim();
-            const password = document.getElementById('regPass').value;
-            const plan = document.getElementById('regPlan').value;
+          // 🚀 SAVE REGISTRATION DATA IN BACKEND LOGS FIRST THEN REDIRECT TO SELAR
+    async function processSubscriberRegistration() {
+        // 1. Grab inputs from your precise markup variables
+        const username = document.getElementById('regUsername').value.trim();
+        const phone = document.getElementById('regPhone').value.trim();
+        const password = document.getElementById('regPass').value;
+        const plan = document.getElementById('regPlan').value;
 
-            if (!username || !phone || !password) {
-                return alert("⚠️ Please fill in all required form fields first.");
-            }
-
-            try {
-                const response = await fetch('/api/register-user', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, phone, password, plan })
-                });
-                const data = await response.json();
-                
-                if (response.ok && data.success !== false) {
-                    localStorage.setItem('uga_subscriber_session', 'true');
-                    localStorage.setItem('uga_user_phone', phone);
-                    alert("🔐 Profile successfully registered in Admin Dashboard! Redirecting to secure payment screen next...");
-                    window.location.href = "https://selar.co";
-                } else {
-                    alert("❌ Registration issue: " + (data.message || "Invalid account details configuration."));
-                }
-            } catch (err) {
-                console.warn("Backend logging delayed, proceeding to payment gateway tracking parameters.");
-                window.location.href = "https://selar.co";
-            }
+        if (!username || !phone || !password) {
+            return alert("⚠️ Please fill out all required form fields first.");
         }
+
+        try {
+            console.log("⏳ Synchronizing registration records with backend engine...");
+            const response = await fetch('/api/register-user', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, phone, password, plan })
+            });
+
+            const data = await response.json();
+
+            // ✅ BULLETPROOF LOGICAL FIX: Simple evaluation check
+            if (data.success === true) {
+                // Store user session flags so they remain logged in
+                localStorage.setItem('uga_subscriber_session', 'true');
+                localStorage.setItem('uga_user_phone', phone);
+                localStorage.setItem('ugaStreamUserSession', JSON.stringify(data.user));
+
+                alert("📝 Profile successfully registered in Admin Dashboard! Redirecting to secure payment screen next...");
+                
+                // 💳 FORWARDS TO SELAR PORTAL INSTANTLY
+                window.location.href = "https://selar.co"; 
+            } else {
+                // If username or phone already exists, show the server's exact reason
+                alert(`❌ Registration Refused: ${data.message || 'Check your entry fields.
+            
+
+        } catch (error) {
+            console.error("❌ Critical Authentication Pipeline Failure:", error);
+            alert("🚨 System Connection Interrupted. Unable to save credentials payload.");
+        }
+    }
+
 
         // 🔐 AUTHENTICATE RETURNING PREMIUM PLAN PASS USERS
         async function processSubscriberLogin() {
