@@ -83,24 +83,36 @@
             }
         }
 
-        async function fetchRegisteredUsers() {
+               async function fetchRegisteredUsers() {
             const tableBody = document.getElementById('usersTableBody');
             if (!tableBody) return;
             try {
-                const response = await fetch('/api/users');
-                const users = await response.json();
+                // Hits your fresh automated time-tracking endpoint
+                const response = await fetch('/api/admin/users-metrics');
+                const data = await response.json();
+                
                 tableBody.innerHTML = ''; 
-                users.forEach(user => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td style="padding: 10px; border: 1px solid rgba(255,255,255,0.08);">${user.username}</td>
-                        <td style="padding: 10px; border: 1px solid rgba(255,255,255,0.08);">${user.phone}</td>
-                        <td style="padding: 10px; border: 1px solid rgba(255,255,255,0.08); color: #f39c12; font-weight: bold;">${user.plan}</td>
-                        <td style="padding: 10px; border: 1px solid rgba(255,255,255,0.08); color: #ff4d4d;">${user.password}</td>
-                    `;
-                    tableBody.appendChild(row);
-                });
-            } catch (error) { console.error(error); }
+                if (data.success && data.users && data.users.length > 0) {
+                    data.users.forEach(user => {
+                        // Generates dynamic clean colored badges matching their status properties
+                        const badgeColor = user.status === "ACTIVE" ? "#2ecc71" : "#e74c3c";
+                        const statusBadge = `<span style="color: ${badgeColor}; font-weight: bold; background: rgba(0,0,0,0.2); padding: 3px 8px; border-radius: 4px; border: 1px solid ${badgeColor}33; font-size: 0.8rem;">${user.status}</span>`;
+
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td style="padding: 10px; border: 1px solid rgba(255,255,255,0.08);">${user.username}</td>
+                            <td style="padding: 10px; border: 1px solid rgba(255,255,255,0.08); color: #aaa;">${user.phone}</td>
+                            <td style="padding: 10px; border: 1px solid rgba(255,255,255,0.08); color: #f39c12; font-weight: bold;">${user.plan}</td>
+                            <td style="padding: 10px; border: 1px solid rgba(255,255,255,0.08); color: #2ecc71;">${user.accessKey}</td>
+                            <td style="padding: 10px; border: 1px solid rgba(255,255,255,0.08);">${statusBadge}</td>
+                            <td style="padding: 10px; border: 1px solid rgba(255,255,255,0.08); color: #95a5a6; font-size: 0.85rem;">${user.timeLeft}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                } else {
+                    tableBody.innerHTML = `<tr><td colspan="6" style="padding: 20px; color: #666; text-align: center;">No registered viewers found in active logs yet.</td></tr>`;
+                }
+            } catch (error) { console.error("Metrics UI mapping error:", error); }
         }
     </script>
 </head>
@@ -146,7 +158,8 @@
             <div class="dashboard-section">
                 <h3>Registered User Database Metrics</h3>
                 <table class="users-table">
-                    <thead><tr><th>Username</th><th>Phone</th><th>Tier Plan</th><th>Access Key</th></tr></thead>
+                                <thead><tr><th>Username</th><th>Phone</th><th>Tier Plan</th><th>Access Key</th><th>Status</th><th>Time Remaining</th></tr></thead>
+
                     <tbody id="usersTableBody"></tbody>
                 </table>
             </div>
