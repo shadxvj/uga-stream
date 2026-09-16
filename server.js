@@ -57,6 +57,13 @@ app.post('/api/login-user', (req, res) => {
         if (userAccount.password !== searchPassword) {
             return res.status(401).json({ success: false, message: "Incorrect password pass. Access denied." });
         }
+              // 🔒 APPROVAL GATE: Restricts login if user skipped payment
+        if (userAccount.isApproved !== true) {
+            return res.status(403).json({ 
+                success: false, 
+                message: "⚠️ Account Pending Verification! Access will activate automatically once your Selar mobile money transfer is approved." 
+            });
+        }
         // 🚀 SECURITY CHECK: Verify if their subscription plan time has run out
         const userExpired = new Date() > new Date(userAccount.expiresAt);
         if (userExpired) {
@@ -111,28 +118,19 @@ app.post('/api/register-user', (req, res) => {
             return res.status(400).json({ success: false, message: "This phone number is already registered!" });
         }
 
-        // 🚀 TIMEOUT CALCULATOR: Assigns live expiration properties based on plan
+               // 🚀 TIMEOUT CALCULATOR: Forces new users to start locked with zero duration
         const now = new Date();
-        let planDurationMs = 24 * 60 * 60 * 1000; // Default Daily: 24 Hours
 
-        const normalizedPlan = String(plan || "DAILY").toUpperCase().trim();
-        if (normalizedPlan === "WEEKLY") {
-            planDurationMs = 7 * 24 * 60 * 60 * 1000;
-        } else if (normalizedPlan === "MONTHLY") {
-            planDurationMs = 30 * 24 * 60 * 60 * 1000;
-        }
-
-        const expirationDate = new Date(now.getTime() + planDurationMs);
-
-        // Build the complete user entity with active timestamps
         const newUser = {
             id: usersDatabase.length + 1,
             username: finalUsername,
             phone: finalPhone,
-            plan: normalizedPlan, 
+            plan: String(plan || "DAILY").toUpperCase().trim(), 
             password: finalPassword,
             subscribedAt: now.toISOString(),
-            expiresAt: expirationDate.toISOString()
+            // Set expiresAt to the exact current time so they have 0 seconds left!
+            expiresAt: now.toISOString(), 
+            isApproved: false // 🔒 Locked until you click activate in your admin panel
         };
 
         usersDatabase.push(newUser);
@@ -463,6 +461,43 @@ app.get('/api/admin/users-metrics', (req, res) => {
     } catch (error) {
         return res.status(500).json({ success: false, message: "Metrics Engine Stalled" });
     }
+});
+// =========================================================================
+// ADMIN ACTION: ACTIVATE USER PLAN AFTER VERIFYING SELAR TRANSACTION
+// =========================================================================
+app.post('/api/admin/approve-user', (req, res) => {
+    const { phone } = req.body;
+    const user = usersDatabase.find(u => u.phone === String(phone).trim());
+    
+    if (!user) return res.status(404).json({ success: false, message: "User profile not found." });
+
+    const now = new Date();
+    let durationMs = 24 * 60 * 60 * 1000; // Daily default
+    if (user.plan === "WEEKLY") durationMs = 7 * 24 * 60 * 60 * 1000;
+    if (user.plan === "MONTHLY") durationMs = 30 * 24 * 60 * 60 * 1000;
+
+    user.isApproved = true;
+    user.subscribedAt = now.toISOString();
+    user.expiresAt = new Date(now.getTime() + durationMs).toISOString();
+
+    console.log(`✅ [ADMIN ACTION]: Activated ${user.username} (${user.plan})`);
+    return res.json({ success: true, message: "User plan activated successfully!" });
+});
+
+// =========================================================================
+// ADMIN ACTION: DELETE USER
+// =========================================================================
+app.delete('/api/admin/delete-user', (req, res) => {
+    const { phone } = req.body;
+    const initialLength = usersDatabase.length;
+    
+    // Filter out the user from the array database
+    usersDatabase = usersDatabase.filter(u => u.phone !== String(phone).trim());
+
+    if (usersDatabase.length === initialLength) {
+        return res.status(404).json({ success: false, message: "User not found." });
+    }
+    return res.json({ success: true, message: "User deleted successfully." });
 });
 
 // INITIALIZE EXPRESS SERVER ENGINE
