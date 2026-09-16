@@ -122,7 +122,7 @@
                 body: JSON.stringify({ phone })
             });
             const outcome = await res.json();
-            if (outcome.success) { fetchRegisteredUsers(); }
+                    if (outcome.success) { fetchRegisteredUsersMetrics(); }
         }
 
         async function deleteUser(phone) {
