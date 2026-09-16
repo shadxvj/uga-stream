@@ -83,20 +83,29 @@
             }
         }
 
-               async function fetchRegisteredUsers() {
+          async function fetchRegisteredUsers() {
             const tableBody = document.getElementById('usersTableBody');
             if (!tableBody) return;
             try {
-                // Hits your fresh automated time-tracking endpoint
                 const response = await fetch('/api/admin/users-metrics');
                 const data = await response.json();
                 
                 tableBody.innerHTML = ''; 
                 if (data.success && data.users && data.users.length > 0) {
                     data.users.forEach(user => {
-                        // Generates dynamic clean colored badges matching their status properties
-                        const badgeColor = user.status === "ACTIVE" ? "#2ecc71" : "#e74c3c";
-                        const statusBadge = `<span style="color: ${badgeColor}; font-weight: bold; background: rgba(0,0,0,0.2); padding: 3px 8px; border-radius: 4px; border: 1px solid ${badgeColor}33; font-size: 0.8rem;">${user.status}</span>`;
+                        const isUserActive = user.status === "ACTIVE";
+                        
+                        // 🟢 ACTIVE users stay green, 🔴 PENDING/EXPIRED accounts turn red
+                        const badgeColor = isUserActive ? "#2ecc71" : "#e74c3c";
+                        const displayStatus = isUserActive ? "ACTIVE" : "PENDING";
+                        const statusBadge = `<span style="color: ${badgeColor}; font-weight: bold; background: rgba(0,0,0,0.2); padding: 3px 8px; border-radius: 4px; border: 1px solid ${badgeColor}33; font-size: 0.8rem;">${displayStatus}</span>`;
+
+                        // 🕹️ REVENUE CONTROL BUTTON ENGINE
+                        // Displays an Activate confirmation link trigger option only if they are pending payment verification
+                        const activateButton = !isUserActive ? 
+                            `<button onclick="approveUser('${user.phone}')" style="background: #2ecc71; color: #000; padding: 4px 8px; font-size: 0.75rem; font-weight: bold; width: auto; margin: 0 5px 0 0; display: inline-block; cursor: pointer; border-radius: 3px;">✅ Activate</button>` : '';
+                        
+                        const deleteButton = `<button onclick="deleteUser('${user.phone}')" style="background: #e50914; color: #fff; padding: 4px 8px; font-size: 0.75rem; font-weight: bold; width: auto; margin: 0; display: inline-block; cursor: pointer; border-radius: 3px;">🗑️ Delete</button>`;
 
                         const row = document.createElement('tr');
                         row.innerHTML = `
@@ -106,14 +115,16 @@
                             <td style="padding: 10px; border: 1px solid rgba(255,255,255,0.08); color: #2ecc71;">${user.accessKey}</td>
                             <td style="padding: 10px; border: 1px solid rgba(255,255,255,0.08);">${statusBadge}</td>
                             <td style="padding: 10px; border: 1px solid rgba(255,255,255,0.08); color: #95a5a6; font-size: 0.85rem;">${user.timeLeft}</td>
+                            <td style="padding: 10px; border: 1px solid rgba(255,255,255,0.08);">${activateButton}${deleteButton}</td>
                         `;
                         tableBody.appendChild(row);
                     });
                 } else {
-                    tableBody.innerHTML = `<tr><td colspan="6" style="padding: 20px; color: #666; text-align: center;">No registered viewers found in active logs yet.</td></tr>`;
+                    tableBody.innerHTML = `<tr><td colspan="7" style="padding: 20px; color: #666; text-align: center;">No registered viewers found in active logs yet.</td></tr>`;
                 }
             } catch (error) { console.error("Metrics UI mapping error:", error); }
         }
+
          // JavaScript Trigger Functions for the buttons
         async function approveUser(phone) {
             const res = await fetch('/api/admin/approve-user', {
