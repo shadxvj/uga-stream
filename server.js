@@ -77,21 +77,20 @@ app.post('/api/login-user', (req, res) => {
         // 3. Return full user token profile to authorize the requesting device
         console.log(`🔑 [AUTH SUCCESS]: ${userAccount.username} logged in successfully from a new device.`);
         return res.status(200).json({
-            success: true,
-            message: "Authentication cleared successfully.",
+                      success: true,
             user: {
                 id: userAccount.id,
                 username: userAccount.username,
                 phone: userAccount.phone,
-                plan: userAccount.plan || "PREMIUM"
+                plan: userAccount.plan || "DAILY"
             }
         });
 
     } catch (error) {
-        console.error("❌ Login system fault:", error.message);
         return res.status(500).json({ success: false, message: "Internal Authentication Processor Stalled." });
     }
 });
+
 
 
 // API Endpoint to process and save new user registrations
