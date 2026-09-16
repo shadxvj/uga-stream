@@ -114,6 +114,28 @@
                 }
             } catch (error) { console.error("Metrics UI mapping error:", error); }
         }
+         // JavaScript Trigger Functions for the buttons
+        async function approveUser(phone) {
+            const res = await fetch('/api/admin/approve-user', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone })
+            });
+            const outcome = await res.json();
+            if (outcome.success) { fetchRegisteredUsers(); }
+        }
+
+        async function deleteUser(phone) {
+            if (confirm("⚠️ Are you sure you want to completely delete this account record?")) {
+                const res = await fetch('/api/admin/delete-user', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone })
+                });
+                const outcome = await res.json();
+                if (outcome.success) { fetchRegisteredUsers(); }
+            }
+        }
     </script>
 </head>
 <body>
