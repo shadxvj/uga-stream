@@ -30,6 +30,41 @@ app.get('/api/health', (req, res) => {
 let moviesDatabase = [];
 let usersDatabase = [];
 
+// PASTE THE STORJ CODE DIRECTLY HERE UNDER LINE 31:
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+
+const b2 = new S3Client({
+    region: "auto", 
+    endpoint: process.env.B2_ENDPOINT_URL, 
+    credentials: {
+        accessKeyId: process.env.B2_KEY_ID,
+        secretAccessKey: process.env.B2_APPLICATION_KEY,
+    },
+});
+
+app.post('/api/admin/get-b2-upload-link', async (req, res) => {
+    try {
+        const { filename, filetype, folder } = req.body;
+        const targetFolder = folder === 'posters' ? 'posters/' : 'videos/';
+        const uniqueFilename = `${targetFolder}${Date.now()}_${filename.replace(/\s+/g, '_')}`;
+
+        const command = new PutObjectCommand({
+            Bucket: process.env.B2_BUCKET_NAME,
+            Key: uniqueFilename,
+            ContentType: filetype,
+        });
+
+        const presignedUrl = await getSignedUrl(b2, command, { expiresIn: 3600 });
+        const permanentPublicUrl = `https://${process.env.B2_BUCKET_NAME}.${process.env.B2_ENDPOINT_URL.replace('https://', '')}/${uniqueFilename}`;
+
+        return res.json({ success: true, uploadUrl: presignedUrl, publicUrl: permanentPublicUrl });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+
 // API Endpoint to authenticate existing subscribers
 // =========================================================================
 // CROSS-DEVICE MULTI-DEVICE ACCOUNT AUTHENTICATION PORTAL
@@ -143,12 +178,11 @@ app.post('/api/upload-movie', (req, res) => {
     try {
         const { title, category, vj, posterUrl, videoUrl, image, source } = req.body;
         
-        // Maps incoming strings safely from either standard name format
         const finalPoster = posterUrl || image || "";
         const finalVideo = videoUrl || source || "";
 
         if (!finalVideo) {
-            return res.status(400).json({ success: false, message: "Missing required video stream file path link parameters." });
+            return res.status(400).json({ success: false, message: "Missing required video stream file link." });
         }
 
         const newMovie = {
@@ -156,30 +190,18 @@ app.post('/api/upload-movie', (req, res) => {
             title: title || "Untitled Movie",
             category: String(category || "trending").toLowerCase().trim(),
             vj: vj || "Unknown VJ",
-            image: finalPoster || "https://placeholder.com", // Securely hooks up to movie.image on your home grid!
-            source: finalVideo    // Securely hooks up to your video playback links inside watch.html!
+            image: finalPoster || "https://placeholder.com", 
+            source: finalVideo    
         };
 
         moviesDatabase.push(newMovie);
-        console.log(`🎬 [STORJ LIVE SUCCESS]: Registered ${newMovie.title} under category ${newMovie.category}`);
-        
+        console.log(`🎬 [STORJ SUCCESS]: Registered ${newMovie.title}`);
         return res.status(200).json({ success: true, movie: newMovie });
-        
     } catch (error) {
-        console.error("❌ Movie registry failure:", error.message);
         return res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 });
 
-        
-        moviesDatabase.push(newMovie);
-        return res.status(200).json({ success: true, movie: newMovie });
-        
-    } catch (error) {
-        console.error("❌ Movie upload compilation array failure:", error.message);
-        return res.status(500).json({ success: false, message: "Internal Server Error" });
-    }
-});
 
 app.get('/api/movies', (req, res) => { res.json(moviesDatabase); });
 app.get('/api/users', (req, res) => { res.json(usersDatabase); });
