@@ -143,27 +143,34 @@ app.post('/api/upload-movie', (req, res) => {
     try {
         const { title, category, vj, posterUrl, videoUrl, image, source } = req.body;
         
-        // Dynamic mapping: accepts input variables whether they are named posterUrl/image or videoUrl/source!
+        // Maps incoming strings safely from either standard name format
         const finalPoster = posterUrl || image || "";
         const finalVideo = videoUrl || source || "";
-        const finalVJ = vj || "Unknown VJ";
-        const finalTitle = title || "Untitled Movie";
-        const finalCategory = String(category || "trending").toLowerCase().trim();
 
-        if (!finalPoster || !finalVideo) {
-            return res.status(400).json({ success: false, message: "Missing required video or poster link parameters." });
+        if (!finalVideo) {
+            return res.status(400).json({ success: false, message: "Missing required video stream file path link parameters." });
         }
 
         const newMovie = {
             id: moviesDatabase.length + 1,
-            title: finalTitle,
-            category: finalCategory,
-            vj: finalVJ,
-            image: finalPoster,   // Securely hooks up to movie.image on your home grid!
-            source: finalVideo    // Securely hooks up to your video playback links!
+            title: title || "Untitled Movie",
+            category: String(category || "trending").toLowerCase().trim(),
+            vj: vj || "Unknown VJ",
+            image: finalPoster || "https://placeholder.com", // Securely hooks up to movie.image on your home grid!
+            source: finalVideo    // Securely hooks up to your video playback links inside watch.html!
         };
 
-        console.log(`🎬 [UPLOAD SUCCESS]: Stored ${newMovie.title} under category ${newMovie.category}`);
+        moviesDatabase.push(newMovie);
+        console.log(`🎬 [STORJ LIVE SUCCESS]: Registered ${newMovie.title} under category ${newMovie.category}`);
+        
+        return res.status(200).json({ success: true, movie: newMovie });
+        
+    } catch (error) {
+        console.error("❌ Movie registry failure:", error.message);
+        return res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
+});
+
         
         moviesDatabase.push(newMovie);
         return res.status(200).json({ success: true, movie: newMovie });
