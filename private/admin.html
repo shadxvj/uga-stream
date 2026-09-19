@@ -46,7 +46,7 @@
         fetchRegisteredUsers();
            // HIGH-SPEED DIRECT BROWSER-TO-STORJ DCS UPLOADER PIPELINE (NO SIZE LIMITS)
         document.addEventListener("DOMContentLoaded", () => {
-            const form = document.getElementById('simpleUploadForm');
+            const form = document.querySelector('form');
             if(!form) return;
             
             form.addEventListener('submit', async (e) => {
