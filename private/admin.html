@@ -45,34 +45,37 @@
         fetchAdminMovies(); 
         fetchRegisteredUsers();
            // HIGH-SPEED DIRECT BROWSER-TO-STORJ DCS UPLOADER PIPELINE (NO SIZE LIMITS)
+         // HIGH-SPEED DIRECT BROWSER-TO-STORJ DCS UPLOADER PIPELINE
         document.addEventListener("DOMContentLoaded", () => {
+            // UNIVERSAL SELECTOR: Grabs the form no matter what ID name it has!
             const form = document.querySelector('form');
             if(!form) return;
             
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
-                const title = document.getElementById('movieTitle').value;
-                const vj = document.getElementById('movieVJ').value;
+                // Handles both ID variants cleanly to prevent null runtime crashes
+                const title = document.getElementById('movieTitle')?.value || document.getElementById('title')?.value;
+                const vj = document.getElementById('movieVJ')?.value || document.getElementById('vj')?.value;
                 const category = document.getElementById('category')?.value || 'trending';
                 const posterUrl = document.getElementById('posterUrl').value;
-                const videoFile = document.getElementById('videoFile').files[0];
+                const videoFile = document.getElementById('videoFile').files[0]; // Fixed file stream mapping
 
                 if (!videoFile) {
                     alert("Please select a video file first.");
                     return;
                 }
 
-                const submitBtn = document.getElementById('submitBtn');
+                const submitBtn = document.getElementById('submitBtn') || document.querySelector('button[type="submit"]');
                 const progressWrapper = document.getElementById('progressWrapper');
                 const progressFill = document.getElementById('progressFill');
 
                 try {
                     submitBtn.disabled = true;
                     submitBtn.innerText = "Processing Authorization...";
-                    progressWrapper.style.display = "block";
+                    if(progressWrapper) progressWrapper.style.style.display = "block";
 
-                    // Step 1: Query your Render server for an authenticated S3 Presigned URL link
+                    // Step 1: Fetch authenticated S3 link
                     const linkRequest = await fetch('/api/admin/get-b2-upload-link', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -84,13 +87,13 @@
 
                     submitBtn.innerText = "Streaming Movie to Cloud (Keep window open)...";
 
-                    // Step 2: Stream raw binary packets straight to Storj via AJAX to track upload speed
+                    // Step 2: Stream packets directly to Storj DCS
                     const xhr = new XMLHttpRequest();
                     xhr.open('PUT', linkData.uploadUrl, true);
                     xhr.setRequestHeader('Content-Type', videoFile.type);
 
                     xhr.upload.onprogress = (event) => {
-                        if (event.lengthComputable) {
+                        if (event.lengthComputable && progressFill) {
                             const percentComplete = Math.round((event.loaded / event.total) * 100);
                             progressFill.style.width = percentComplete + '%';
                             progressFill.innerText = percentComplete + '%';
@@ -99,9 +102,9 @@
 
                     xhr.onload = async () => {
                         if (xhr.status === 200 || xhr.status === 201) {
-                            progressFill.innerText = "Saving to Database...";
+                            if(progressFill) progressFill.innerText = "Saving to Database...";
                             
-                            // Step 3: Dispatch final metadata mapping properties back to server registry array
+                            // Step 3: Publish to app layout
                             const finalPublish = await fetch('/api/upload-movie', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
@@ -114,25 +117,21 @@
                             if (publishResult.success) {
                                 alert("🎬 " + title + " has been successfully published to UGA STREAM!");
                                 form.reset();
-                                progressWrapper.style.display = "none";
-                                if(typeof fetchAdminMovies === "function") fetchAdminMovies();
+                                if(progressWrapper) progressWrapper.style.style.display = "none";
+                                location.reload();
                             } else {
-                                alert("Database catalog update failed: " + publishResult.message);
+                                alert("Database registry failed: " + publishResult.message);
                             }
                         } else {
                             alert("Storage network rejected file stream chunks.");
                         }
                     };
 
-                    xhr.onerror = () => {
-                        alert("Network connection dropped mid-transit.");
-                    };
-
+                    xhr.onerror = () => { alert("Network connection dropped mid-transit."); };
                     xhr.onloadend = () => {
                         submitBtn.disabled = false;
                         submitBtn.innerText = "🚀 Publish Movie to App";
                     };
-
                     xhr.send(videoFile);
 
                 } catch (err) {
@@ -142,6 +141,7 @@
                 }
             });
         });
+
      
         // ADDED HERE: Starts the 5-second automatic refresh loop
         setInterval(fetchRegisteredUsers, 5000);
