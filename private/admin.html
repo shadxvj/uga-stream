@@ -21,6 +21,10 @@
         .users-table th { background-color: #1a1a1a; color: #f39c12; text-align: left; padding: 12px 10px; border: 1px solid rgba(255,255,255,0.08); }
         #adminMoviesList { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
         @media (max-width: 992px) { .admin-layout-grid { grid-template-columns: 1fr; } }
+                /* Progress Bar Styling Container Hooks */
+        .progress-wrapper { display: none; margin-top: 20px; background: #222; border-radius: 4px; height: 20px; overflow: hidden; border: 1px solid #444; }
+        .progress-fill { background: linear-gradient(to right, #f39c12, #e08e0b); width: 0%; height: 100%; text-align: center; color: black; font-weight: bold; font-size: 0.8rem; line-height: 20px; transition: width 0.1s ease; }
+
     </style>
     <script>
        document.addEventListener("DOMContentLoaded", () => {
@@ -40,7 +44,105 @@
     } else {
         fetchAdminMovies(); 
         fetchRegisteredUsers();
-        
+           // HIGH-SPEED DIRECT BROWSER-TO-STORJ DCS UPLOADER PIPELINE (NO SIZE LIMITS)
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.getElementById('simpleUploadForm');
+            if(!form) return;
+            
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const title = document.getElementById('movieTitle').value;
+                const vj = document.getElementById('movieVJ').value;
+                const category = document.getElementById('category')?.value || 'trending';
+                const posterUrl = document.getElementById('posterUrl').value;
+                const videoFile = document.getElementById('videoFile').files[0];
+
+                if (!videoFile) {
+                    alert("Please select a video file first.");
+                    return;
+                }
+
+                const submitBtn = document.getElementById('submitBtn');
+                const progressWrapper = document.getElementById('progressWrapper');
+                const progressFill = document.getElementById('progressFill');
+
+                try {
+                    submitBtn.disabled = true;
+                    submitBtn.innerText = "Processing Authorization...";
+                    progressWrapper.style.display = "block";
+
+                    // Step 1: Query your Render server for an authenticated S3 Presigned URL link
+                    const linkRequest = await fetch('/api/admin/get-b2-upload-link', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ filename: videoFile.name, filetype: videoFile.type })
+                    });
+
+                    const linkData = await linkRequest.json();
+                    if (!linkData.success) throw new Error(linkData.message || "Failed to generate storage link.");
+
+                    submitBtn.innerText = "Streaming Movie to Cloud (Keep window open)...";
+
+                    // Step 2: Stream raw binary packets straight to Storj via AJAX to track upload speed
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('PUT', linkData.uploadUrl, true);
+                    xhr.setRequestHeader('Content-Type', videoFile.type);
+
+                    xhr.upload.onprogress = (event) => {
+                        if (event.lengthComputable) {
+                            const percentComplete = Math.round((event.loaded / event.total) * 100);
+                            progressFill.style.width = percentComplete + '%';
+                            progressFill.innerText = percentComplete + '%';
+                        }
+                    };
+
+                    xhr.onload = async () => {
+                        if (xhr.status === 200 || xhr.status === 201) {
+                            progressFill.innerText = "Saving to Database...";
+                            
+                            // Step 3: Dispatch final metadata mapping properties back to server registry array
+                            const finalPublish = await fetch('/api/upload-movie', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    title, vj, category, posterUrl, videoUrl: linkData.publicUrl
+                                })
+                            });
+
+                            const publishResult = await finalPublish.json();
+                            if (publishResult.success) {
+                                alert("🎬 " + title + " has been successfully published to UGA STREAM!");
+                                form.reset();
+                                progressWrapper.style.display = "none";
+                                if(typeof fetchAdminMovies === "function") fetchAdminMovies();
+                            } else {
+                                alert("Database catalog update failed: " + publishResult.message);
+                            }
+                        } else {
+                            alert("Storage network rejected file stream chunks.");
+                        }
+                    };
+
+                    xhr.onerror = () => {
+                        alert("Network connection dropped mid-transit.");
+                    };
+
+                    xhr.onloadend = () => {
+                        submitBtn.disabled = false;
+                        submitBtn.innerText = "🚀 Publish Movie to App";
+                    };
+
+                    xhr.send(videoFile);
+
+                } catch (err) {
+                    alert("Upload failed: " + err.message);
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = "🚀 Publish Movie to App";
+                }
+            });
+        });
+     
         // ADDED HERE: Starts the 5-second automatic refresh loop
         setInterval(fetchRegisteredUsers, 5000);
     }
@@ -177,8 +279,13 @@
                 <label>Poster Image URL:</label>
                 <input type="text" id="posterUrl" required placeholder="Paste Cloudinary Poster .jpg link">
 
-                <label>Video Stream URL:</label>
-                <input type="text" id="videoUrl" required placeholder="Paste Cloudinary Video .mp4 link">
+                               <label for="videoFile">Select Movie File (Up to 25GB):</label>
+                <input type="file" id="videoFile" accept="video/mp4,video/mkv" required>
+
+                <!-- Live Progress Tracker Elements -->
+                <div class="progress-wrapper" id="progressWrapper">
+                    <div class="progress-fill" id="progressFill">0%</div>
+                </div>
 
                 <button type="submit" id="submitBtn">🚀 Publish Movie to App</button>
             </form>
