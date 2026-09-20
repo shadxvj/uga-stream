@@ -259,15 +259,15 @@
     <div class="admin-layout-grid">
         <div class="form-container">
             <h3>Upload New Content (Link Method)</h3>
-            <form id="uploadMovieForm">
+            <form id="mediaUploadForm">
                 <label>Movie Title:</label>
-                <input type="text" id="title" required placeholder="e.g., Gladiator 2">
+                <input type="text" id="movieTitle" required placeholder="e.g., Gladiator 2">
 
                 <label>VJ Translator Name:</label>
-                <input type="text" id="vj" required placeholder="e.g., VJ Jingo">
+                <input type="text" id="movieVJ" required placeholder="e.g., VJ Jingo">
 
                 <label>Movie Category:</label>
-                <select id="movieCategory">
+                <select id="category">
                     <option value="trending">🔥 Trending</option>
                     <option value="action">💥 Action</option>
                     <option value="comedy">😂 Comedy</option>
@@ -276,9 +276,8 @@
                     <option value="animation">🦊 Animation</option>
                 </select>
 
-                <label>Poster Image URL:</label>
-                <input type="text" id="posterUrl" required placeholder="Paste Cloudinary Poster .jpg link">
-
+              <label for="posterUrl">Poster Image URL:</label>
+<input type="text" id="posterUrl" placeholder="Paste Storj Artwork / Poster Link">
                                <label for="videoFile">Select Movie File (Up to 25GB):</label>
                 <input type="file" id="videoFile" accept="video/mp4,video/mkv" required>
 
