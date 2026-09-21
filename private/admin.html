@@ -312,21 +312,21 @@
             submitBtn.disabled = true;
             submitBtn.innerText = "Publishing...";
 
-            const response = await fetch('/api/upload-movie', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    title: document.getElementById('movieTitle').value,
-                    vj: document.getElementById('movieVj').value,
-                    category: document.getElementById('category').value,
-                   // REPLACE THEM WITH THIS SPECIFIC IMPLEMENTATION:
-// MAKE LINES 325 AND 326 MATCH THIS EXACT SYNTAX:
-                      // MATCH LINES 324 & 325 TO THIS EXACT CODE:
-            posterUrl: document.getElementById('posterFile').files[0] ? document.getElementById('posterFile').files[0].name : '',
-            videoUrl: document.getElementById('videoFile').files[0] ? document.getElementById('videoFile').files[0].name : ''
+                    // 1. Read input parameters safely first
+        const title = document.getElementById('movieTitle')?.value || document.getElementById('title')?.value || '';
+        const vj = document.getElementById('movieVJ')?.value || document.getElementById('vj')?.value || '';
+        const category = document.getElementById('category')?.value || document.getElementById('movieCategory')?.value || 'trending';
 
-                })
-            });
+        const posterUrl = document.getElementById('posterFile')?.files[0] ? document.getElementById('posterFile').files[0].name : '';
+        const videoUrl = document.getElementById('videoFile')?.files[0] ? document.getElementById('videoFile').files[0].name : '';
+
+        // 2. Safely run the fetch call now that the parameters exist
+        const response = await fetch('/api/upload-movie', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, vj, category, posterUrl, videoUrl })
+        });
+
 
             if (response.ok) {
                 alert("✅ Success: Movie published instantly!");
