@@ -322,9 +322,11 @@
         const videoFileObj = document.getElementById('videoFile')?.files[0];
 
         // Creates the genuine public gateway paths pointing to your bucket files in Storjv
-    // MATCH LINES 325 AND 326 TO THIS EXACT CODE STRING PATTERN:
-               const posterUrl = posterFileObj ? `https://storjshare.io{Date.now()}_${posterFileObj.name.replace(/\s+/g, '_')}` : '';
-        const videoUrl = videoFileObj ? `https://storjshare.io{Date.now()}_${videoFileObj.name.replace(/\s+/g, '_')}` : '';
+            // MAKE SURE LINES 325 & 326 USE THIS EXACT DOLLAR-SIGN INTERPOLATION:
+        const posterUrl = posterFileObj ? `https://storjshare.io/jus3vug6wfrqk7xxi35ujmrcruya/uga-stream-cinema/${Date.now()}_${posterFileObj.name.replace(/\s+/g, '_')}` : '';
+        const videoUrl = videoFileObj ? `https://link.storjshare.io/raw/jus3vug6wfrqk7xxi35ujmrcruya/uga-stream-cinema${Date.now()}_${videoFileObj.name.replace(/\s+/g, '_')}` : '';
+
+
 
         // 2. Safely run the fetch call now that the parameters exist
         const response = await fetch('/api/upload-movie', {
