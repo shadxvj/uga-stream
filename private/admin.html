@@ -369,7 +369,7 @@
             })
         });
 
-        if (response.ok) {
+              if (response.ok) {
             alert("✅ Success: Movie published instantly!");
             window.location.reload();
         } else {
@@ -379,13 +379,14 @@
     } catch (error) {
         alert("❌ Ingestion pipeline failed: " + error.message);
     } finally {
-        submitBtn = document.getElementById('submitBtn');
-        if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.innerText = "Publish Movie to App";
+        const resetBtn = document.getElementById('submitBtn');
+        if (resetBtn) {
+            resetBtn.disabled = false;
+            resetBtn.innerText = "Publish Movie to App";
         }
     }
 });
+
 
     </script>
 </body>
