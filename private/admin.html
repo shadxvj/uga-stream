@@ -326,7 +326,7 @@
             return;
         }
 
-        const submitBtn = document.getElementById('submitBtn') || document.querySelector('button[type="submit"]');
+        submitBtn = document.getElementById('submitBtn') || document.querySelector('button[type="submit"]');
         if (submitBtn) {
             submitBtn.disabled = true;
             submitBtn.innerText = "Uploading media to Storj (Please keep this window open)...";
