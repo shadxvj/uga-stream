@@ -320,8 +320,11 @@
                     vj: document.getElementById('movieVj').value,
                     category: document.getElementById('movieCategory').value,
                    // REPLACE THEM WITH THIS SPECIFIC IMPLEMENTATION:
-posterFile: document.getElementById('posterFile').files[0],
-videoFile: document.getElementById('videoFile').files[0]
+// MAKE LINES 325 AND 326 MATCH THIS EXACT SYNTAX:
+                      // MATCH LINES 324 & 325 TO THIS EXACT CODE:
+            posterUrl: document.getElementById('posterFile').files[0] ? document.getElementById('posterFile').files[0].name : '',
+            videoUrl: document.getElementById('videoFile').files[0] ? document.getElementById('videoFile').files[0].name : ''
+
                 })
             });
 
