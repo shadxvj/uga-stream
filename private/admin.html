@@ -364,28 +364,28 @@
                 title,
                 vj,
                 category,
-                posterUrl: posterLinkData.publicUrl,
-                videoUrl: videoLinkData.publicUrl
-            })
-        });
+                         posterUrl: posterLinkData.publicUrl,
+            videoUrl: videoLinkData.publicUrl
+        })
+    });
 
-              if (response.ok) {
-            alert("✅ Success: Movie published instantly!");
-            window.location.reload();
-        } else {
-            alert("❌ Database registration failed.");
-        }
+    if (response.ok) {
+        alert("✅ Success: Movie published instantly!");
+        window.location.reload();
+    } else {
 
     } catch (error) {
         alert("❌ Ingestion pipeline failed: " + error.message);
-    } finally {
-        const resetBtn = document.getElementById('submitBtn');
-        if (resetBtn) {
-            resetBtn.disabled = false;
-            resetBtn.innerText = "Publish Movie to App";
-        }
+       } finally {
+        const submitBtnEl = document.getElementById('submitBtn');
+        if (submitBtnEl) {
+            submitBtnEl.disabled = false;
+            submitBtnEl.innerText = "Publish Movie to App";
+              }
     }
 });
+
+
 
 
     </script>
