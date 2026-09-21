@@ -305,7 +305,8 @@
         </div>
     </div>
     <script>
-        document.getElementById('mediaUploadForm').addEventListener('submit', async function(e) {
+        // REPLACE LINE 308 WITH THIS EXACT LINE:
+(document.getElementById('mediaUploadForm') || document.getElementById('uploadMovieForm') || document.querySelector('form')).addEventListener('submit', async function(e) {
             e.preventDefault();
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
