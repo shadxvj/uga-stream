@@ -317,7 +317,7 @@
         const vj = document.getElementById('movieVJ')?.value || document.getElementById('vj')?.value || '';
         const category = document.getElementById('category')?.value || document.getElementById('movieCategory')?.value || 'trending';
 
-                    // CHOOSE THIS SECURE VARIABLE STRUCTURING ASSIGNMENT:
+        // 1. Get the individual file objects out of the file list correctly
         const posterFile = document.getElementById('posterFile')?.files[0];
         const videoFile = document.getElementById('videoFile')?.files[0];
 
@@ -329,45 +329,48 @@
         const submitBtn = document.getElementById('submitBtn') || document.querySelector('button[type="submit"]');
         if (submitBtn) {
             submitBtn.disabled = true;
-            submitBtn.innerText = "Uploading assets to Storj (Please keep this window open)...";
+            submitBtn.innerText = "Uploading media to Storj (Please keep this window open)...";
         }
 
         try {
-            // Step 1: Get upload link and upload the Poster Image
+            // Unique file identifiers matching your backend variables structure
+            const uniquePosterName = `posters/${Date.now()}_${posterFile.name.replace(/\s+/g, '_')}`;
+            const uniqueVideoName = `videos/${Date.now()}_${videoFile.name.replace(/\s+/g, '_')}`;
+
+            // Step 2: Request signed leases from your server using the unique timestamp filenames
             const posterLinkReq = await fetch('/api/admin/get-b2-upload-link', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ filename: posterFile.name, filetype: posterFile.type, folder: 'posters' })
+                body: JSON.stringify({ filename: uniquePosterName, filetype: posterFile.type, folder: 'posters' })
             });
             const posterLinkData = await posterLinkReq.json();
-            if (!posterLinkData.success) throw new Error("Poster authorization lease failed.");
 
-            await fetch(posterLinkData.uploadUrl, { method: 'PUT', headers: { 'Content-Type': 'posterFile.type' }, body: posterFile });
+            // Stream poster binary block straight to Storj S3 bucket network
+            await fetch(posterLinkData.uploadUrl, { method: 'PUT', headers: { 'Content-Type': posterFile.type }, body: posterFile });
 
-            // Step 2: Get upload link and upload the Video File
             const videoLinkReq = await fetch('/api/admin/get-b2-upload-link', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ filename: videoFile.name, filetype: videoFile.type, folder: 'videos' })
+                body: JSON.stringify({ filename: uniqueVideoName, filetype: videoFile.type, folder: 'videos' })
             });
             const videoLinkData = await videoLinkReq.json();
-            if (!videoLinkData.success) throw new Error("Video authorization lease failed.");
 
-            // Direct upload stream to Storj
+            // Stream movie binary block straight to Storj S3 bucket network
             await fetch(videoLinkData.uploadUrl, { method: 'PUT', headers: { 'Content-Type': videoFile.type }, body: videoFile });
 
-                    // 3. Save the public links returned by Storj straight into your catalog registry
-        const response = await fetch('/api/upload-movie', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                title,
-                vj,
-                category,
-                         posterUrl: posterLinkData.publicUrl,
-            videoUrl: videoLinkData.publicUrl
-        })
-    });
+            // Step 3: Register the finalized authenticated public gateway paths to your movie rails track
+            const response = await fetch('/api/upload-movie', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    title,
+                    vj,
+                    category,
+                    posterUrl: posterLinkData.publicUrl,
+                    videoUrl: videoLinkData.publicUrl
+                })
+            });
+
 
     if (response.ok) {
         alert("✅ Success: Movie published instantly!");
