@@ -317,9 +317,14 @@
         const vj = document.getElementById('movieVJ')?.value || document.getElementById('vj')?.value || '';
         const category = document.getElementById('category')?.value || document.getElementById('movieCategory')?.value || 'trending';
 
-        const posterUrl = document.getElementById('posterFile')?.files[0] ? document.getElementById('posterFile').files[0].name : '';
-        const videoUrl = document.getElementById('videoFile')?.files[0] ? document.getElementById('videoFile').files[0].name : '';
+             // CHOOSE THIS SECURE VARIABLE STRUCTURING ASSIGNMENT:
+              const posterFileObj = document.getElementById('posterFile')?.files[0];
+        const videoFileObj = document.getElementById('videoFile')?.files[0];
 
+        // Creates the genuine public gateway paths pointing to your bucket files in Storj
+                // REPLACE LINES 325 AND 326 WITH THIS CORRECT GATEWAY LINK:
+        const posterUrl = posterFileObj ? `https://storjshare.io{Date.now()}_${posterFileObj.name.replace(/\s+/g, '_')}` : '';
+        const videoUrl = videoFileObj ? `https://storjshare.io{Date.now()}_${videoFileObj.name.replace(/\s+/g, '_')}` : '';
         // 2. Safely run the fetch call now that the parameters exist
         const response = await fetch('/api/upload-movie', {
             method: 'POST',
