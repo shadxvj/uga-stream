@@ -379,7 +379,7 @@
     } catch (error) {
         alert("❌ Ingestion pipeline failed: " + error.message);
     } finally {
-        const submitBtn = document.getElementById('submitBtn');
+        submitBtn = document.getElementById('submitBtn');
         if (submitBtn) {
             submitBtn.disabled = false;
             submitBtn.innerText = "Publish Movie to App";
