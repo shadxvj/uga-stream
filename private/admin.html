@@ -367,17 +367,22 @@
                     category,
                     posterUrl: posterLinkData.publicUrl,
                     videoUrl: videoLinkData.publicUrl
-                })
-            });
+             
 
+
+               videoUrl: videoLinkData.publicUrl
+        })
+    }); // 
 
     if (response.ok) {
         alert("✅ Success: Movie published instantly!");
         window.location.reload();
     } else {
+        alert("❌ Database registration failed.");
+    }
+} catch (error) {
+    alert("❌ Ingestion pipeline failed: " + error.message);
 
-    } catch (error) {
-        alert("❌ Ingestion pipeline failed: " + error.message);
        } finally {
         const submitBtnEl = document.getElementById('submitBtn');
         if (submitBtnEl) {
@@ -386,8 +391,6 @@
               }
     }
 });
-
-
 
 
     </script>
