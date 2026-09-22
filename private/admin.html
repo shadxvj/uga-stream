@@ -334,8 +334,10 @@
 
         try {
             // Unique file identifiers matching your backend variables structure
-                       const uniquePosterName = `posters/${Date.now()}_${posterFile.name.replace(/\s+/g, '_')}`;
+                                  // Change the single quotes to backticks on these two lines:
+            const uniquePosterName = `posters/${Date.now()}_${posterFile.name.replace(/\s+/g, '_')}`;
             const uniqueVideoName = `videos/${Date.now()}_${videoFile.name.replace(/\s+/g, '_')}`;
+
             // Step 2: Request signed leases from your server using the unique timestamp filenames
             const posterLinkReq = await fetch('/api/admin/get-b2-upload-link', {
                 method: 'POST',
