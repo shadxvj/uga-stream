@@ -318,8 +318,9 @@
         const category = document.getElementById('category')?.value || document.getElementById('movieCategory')?.value || 'trending';
 
         // 1. Get the individual file objects out of the file list correctly
-        const posterFile = document.getElementById('posterFile')?.files[0];
-        const videoFile = document.getElementById('videoFile')?.files[0];
+       // ⚡ FIX: Add [0] at the end so it grabs the actual file data properties!
+const posterFile = document.getElementById('posterFile')?.files[0];
+const videoFile = document.getElementById('videoFile')?.files[0];
 
         if (!posterFile || !videoFile) {
             alert("❌ Please select both a poster image and a video file first.");
