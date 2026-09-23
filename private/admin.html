@@ -317,16 +317,19 @@
         const vj = document.getElementById('movieVJ')?.value || document.getElementById('vj')?.value || '';
         const category = document.getElementById('category')?.value || document.getElementById('movieCategory')?.value || 'trending';
 
-        // 1. Get the individual file objects out of the file list correctly
-       // ⚡ FIX: Add [0] at the end so it grabs the actual file data properties!
-const posterFile = document.getElementById('posterFile')?.files[0];
-const videoFile = document.getElementById('videoFile')?.files[0];
+              // 1. Correctly extract the actual file items from the file inputs
+        const posterFileInput = document.getElementById('posterFile');
+        const videoFileInput = document.getElementById('videoFile');
 
-        if (!posterFile || !videoFile) {
+        if (!posterFileInput?.files?.[0] || !videoFileInput?.files?.[0]) {
             alert("❌ Please select both a poster image and a video file first.");
             return;
-             }
-        submitBtn = document.getElementById('submitBtn') || document.querySelector('button[type="submit"]');
+        }
+
+        const posterFile = posterFileInput.files[0];
+        const videoFile = videoFileInput.files[0];
+
+        let submitBtn = document.getElementById('submitBtn') || document.querySelector('button[type="submit"]');
         if (submitBtn) {
             submitBtn.disabled = true;
             submitBtn.innerText = "Uploading media to Storj (Please keep this window open)...";
@@ -337,7 +340,7 @@ const videoFile = document.getElementById('videoFile')?.files[0];
             const uniquePosterName = `posters/${Date.now()}_${posterFile.name.replace(/\s+/g, '_')}`;
             const uniqueVideoName = `videos/${Date.now()}_${videoFile.name.replace(/\s+/g, '_')}`;
 
-            // Step 1: Request signed upload links from your server using the filenames
+            // Step 2: Request signed leases from your server using the unique timestamp filenames
             const posterLinkReq = await fetch('/api/admin/get-b2-upload-link', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -345,7 +348,7 @@ const videoFile = document.getElementById('videoFile')?.files[0];
             });
             const posterLinkData = await posterLinkReq.json();
 
-            // Stream poster binary block straight to Storj
+            // Stream poster binary block straight to Storj S3 bucket network
             await fetch(posterLinkData.uploadUrl, { method: 'PUT', headers: { 'Content-Type': posterFile.type }, body: posterFile });
 
             const videoLinkReq = await fetch('/api/admin/get-b2-upload-link', {
@@ -355,24 +358,24 @@ const videoFile = document.getElementById('videoFile')?.files[0];
             });
             const videoLinkData = await videoLinkReq.json();
 
-            // Stream movie binary block straight to Storj
+            // Stream movie binary block straight to Storj S3 bucket network
             await fetch(videoLinkData.uploadUrl, { method: 'PUT', headers: { 'Content-Type': videoFile.type }, body: videoFile });
 
-            // Step 2: Register the finalized public URLs to your movie database track
-                         const response = await fetch('/api/upload-movie', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                title: title,
-                vj: vj,
-                category: category,
-                posterUrl: posterLinkData.publicUrl,
-                videoUrl: videoLinkData.publicUrl,  // Fixed: capital L
-                image: posterLinkData.publicUrl,    // Required by server.js
-                source: videoLinkData.publicUrl     // Fixed: capital L
-            })
-        });
-            
+            // Step 3: Register the finalized authenticated public gateway paths to your movie rails track
+            const response = await fetch('/api/upload-movie', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    title: title,
+                    vj: vj,
+                    category: category,
+                    posterUrl: posterLinkData.publicUrl,
+                    videoUrl: videoLinkData.publicUrl,
+                    image: posterLinkData.publicUrl,    // Required by server.js line 183
+                    source: videoLinkData.publicUrl     // Required by server.js line 184
+                })
+            });
+
             if (response.ok) {
                 alert("✅ Success: Movie published instantly!");
                 window.location.reload();
@@ -383,10 +386,9 @@ const videoFile = document.getElementById('videoFile')?.files[0];
         } catch (error) {
             alert("❌ Ingestion pipeline failed: " + error.message);
         } finally {
-            const submitBtnEl = document.getElementById('submitBtn');
-            if (submitBtnEl) {
-                submitBtnEl.disabled = false;
-                submitBtnEl.innerText = "Publish Movie to App";
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Publish Movie to App";
             }
         }
     });
