@@ -325,13 +325,13 @@
             alert("❌ Please select both a poster image and a video file first.");
             return;
              }
-let submitBtn = document.getElementById('submitBtn') || document.querySelector('button[type="submit"]');
+        let submitBtn = document.getElementById('submitBtn') || document.querySelector('button[type="submit"]');
         if (submitBtn) {
             submitBtn.disabled = true;
             submitBtn.innerText = "Uploading media to Storj (Please keep this window open)...";
         }
 
-              try {
+        try {
             // Unique file identifiers matching your backend variables structure
             const uniquePosterName = `posters/${Date.now()}_${posterFile.name.replace(/\s+/g, '_')}`;
             const uniqueVideoName = `videos/${Date.now()}_${videoFile.name.replace(/\s+/g, '_')}`;
