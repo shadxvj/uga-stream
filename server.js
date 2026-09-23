@@ -35,13 +35,14 @@ const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 
 const b2 = new S3Client({
-    region: "auto", 
-    endpoint: process.env.B2_ENDPOINT_URL, 
+    region: "us-east-1", // Storj explicitly requires us-east-1
+    endpoint: process.env.STORJ_ENDPOINT,
     credentials: {
-        accessKeyId: process.env.B2_KEY_ID,
-        secretAccessKey: process.env.B2_APPLICATION_KEY,
+        accessKeyId: process.env.STORJ_ACCESS_KEY,
+        secretAccessKey: process.env.STORJ_SECRET_KEY,
     },
 });
+
 
 app.post('/api/admin/get-b2-upload-link', async (req, res) => {
     try {
@@ -50,7 +51,7 @@ app.post('/api/admin/get-b2-upload-link', async (req, res) => {
         const uniqueFilename = `${targetFolder}${Date.now()}_${filename.replace(/\s+/g, '_')}`;
 
         const command = new PutObjectCommand({
-            Bucket: process.env.B2_BUCKET_NAME,
+        Bucket: "uga-stream-cinema",
             Key: uniqueFilename,
             ContentType: filetype,
         });
