@@ -332,11 +332,44 @@
             submitBtn.innerText = "Uploading media to Storj (Please keep this window open)...";
         }
 
-        try {
+              try {
             // Unique file identifiers matching your backend variables structure
-                                  // Change the single quotes to backticks on these two lines:
             const uniquePosterName = `posters/${Date.now()}_${posterFile.name.replace(/\s+/g, '_')}`;
             const uniqueVideoName = `videos/${Date.now()}_${videoFile.name.replace(/\s+/g, '_')}`;
+
+            // Step 1: Request signed upload links from your server using the filenames
+            const posterLinkReq = await fetch('/api/admin/get-b2-upload-link', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ filename: uniquePosterName, filetype: posterFile.type, folder: 'posters' })
+            });
+            const posterLinkData = await posterLinkReq.json();
+
+            // Stream poster binary block straight to Storj
+            await fetch(posterLinkData.uploadUrl, { method: 'PUT', headers: { 'Content-Type': posterFile.type }, body: posterFile });
+
+            const videoLinkReq = await fetch('/api/admin/get-b2-upload-link', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ filename: uniqueVideoName, filetype: videoFile.type, folder: 'videos' })
+            });
+            const videoLinkData = await videoLinkReq.json();
+
+            // Stream movie binary block straight to Storj
+            await fetch(videoLinkData.uploadUrl, { method: 'PUT', headers: { 'Content-Type': videoFile.type }, body: videoFile });
+
+            // Step 2: Register the finalized public URLs to your movie database track
+            const response = await fetch('/api/upload-movie', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    title,
+                    vj,
+                    category,
+                    posterUrl: posterLinkData.publicUrl,
+                    videoUrl: videoLinkData.publicUrl
+                })
+            });
 
             // Step 2: Request signed leases from your server using the unique timestamp filenames
             const posterLinkReq = await fetch('/api/admin/get-b2-upload-link', {
