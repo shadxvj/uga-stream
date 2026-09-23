@@ -326,7 +326,8 @@
             return;
         }
 
-        submitBtn = document.getElementById('submitBtn') || document.querySelector('button[type="submit"]');
+        // ⚡ CHANGE "const" TO "let" EXACTLY LIKE THIS:
+let submitBtn = document.getElementById('submitBtn') || document.querySelector('button[type="submit"]');
         if (submitBtn) {
             submitBtn.disabled = true;
             submitBtn.innerText = "Uploading media to Storj (Please keep this window open)...";
