@@ -322,7 +322,9 @@
         const videoFile = document.getElementById('videoFile')?.files[0];
 
         if (!posterFile || !videoFile) {
-            alert("❌ Please select both a poster image and a video file first
+            alert("❌ Please select both a poster image and a video file first.");
+            return;
+             }
 let submitBtn = document.getElementById('submitBtn') || document.querySelector('button[type="submit"]');
         if (submitBtn) {
             submitBtn.disabled = true;
