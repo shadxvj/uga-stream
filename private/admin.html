@@ -359,22 +359,20 @@ const videoFile = document.getElementById('videoFile')?.files[0];
             await fetch(videoLinkData.uploadUrl, { method: 'PUT', headers: { 'Content-Type': videoFile.type }, body: videoFile });
 
             // Step 2: Register the finalized public URLs to your movie database track
-                   const response = await fetch('/api/upload-movie', {
+                         const response = await fetch('/api/upload-movie', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                title,
-                vj,
-                category,
+                title: title,
+                vj: vj,
+                category: category,
                 posterUrl: posterLinkData.publicUrl,
-                videoUrl: videoLinkData.publicUrl,
-                image: posterLinkData.publicUrl,    // Required by server.js line 194
-                source: videoLinkData.publicUrl     // Required by server.js line 195
+                videoUrl: videoLinkData.publicUrl,  // Fixed: capital L
+                image: posterLinkData.publicUrl,    // Required by server.js
+                source: videoLinkData.publicUrl     // Fixed: capital L
             })
         });
-
-        
-
+            
             if (response.ok) {
                 alert("✅ Success: Movie published instantly!");
                 window.location.reload();
