@@ -1,12 +1,16 @@
 {
+  "name": "uga-stream",
+  "version": "1.0.0",
+  "description": "Premium VJ-translated Cinema Streaming Platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.500.0",
     "@aws-sdk/s3-request-presigner": "^3.500.0",
     "axios": "^1.7.7",
-    "cloudinary": "^2.0.0",
     "express": "^5.2.1",
-    "multer": "^2.2.0",
-    "multer-storage-cloudinary": "^4.0.0",
     "node-cron": "^3.0.3"
   }
 }
