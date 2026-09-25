@@ -73,14 +73,16 @@
                 try {
                     submitBtn.disabled = true;
                     submitBtn.innerText = "Processing Authorization...";
-                    if(progressWrapper) progressWrapper.style.style.display = "block";
+                // FIXED: Removed the duplicate style declaration to prevent crashes
+if (progressWrapper) progressWrapper.style.display = "block";
 
-                    // Step 1: Fetch authenticated S3 link
-                    const linkRequest = await fetch('/api/admin/get-b2-upload-link', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ filename: videoFile.name, filetype: videoFile.type })
-                    });
+// Step 1: Fetch authenticated S3 link
+const linkRequest = await fetch('/api/admin/get-b2-upload-link', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ filename: videoFile.name, filetype: videoFile.type, folder: 'videos' })
+});
+
 
                     const linkData = await linkRequest.json();
                     if (!linkData.success) throw new Error(linkData.message || "Failed to generate storage link.");
