@@ -49,9 +49,45 @@
         document.addEventListener("DOMContentLoaded", () => {
             // UNIVERSAL SELECTOR: Grabs the form no matter what ID name it has!
             const form = document.querySelector('form');
-            if(!form) return;
-            
             form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const submitBtn = document.getElementById('publishBtn') || form.querySelector('button[type="submit"]');
+    if (submitBtn) submitBtn.innerText = "⏳ Publishing Movie...";
+
+    // 1. Gather text URLs cleanly into an object matching your template layout keys
+    const movieData = {
+        title: document.getElementById('movieTitle')?.value || '',
+        vj: document.getElementById('movieVJ')?.value || document.getElementById('vj')?.value || 'VJ',
+        category: document.getElementById('category')?.value || 'trending',
+        image: document.getElementById('posterUrl')?.value || '',     // Direct Archive.org image link
+        videoUrl: document.getElementById('movieUrl')?.value || ''    // Direct Archive.org stream link
+    };
+
+    try {
+        // 2. Send plain text JSON directly to your backend upload API
+        const res = await fetch('/api/movies/upload', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(movieData)
+        });
+
+        const outcome = await res.json();
+        if (outcome.success) {
+            alert('🎉 VJ Movie published successfully!');
+            if (typeof fetchAdminMovies === 'function') fetchAdminMovies();
+            location.reload();
+        } else {
+            alert('Failed to publish: ' + (outcome.error || 'Unknown error'));
+        }
+    } catch (err) {
+        console.error('Submission error:', err);
+        alert('Server connection error. Check your backend console.');
+    } finally {
+        if (submitBtn) submitBtn.innerText = "🚀 Publish Movie to App";
+    }
+});
+
                 e.preventDefault();
 
                 // Handles both ID variants cleanly to prevent null runtime crashes
@@ -279,10 +315,11 @@ const linkRequest = await fetch('https://onrender.com', {
                     <option value="animation">🦊 Animation</option>
                 </select>
 
-              <label for="posterFile">Upload Poster Artwork (JPG/PNG):</label>
-<input type="file" id="posterFile" accept="image/*" required>
-                               <label for="videoFile">Select Movie File (Up to 25GB):</label>
-                <input type="file" id="videoFile" accept="video/mp4,video/mkv" required>
+             <label for="posterUrl">Poster Image Link (URL):</label>
+<input type="url" id="posterUrl" placeholder="Paste Archive.org image link here" required>
+
+<label for="movieUrl">Direct Video Link (MP4 URL):</label>
+<input type="url" id="movieUrl" placeholder="Paste Archive.org MPEG4 link here" required>
 
                 <!-- Live Progress Tracker Elements -->
                 <div class="progress-wrapper" id="progressWrapper">
