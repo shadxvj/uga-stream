@@ -58,7 +58,7 @@ app.post('/api/admin/get-b2-upload-link', async (req, res) => {
 
         const presignedUrl = await getSignedUrl(b2, command, { expiresIn: 3600 });
 // Remove the trailing folder structural name so uniqueFilename appends cleanly
-const permanentPublicUrl = `https://storjshare.io{uniqueFilename}`;
+const permanentPublicUrl = `httpslink.storjshare.io$/raw/jvaau6wnjqnrhtct42yomyolxxvq/uga-stream-cinema/){uniqueFilename}`;
 
 
 
