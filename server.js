@@ -44,27 +44,39 @@ const b2 = new S3Client({
 });
 
 
-app.post('/api/admin/get-b2-upload-link', async (req, res) => {
+app.post('/api/movies/upload', (req, res) => {
     try {
-        const { filename, filetype, folder } = req.body;
-        const targetFolder = folder === 'posters' ? 'posters/' : 'videos/';
-        const uniqueFilename = `${targetFolder}${Date.now()}_${filename.replace(/\s+/g, '_')}`;
+        const { title, vj, category, image, videoUrl } = req.body;
 
-        const command = new PutObjectCommand({
-        Bucket: "uga-stream-cinema",
-            Key: uniqueFilename,
-            ContentType: filetype,
-        });
+        // Basic check to make sure the critical link fields aren't empty
+        if (!title || !image || !videoUrl) {
+            return res.status(400).json({ success: false, error: "Missing required movie title or URL fields." });
+        }
 
-        const presignedUrl = await getSignedUrl(b2, command, { expiresIn: 3600 });
-// Remove the trailing folder structural name so uniqueFilename appends cleanly
-const permanentPublicUrl = `httpslink.storjshare.io$/raw/jvaau6wnjqnrhtct42yomyolxxvq/uga-stream-cinema/){uniqueFilename}`;
+        const newMovie = {
+            id: Date.now(),
+            title,
+            vj: vj || 'VJ',
+            category: category || 'trending',
+            image,       // Direct Archive.org poster text link string
+            videoUrl,    // Direct Archive.org streaming video text link string
+            uploadedAt: new Date()
+        };
 
+        // Append the new movie object directly to your catalog array
+        // NOTE: If your global array variable is named something else (like movieDatabase), change 'movies' below to match it.
+        movies.push(newMovie);
 
+        // If your app writes data back to a local movies.json file, uncomment the lines below:
+        // const fs = require('fs');
+        // const path = require('path');
+        // fs.writeFileSync(path.join(__dirname, 'movies.json'), JSON.stringify(movies, null, 2));
 
-        return res.json({ success: true, uploadUrl: presignedUrl, publicUrl: permanentPublicUrl });
+        return res.json({ success: true, movie: newMovie });
+
     } catch (error) {
-        return res.status(500).json({ success: false, message: error.message });
+        console.error("Upload handler error:", error);
+        return res.status(500).json({ success: false, error: error.message });
     }
 });
 
