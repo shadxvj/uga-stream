@@ -57,8 +57,9 @@ app.post('/api/admin/get-b2-upload-link', async (req, res) => {
         });
 
         const presignedUrl = await getSignedUrl(b2, command, { expiresIn: 3600 });
-        // REPLACE YOUR CURRENT LINE 60 WITH THIS SAFE SPECIFIC STREAM PATH:
-const permanentPublicUrl = `https://link.storjshare.io/raw/jvaau6wnjqnrhtct42yomyolxxvq/uga-stream-cinema/${uniqueFilename}`;
+// Remove the trailing folder structural name so uniqueFilename appends cleanly
+const permanentPublicUrl = `https://storjshare.io{uniqueFilename}`;
+
 
 
         return res.json({ success: true, uploadUrl: presignedUrl, publicUrl: permanentPublicUrl });
