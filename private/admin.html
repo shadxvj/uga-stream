@@ -46,140 +46,51 @@
         fetchRegisteredUsers();
            // HIGH-SPEED DIRECT BROWSER-TO-STORJ DCS UPLOADER PIPELINE (NO SIZE LIMITS)
          // HIGH-SPEED DIRECT BROWSER-TO-STORJ DCS UPLOADER PIPELINE
-        document.addEventListener("DOMContentLoaded", () => {
-            // UNIVERSAL SELECTOR: Grabs the form no matter what ID name it has!
-            const form = document.querySelector('form');
-            form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const submitBtn = document.getElementById('publishBtn') || form.querySelector('button[type="submit"]');
-    if (submitBtn) submitBtn.innerText = "⏳ Publishing Movie...";
+       document.addEventListener('DOMContentLoaded', () => {
+    // UNIVERSAL SELECTOR: Grabs the form no matter what ID name it has!
+    const form = document.querySelector('form');
+    if (!form) return;
 
-    // 1. Gather text URLs cleanly into an object matching your template layout keys
-    const movieData = {
-        title: document.getElementById('movieTitle')?.value || '',
-        vj: document.getElementById('movieVJ')?.value || document.getElementById('vj')?.value || 'VJ',
-        category: document.getElementById('category')?.value || 'trending',
-        image: document.getElementById('posterUrl')?.value || '',     // Direct Archive.org image link
-        videoUrl: document.getElementById('movieUrl')?.value || ''    // Direct Archive.org stream link
-    };
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const submitBtn = document.getElementById('publishBtn') || form.querySelector('button[type="submit"]');
+        if (submitBtn) submitBtn.innerText = "⏳ Publishing Movie...";
 
-    try {
-        // 2. Send plain text JSON directly to your backend upload API
-        const res = await fetch('/api/movies/upload', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(movieData)
-        });
+        // 1. Gather text URLs cleanly into an object matching your template layout keys
+        const movieData = {
+            title: document.getElementById('movieTitle')?.value || '',
+            vj: document.getElementById('movieVJ')?.value || document.getElementById('vj')?.value || 'VJ',
+            category: document.getElementById('category')?.value || 'trending',
+            image: document.getElementById('posterUrl')?.value || '',     // Direct Archive.org image link
+            videoUrl: document.getElementById('movieUrl')?.value || ''    // Direct Archive.org stream link
+        };
 
-        const outcome = await res.json();
-        if (outcome.success) {
-            alert('🎉 VJ Movie published successfully!');
-            if (typeof fetchAdminMovies === 'function') fetchAdminMovies();
-            location.reload();
-        } else {
-            alert('Failed to publish: ' + (outcome.error || 'Unknown error'));
-        }
-    } catch (err) {
-        console.error('Submission error:', err);
-        alert('Server connection error. Check your backend console.');
-    } finally {
-        if (submitBtn) submitBtn.innerText = "🚀 Publish Movie to App";
-    }
-});
-
-                e.preventDefault();
-
-                // Handles both ID variants cleanly to prevent null runtime crashes
-                const title = document.getElementById('movieTitle')?.value || document.getElementById('title')?.value;
-                const vj = document.getElementById('movieVJ')?.value || document.getElementById('vj')?.value;
-                const category = document.getElementById('category')?.value || 'trending';
-                const posterUrl = document.getElementById('posterUrl').value;
-                const videoFile = document.getElementById('videoFile').files[0]; // Fixed file stream mapping
-
-                if (!videoFile) {
-                    alert("Please select a video file first.");
-                    return;
-                }
-
-                const submitBtn = document.getElementById('submitBtn') || document.querySelector('button[type="submit"]');
-                const progressWrapper = document.getElementById('progressWrapper');
-                const progressFill = document.getElementById('progressFill');
-
-                try {
-                    submitBtn.disabled = true;
-                    submitBtn.innerText = "Processing Authorization...";
-                // FIXED: Removed the duplicate style declaration to prevent crashes
-if (progressWrapper) progressWrapper.style.display = "block";
-
-// Step 1: Fetch authenticated S3 link
-const linkRequest = await fetch('https://onrender.com', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ filename: videoFile.name, filetype: videoFile.type, folder: 'videos' })
-});
-
-
-
-                    const linkData = await linkRequest.json();
-                    if (!linkData.success) throw new Error(linkData.message || "Failed to generate storage link.");
-
-                    submitBtn.innerText = "Streaming Movie to Cloud (Keep window open)...";
-
-                    // Step 2: Stream packets directly to Storj DCS
-                    const xhr = new XMLHttpRequest();
-                    xhr.open('PUT', linkData.uploadUrl, true);
-                    xhr.setRequestHeader('Content-Type', videoFile.type);
-
-                    xhr.upload.onprogress = (event) => {
-                        if (event.lengthComputable && progressFill) {
-                            const percentComplete = Math.round((event.loaded / event.total) * 100);
-                            progressFill.style.width = percentComplete + '%';
-                            progressFill.innerText = percentComplete + '%';
-                        }
-                    };
-
-                    xhr.onload = async () => {
-                        if (xhr.status === 200 || xhr.status === 201) {
-                            if(progressFill) progressFill.innerText = "Saving to Database...";
-                            
-                            // Step 3: Publish to app layout
-                            const finalPublish = await fetch('/api/upload-movie', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({
-                                    title, vj, category, posterUrl, videoUrl: linkData.publicUrl
-                                })
-                            });
-
-                            const publishResult = await finalPublish.json();
-                            if (publishResult.success) {
-                                alert("🎬 " + title + " has been successfully published to UGA STREAM!");
-                                form.reset();
-                                if(progressWrapper) progressWrapper.style.style.display = "none";
-                                location.reload();
-                            } else {
-                                alert("Database registry failed: " + publishResult.message);
-                            }
-                        } else {
-                            alert("Storage network rejected file stream chunks.");
-                        }
-                    };
-
-                    xhr.onerror = () => { alert("Network connection dropped mid-transit."); };
-                    xhr.onloadend = () => {
-                        submitBtn.disabled = false;
-                        submitBtn.innerText = "🚀 Publish Movie to App";
-                    };
-                    xhr.send(videoFile);
-
-                } catch (err) {
-                    alert("Upload failed: " + err.message);
-                    submitBtn.disabled = false;
-                    submitBtn.innerText = "🚀 Publish Movie to App";
-                }
+        try {
+            // 2. Send plain text JSON directly to your backend upload API
+            const res = await fetch('/api/movies/upload', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(movieData)
             });
-        });
+
+            const outcome = await res.json();
+            if (outcome.success) {
+                alert('🎉 VJ Movie published successfully!');
+                if (typeof fetchAdminMovies === 'function') fetchAdminMovies();
+                location.reload();
+            } else {
+                alert('Failed to publish: ' + (outcome.error || 'Unknown error'));
+            }
+        } catch (err) {
+            console.error('Submission error:', err);
+            alert('Server connection error. Check your backend console.');
+        } finally {
+            if (submitBtn) submitBtn.innerText = "🚀 Publish Movie to App";
+        }
+    });
+});
+
 
      
         // ADDED HERE: Starts the 5-second automatic refresh loop
