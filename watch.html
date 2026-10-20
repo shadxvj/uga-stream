@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <script>
+    <script>
         // 🛡️ LIVE SERVER-SIDE ACCESS VERIFICATION ENGINE
         (async function() {
             const activeSessionToken = localStorage.getItem('uga_subscriber_session');
             const userProfilePayload = localStorage.getItem('ugaStreamUserSession');
 
-            // 1. Kick them out immediately if they have absolutely no local cache tags
             if (!activeSessionToken || activeSessionToken !== 'true' || !userProfilePayload) {
                 alert("🔒 Premium Protected Access! Please log into an active paid account to stream this movie.");
                 window.location.href = "index.html?access=locked#login";
@@ -16,48 +15,41 @@
 
             try {
                 const user = JSON.parse(userProfilePayload);
-                
-                // 2. Query your backend server database to see if they are truly APPROVED
                 const response = await fetch('/api/login-user', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         phone: user.phone,
-                        password: user.password || "123456" // Uses your default account password if not explicitly set
+                        password: user.password || "123456"
                     })
                 });
 
                 const databaseCheck = await response.json();
 
-                // 3. KICKS THEM OUT if the server database reports they are EXPIRED or PENDING!
                 if (databaseCheck.success !== true) {
                     alert(`🔒 Access Denied: ${databaseCheck.message || 'Subscription verification failed.'}`);
-                    
-                    // Erase the fake/expired keys from their local machine cache immediately
                     localStorage.removeItem('uga_subscriber_session');
                     localStorage.removeItem('uga_user_phone');
                     localStorage.removeItem('ugaStreamUserSession');
-                    
                     window.location.href = "index.html?access=locked#login";
                 }
-                
                 console.log("✅ Server Verification Cleared. Enjoy your movie!");
-
             } catch (error) {
                 console.error("Verification error:", error);
-                // Safety measure: if server connection fails, keep it locked down
                 alert("🚨 System Connection Interrupted. Unable to authenticate your credentials with the cloud server.");
                 window.location.href = "index.html";
             }
         })();
     </script>
 
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UGA STREAM — Streaming Theater</title>
-    <!-- Fixed broken Cloudflare link to stable FontAwesome icons CDN -->
     <link rel="stylesheet" href="https://cloudflare.com">
+    
+    <!-- 🎥 Add Video.js CSS framework styles -->
+    <link href="https://zencdn.net" rel="stylesheet" />
+
     <style>
         body {
             margin: 0;
@@ -70,7 +62,6 @@
             height: 100vh;
             overflow: hidden;
         }
-        /* Top Navigation Header bar */
         .watch-header {
             padding: 20px 4%;
             background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
@@ -115,7 +106,6 @@
         .download-btn:active {
             transform: scale(0.98);
         }
-        /* Theater Player Box Container Layout */
         .player-container {
             flex: 1;
             display: flex;
@@ -125,17 +115,16 @@
             width: 100%;
             height: 100%;
         }
-        video {
-            width: 100%;
-            height: 100%;
+        /* Custom dimensions to scale Video.js beautifully to full cinematic screen */
+        .video-js {
+            width: 100% !important;
+            height: 100% !important;
             max-height: 100vh;
-            object-fit: contain; /* Keeps cinema letterboxing intact */
         }
     </style>
 </head>
 <body>
 
-    <!-- Back Navigation Top Bar Container -->
     <header class="watch-header">
         <a href="index.html" class="back-btn">
             <i class="fa-solid fa-arrow-left"></i> Back to Home
@@ -145,56 +134,68 @@
         </a>
     </header>
 
-    <!-- Main Streaming Target Canvas Content -->
     <main class="player-container">
-        <video id="ugaStreamVideo" controls autoplay controlsList="nodownload">
-            <source id="videoSource" src="" type="video/mp4">
-            Your browser does not support HTML video playback mechanics.
+        <!-- 🎥 Upgraded structural component layout to support modern streaming frameworks -->
+        <video 
+            id="ugaStreamVideo" 
+            class="video-js vjs-default-skin vjs-big-play-centered" 
+            controls 
+            autoplay 
+            preload="auto">
+            Your browser does not support modern streaming frameworks.
         </video>
     </main>
 
+    <!-- 🎥 Add Video.js Compilation Core Script Engine -->
+    <script src="https://zencdn.net"></script>
+
     <script>
-       document.addEventListener("DOMContentLoaded", () => {
-    // 1. CRITICAL GUARD: Check if the user has an authenticated session or admin status
-    const activeSession = sessionStorage.getItem('subscriberSessionActive') || localStorage.getItem('uga_subscriber_session') === 'true';
-    const isAdminBypass = localStorage.getItem('uga_user_status') === 'premium';
+        document.addEventListener("DOMContentLoaded", () => {
+            const activeSession = sessionStorage.getItem('subscriberSessionActive') || localStorage.getItem('uga_subscriber_session') === 'true';
+            const isAdminBypass = localStorage.getItem('uga_user_status') === 'premium';
 
-    if (!activeSession && !isAdminBypass) {
-        alert("🔒 Stream Access Restricted. Please log in or activate a mobile money pass to view this premium translated movie.");
-        window.location.href = 'index.html?access=locked';
-        return;
-    }
-
-    // 2. Clear out parameters and resolve movie link structures normally
-    const urlParams = new URLSearchParams(window.location.search);
-    // Updated parameter reader to capture the 'source' key passed by your home cards
-    const movieUrl = urlParams.get('source') || urlParams.get('video');
-
-
-    if (movieUrl) {
-        const video = document.getElementById('ugaStreamVideo');
-        const videoSource = document.getElementById('videoSource');
-        const downloadBtn = document.getElementById('directDownloadBtn');
-        
-        const clearUrl = decodeURIComponent(movieUrl);
-
-        video.src = clearUrl;
-        videoSource.src = clearUrl;
-        video.load();
-
-        if (downloadBtn) {
-            if (clearUrl.includes('cloudinary.com')) {
-                const forcedDownloadUrl = clearUrl.replace('/upload/', '/upload/fl_attachment/');
-                downloadBtn.href = forcedDownloadUrl;
-            } else {
-                downloadBtn.href = clearUrl;
+            if (!activeSession && !isAdminBypass) {
+                alert("🔒 Stream Access Restricted. Please log in or activate a mobile money pass to view this premium translated movie.");
+                window.location.href = 'index.html?access=locked';
+                return;
             }
-        }
-    } else {
-        window.location.href = 'index.html';
-    }
-});
 
+            const urlParams = new URLSearchParams(window.location.search);
+            const movieUrl = urlParams.get('source') || urlParams.get('video');
+
+            if (movieUrl) {
+                const clearUrl = decodeURIComponent(movieUrl);
+                const downloadBtn = document.getElementById('directDownloadBtn');
+                
+                // Initialize Video.js engine dynamically
+                const player = videojs('ugaStreamVideo');
+
+                // Evaluate content format rules
+                if (clearUrl.includes('.m3u8')) {
+                    player.src({ src: clearUrl, type: 'application/x-mpegURL' });
+                } else {
+                    player.src({ src: clearUrl, type: 'video/mp4' });
+                }
+                
+                player.ready(() => {
+                    player.play().catch(err => console.log("Autoplay blocked by browser policy"));
+                });
+
+                if (downloadBtn) {
+                    if (clearUrl.includes('cloudinary.com')) {
+                        // Standard conversion format to force raw download generation from streaming strings
+                        let forcedDownloadUrl = clearUrl.replace('/sp_auto/', '/');
+                        forcedDownloadUrl = forcedDownloadUrl.replace('.m3u8', '.mp4');
+                        forcedDownloadUrl = forcedDownloadUrl.replace('/upload/', '/upload/fl_attachment/');
+                        downloadBtn.href = forcedDownloadUrl;
+                    } else {
+                        downloadBtn.href = clearUrl;
+                    }
+                }
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
     </script>
 </body>
 </html>
