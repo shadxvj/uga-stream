@@ -276,8 +276,10 @@ function initDashboard() {
         const category = document.getElementById('category')?.value || document.getElementById('movieCategory')?.value || 'trending';
 
         // 1. Correctly extract the link text strings from your form inputs
-        const posterUrl = document.getElementById('posterUrl')?.value || '';
-        const movieUrl = document.getElementById('movieUrl')?.value || '';
+       // Change lines 279-280 to this:
+const posterUrl = document.getElementById('posterUrl')?.value || document.getElementById('posterFile')?.value || '';
+const movieUrl = document.getElementById('movieUrl')?.value || document.getElementById('videoFile')?.value || '';
+
 
         if (!posterUrl || !movieUrl) {
             alert("❌ Please fill out both the Poster Image Link and the Video Link fields.");
