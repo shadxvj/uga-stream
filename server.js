@@ -44,41 +44,55 @@ const b2 = new S3Client({
 });
 
 
-app.post('/api/movies/upload', (req, res) => {
-    try {
-        const { title, vj, category, image, videoUrl } = req.body;
+app.post('/api/movies/upload', async (req, res) => {
+  try {
+    const { title, vj, category, image, videoUrl } = req.body;
 
-        // Basic check to make sure the critical link fields aren't empty
-        if (!title || !image || !videoUrl) {
-            return res.status(400).json({ success: false, error: "Missing required movie title or URL fields." });
-        }
-
-        const newMovie = {
-            id: Date.now(),
-            title,
-            vj: vj || 'VJ',
-            category: category || 'trending',
-            image,       // Direct Archive.org poster text link string
-            videoUrl,    // Direct Archive.org streaming video text link string
-            uploadedAt: new Date()
-        };
-
-        // Append the new movie object directly to your catalog array
-        // NOTE: If your global array variable is named something else (like movieDatabase), change 'movies' below to match it.
-        movies.push(newMovie);
-
-        // If your app writes data back to a local movies.json file, uncomment the lines below:
-        // const fs = require('fs');
-        // const path = require('path');
-        // fs.writeFileSync(path.join(__dirname, 'movies.json'), JSON.stringify(movies, null, 2));
-
-        return res.json({ success: true, movie: newMovie });
-
-    } catch (error) {
-        console.error("Upload handler error:", error);
-        return res.status(500).json({ success: false, error: error.message });
+    // Basic check to make sure critical link fields aren't empty
+    if (!title || !image || !videoUrl) {
+      return res.status(400).json({ success: false, error: "Missing required movie title or URL fields." });
     }
+
+    console.log(`Starting Cloudinary chunked upload from URL for: ${title}`);
+
+    // 1. Tell Cloudinary to download and chunk the video in the background
+    const cloudinaryResult = await cloudinary.uploader.upload_large(videoUrl, {
+      resource_type: "video",
+      chunk_size: 20000000, // 20MB chunks
+      public_id: `movies/${title.replace(/\s+/g, '_').toLowerCase()}_${Date.now()}`,
+      eager: [
+        { streaming_profile: "auto", format: "m3u8" } // Automatically encodes it to HLS stream format
+      ],
+      eager_async: true // Processes in background so Render doesn't time out the request
+    });
+
+    // 2. Convert the .mp4 extension to an .m3u8 streaming index link
+    // If the background eager processing isn't done yet, Cloudinary dynamically generates it on first play
+    const optimizedStreamingUrl = cloudinaryResult.secure_url.replace(/\.[^/.]+\$/, ".m3u8");
+
+    // 3. Construct your movie object using the new streaming URL
+    const newMovie = {
+      id: Date.now(),
+      title,
+      vj: vj || 'VJ',
+      category: category || 'trending',
+      image,                                // Direct poster link
+      videoUrl: optimizedStreamingUrl,      // Brand new optimized Cloudinary streaming link!
+      uploadedAt: new Date()
+    };
+
+    // Append the new movie object directly to your catalog array
+    movies.push(newMovie); 
+
+    console.log(`Successfully added optimized movie: ${title}`);
+    res.status(200).json({ success: true, message: "Movie uploaded and optimized successfully!", movie: newMovie });
+
+  } catch (error) {
+    console.error("Cloudinary upload route error:", error);
+    res.status(500).json({ success: false, error: "Internal server processing error." });
+  }
 });
+
 
 
 
